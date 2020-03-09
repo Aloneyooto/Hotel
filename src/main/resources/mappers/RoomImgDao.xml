@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.RoomImgDao">
+    <insert id="batchInsertRoomImg" parameterType="java.util.List">
+        insert into tb_room_img(room_img_addr, priority, room_id)
+        values
+        <foreach collection="list" item="roomImg" index="index" separator=",">
+            (
+            #{roomImg.roomImgAddr},
+            #{roomImg.priority},
+            #{roomImg.roomId}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryProductImgList" resultType="com.alone.hotel.entity.RoomImg">
+        select room_img_id, room_img_addr, priority, room_id
+        from tb_room_img
+        where room_id = #{roomId}
+    </select>
+
+
+</mapper>

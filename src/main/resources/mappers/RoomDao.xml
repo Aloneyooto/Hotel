@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.RoomDao">
+    <resultMap id="roomMap" type="com.alone.hotel.entity.Room">
+        <id column="room_id" property="roomId" />
+        <result column="room_floor" property="roomFloor"/>
+        <result column="room_desc" property="roomDesc" />
+        <result column="room_state" property="roomState" />
+        <result column="room_type" property="roomType" />
+        <result column="room_price" property="roomPrice" />
+        <collection property="roomImgList" column="room_id" ofType="com.alone.hotel.entity.RoomImg">
+            <id column="room_img_id" property="roomImgId" />
+            <result column="room_img_addr" property="roomImgAddr" />
+            <result column="priority" property="priority" />
+            <result column="room_id" property="roomId" />
+        </collection>
+    </resultMap>
+
+    <insert id="insertRoom" parameterType="com.alone.hotel.entity.Room" keyProperty="roomId" keyColumn="room_id">
+        insert into tb_room(room_id, room_floor, room_desc, room_state, room_type, room_price)
+        values (#{roomId}, #{roomFloor}, #{roomDesc}, #{roomState}, #{roomType}, #{roomPrice})
+    </insert>
+
+    <select id="queryRoomById" resultMap="roomMap" parameterType="Integer">
+        select r.room_id, r.room_floor, r.room_desc, r.room_state, r.room_type, r.room_price,
+        rm.room_img_id, rm.room_img_addr, rm.priority
+        from tb_room r left join tb_room_img rm on r.room_id = rm.room_id
+        where r.room_id = #{roomId} order by rm.priority desc;
+    </select>
+</mapper>
