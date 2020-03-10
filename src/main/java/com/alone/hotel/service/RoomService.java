@@ -23,4 +23,11 @@ public interface RoomService {
      * @return
      */
     RoomExecution addRoom(Room room, MultipartFile[] files);
+
+    /**
+     * 根据房间号获取房间信息
+     * @param roomId
+     * @return
+     */
+    Room getRoomById(int roomId);
 }

@@ -39,5 +39,16 @@ class RoomImgDaoTest {
         assertEquals(2, effectNum);
     }
 
+    @Test
+    public void testQueryRoomImgList(){
+        List<RoomImg> roomImgList = roomImgDao.queryRoomImgList(101);
+        assertEquals(2 ,roomImgList.size());
+    }
 
+    @Test
+    public void testDeleteRoomImgByRoomId(){
+        int roomId = 101;
+        int effectedNum = roomImgDao.deleteRoomImgByRoomId(roomId);
+        assertEquals(2, effectedNum);
+    }
 }

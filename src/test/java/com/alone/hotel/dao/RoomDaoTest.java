@@ -34,7 +34,7 @@ class RoomDaoTest {
 
     @Test
     public void testQueryRoomById(){
-        Room room = roomDao.queryRoomById(101);
-        assertEquals(100.1, room.getRoomPrice());
+        Room room = roomDao.queryRoomById(102);
+        assertEquals(1, room.getRoomImgList().size());
     }
 }

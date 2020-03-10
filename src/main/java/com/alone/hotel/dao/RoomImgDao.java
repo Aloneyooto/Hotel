@@ -25,4 +25,11 @@ public interface RoomImgDao {
      * @return
      */
     List<RoomImg> queryRoomImgList(int roomId);
+
+    /**
+     * 删除指定房间的所有详情图
+     * @param roomId
+     * @return
+     */
+    int deleteRoomImgByRoomId(int roomId);
 }

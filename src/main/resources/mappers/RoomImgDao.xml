@@ -13,11 +13,13 @@
         </foreach>
     </insert>
 
-    <select id="queryProductImgList" resultType="com.alone.hotel.entity.RoomImg">
+    <select id="queryRoomImgList" resultType="com.alone.hotel.entity.RoomImg">
         select room_img_id, room_img_addr, priority, room_id
         from tb_room_img
         where room_id = #{roomId}
     </select>
 
-
+    <delete id="deleteRoomImgByRoomId">
+        delete from tb_room_img where room_id = #{roomId}
+    </delete>
 </mapper>

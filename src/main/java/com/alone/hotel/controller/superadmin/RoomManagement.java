@@ -8,10 +8,7 @@ import com.alone.hotel.service.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +37,7 @@ public class RoomManagement {
      * @return 成功或失败,失败返回失败信息
      */
     @PostMapping("/addroom")
-    private String addRoom(@RequestParam("roomStr")String roomStr, @RequestParam("filelist")MultipartFile[] filelist){
+    private RoomExecution addRoom(@RequestParam("roomStr")String roomStr, @RequestParam("filelist")MultipartFile[] filelist){
         //TODO 验证码
         //List<ImageExecution> imageList = new ArrayList<ImageExecution>();
         Room room = null;
@@ -54,15 +51,32 @@ public class RoomManagement {
             try{
                 RoomExecution roomExecution = roomService.addRoom(room, filelist);
                 if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
-                    return "success";
+                    return new RoomExecution(RoomStateEnum.SUCCESS);
                 } else {
-                    return "error" + ":插入失败";
+                    return new RoomExecution(RoomStateEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return "error" + e.getMessage();
+                return new RoomExecution(RoomStateEnum.INNER_ERROR);
             }
         } else {
-            return "error" + "插入信息不能为空";
+            return new RoomExecution(RoomStateEnum.EMPTY);
         }
+    }
+
+    @GetMapping("/getroombyid")
+    private RoomExecution getRoomById(@RequestParam("roomId")int roomId){
+        RoomExecution roomExecution = null;
+        if(roomId < -1){
+            try{
+                Room room = roomService.getRoomById(roomId);
+                roomExecution = new RoomExecution(RoomStateEnum.SUCCESS, room);
+            } catch (Exception e){
+                roomExecution = new RoomExecution(RoomStateEnum.INNER_ERROR);
+            }
+        } else {
+            //房间号错误
+            roomExecution = new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+        }
+        return roomExecution;
     }
 }

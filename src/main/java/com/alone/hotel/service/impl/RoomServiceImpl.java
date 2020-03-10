@@ -73,6 +73,15 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
+    /**
+     * 根据房间号查询房间信息
+     * @param roomId
+     * @return
+     */
+    public Room getRoomById(int roomId){
+        return roomDao.queryRoomById(roomId);
+    }
+
     private void addRoomImgList(Room room, MultipartFile[] files){
         List<RoomImg> roomImgList = new ArrayList<RoomImg>();
         //获取图片存储路径
