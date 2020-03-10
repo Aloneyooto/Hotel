@@ -23,4 +23,6 @@ public interface RoomDao {
      * @return
      */
     Room queryRoomById(int roomId);
+
+
 }
