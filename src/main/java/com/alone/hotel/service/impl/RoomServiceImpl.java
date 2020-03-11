@@ -126,6 +126,27 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
+    @Override
+    @Transactional
+    public RoomExecution deleteRoom(int roomId) {
+        try {
+            if(roomId > 0){
+                int effectedNum = roomImgDao.deleteRoomImgByRoomId(roomId);
+                if(effectedNum < 0){
+                    throw new RoomException(ResultEnum.ROOM_IMG_DELETE_ERROR);
+                }
+                int result = roomDao.deleteRoom(roomId);
+                if(result <= 0){
+                    throw new RoomException(ResultEnum.ROOM_DELETE_ERROR);
+                } else {
+                    return new RoomExecution(RoomStateEnum.SUCCESS);
+                }
+            }
+        } catch (Exception e){
+            throw new RoomException(ResultEnum.ROOM_DELETE_ERROR);
+        }
+        return new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+    }
 
     private void addRoomImgList(Room room, MultipartFile[] files){
         List<RoomImg> roomImgList = new ArrayList<RoomImg>();

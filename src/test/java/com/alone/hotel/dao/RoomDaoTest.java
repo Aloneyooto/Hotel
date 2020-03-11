@@ -58,4 +58,11 @@ class RoomDaoTest {
         int effectedNum = roomDao.updateRoom(newroom);
         assertEquals(1, effectedNum);
     }
+
+    @Test
+    public void testDeleteRoom(){
+        int roomId = 101;
+        int effectedNum = roomDao.deleteRoom(roomId);
+        assertEquals(1, effectedNum);
+    }
 }

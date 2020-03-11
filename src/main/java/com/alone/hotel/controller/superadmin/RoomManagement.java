@@ -145,4 +145,14 @@ public class RoomManagement {
             return new RoomExecution(RoomStateEnum.EMPTY);
         }
     }
+
+    @PostMapping("/deleteroom")
+    private RoomExecution deleteRoom(@RequestParam("roomId")int roomId){
+        if(roomId > 0){
+            RoomExecution roomExecution = roomService.deleteRoom(roomId);
+            return roomExecution;
+        } else {
+            return new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+        }
+    }
 }

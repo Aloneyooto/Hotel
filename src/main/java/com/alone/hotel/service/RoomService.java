@@ -47,4 +47,11 @@ public interface RoomService {
      * @return
      */
     RoomExecution modifyRoom(Room room, MultipartFile[] files);
+
+    /**
+     * 删除房间
+     * @param roomId
+     * @return
+     */
+    RoomExecution deleteRoom(int roomId);
 }

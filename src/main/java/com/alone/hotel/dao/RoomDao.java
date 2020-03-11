@@ -49,4 +49,11 @@ public interface RoomDao {
      * @return
      */
     int updateRoom(Room room);
+
+    /**
+     * 删除房间信息
+     * @param roomId
+     * @return
+     */
+    int deleteRoom(int roomId);
 }

@@ -66,4 +66,9 @@
         </set>
         where room_id = #{roomId}
     </update>
+
+    <delete id="deleteRoom">
+        delete from tb_room
+        where room_id = #{roomId}
+    </delete>
 </mapper>
