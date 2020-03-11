@@ -27,4 +27,43 @@
         from tb_room r left join tb_room_img rm on r.room_id = rm.room_id
         where r.room_id = #{roomId} order by rm.priority desc;
     </select>
+
+    <select id="queryRoomList" resultType="com.alone.hotel.entity.Room">
+        select room_id, room_floor, room_desc, room_state, room_type, room_price
+        from tb_room
+        <where>
+            <if test="roomCondition.roomType != null ">
+                and room_type = #{roomCondition.roomType}
+            </if>
+            <if test="roomCondition.roomState != null ">
+                and room_state = #{roomCondition.roomState}
+            </if>
+        </where>
+        limit #{rowIndex}, #{pageSize}
+    </select>
+
+    <select id="queryRoomCount" resultType="int">
+        select count(1)
+        from tb_room
+        <where>
+            <if test="roomCondition.roomType != null ">
+                and room_type = #{roomCondition.roomType}
+            </if>
+            <if test="roomCondition.roomState != null ">
+                and room_state = #{roomCondition.roomState}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateRoom" parameterType="com.alone.hotel.entity.Room" >
+        update tb_room
+        <set>
+            <if test="roomFloor != null">room_floor = #{roomFloor}</if>
+            <if test="roomDesc != null">room_desc = #{roomDesc}</if>
+            <if test="roomState != null">room_state = #{roomState}</if>
+            <if test="roomType != null ">room_type = #{roomType}</if>
+            <if test="roomPrice != null">room_price = #{roomPrice}</if>
+        </set>
+        where room_id = #{roomId}
+    </update>
 </mapper>

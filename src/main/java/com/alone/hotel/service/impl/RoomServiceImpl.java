@@ -11,6 +11,7 @@ import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.exceptions.RoomException;
 import com.alone.hotel.service.RoomService;
 import com.alone.hotel.utils.ImageUtil;
+import com.alone.hotel.utils.PageUtil;
 import com.alone.hotel.utils.PathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,50 @@ public class RoomServiceImpl implements RoomService {
         return roomDao.queryRoomById(roomId);
     }
 
+    @Override
+    public RoomExecution getRoomList(Room roomCondition, int pageIndex, int pageSize) {
+        //页数转换成数据库的行数
+        int rowIndex = PageUtil.calculateRowIndex(pageIndex, pageSize);
+        //查询所需记录
+        List<Room> roomList = roomDao.queryRoomList(roomCondition, rowIndex, pageSize);
+        //记录的总行数
+        int count = roomDao.queryRoomCount(roomCondition);
+        RoomExecution re = new RoomExecution();
+        re.setRoomList(roomList);
+        re.setCount(count);
+        return re;
+    }
+
+    /**
+     * 修改房间
+     * @param room
+     * @param files
+     * @return
+     */
+    @Override
+    @Transactional
+    public RoomExecution modifyRoom(Room room, MultipartFile[] files) {
+        if(room != null){
+            //更新图片
+            if(files != null){
+                deleteRoomImgList(room.getRoomId());
+                addRoomImgList(room, files);
+            }
+            try{
+                int effectedNum = roomDao.updateRoom(room);
+                if(effectedNum <= 0){
+                    throw new RoomException(ResultEnum.ROOM_UPDATE_ERROR);
+                }
+                return new RoomExecution(RoomStateEnum.SUCCESS, room);
+            } catch (Exception e){
+                throw new RoomException(ResultEnum.ROOM_UPDATE_ERROR);
+            }
+        } else {
+            return new RoomExecution(RoomStateEnum.EMPTY);
+        }
+    }
+
+
     private void addRoomImgList(Room room, MultipartFile[] files){
         List<RoomImg> roomImgList = new ArrayList<RoomImg>();
         //获取图片存储路径
@@ -109,5 +154,15 @@ public class RoomServiceImpl implements RoomService {
                 throw new RoomException(ResultEnum.ROOM_INSERT_ERROR);
             }
         }
+    }
+
+    private void deleteRoomImgList(int roomId){
+        //根据roomId获取原来的图片
+        List<RoomImg> roomImgList = roomImgDao.queryRoomImgList(roomId);
+        //干掉原来的照片
+        for (RoomImg roomImg : roomImgList) {
+            ImageUtil.deleteFileOrPath(roomImg.getRoomImgAddr());
+        }
+        roomImgDao.deleteRoomImgByRoomId(roomId);
     }
 }

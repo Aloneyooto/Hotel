@@ -46,4 +46,20 @@ class RoomServiceTest {
 //        RoomExecution roomExecution = roomService.addRoom(room, list);
 //        assertEquals(RoomStateEnum.SUCCESS.getState(), roomExecution.getState());
     }
+
+    @Test
+    public void testUpdateRoom() throws IOException {
+        Room room = new Room();
+        room.setRoomId(102);
+        room.setRoomDesc("测试");
+        File file = new File("E:\\proresources\\images\\jide.jpg");
+        File file1 = new File("E:\\proresources\\images\\kidsama.jpg");
+        InputStream inputStream = new FileInputStream(file);
+        InputStream inputStream1 = new FileInputStream(file1);
+        MultipartFile[] multipartFiles = new MultipartFile[2];
+        multipartFiles[0] = new MockMultipartFile(file.getName(), inputStream);
+        multipartFiles[1] = new MockMultipartFile(file1.getName(), inputStream1);
+        RoomExecution roomExecution = roomService.modifyRoom(room, multipartFiles);
+        assertEquals(RoomStateEnum.SUCCESS.getState(), roomExecution.getState());
+    }
 }

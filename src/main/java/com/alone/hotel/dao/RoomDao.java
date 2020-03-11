@@ -1,6 +1,9 @@
 package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.Room;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @BelongsProject: hotel
@@ -24,5 +27,26 @@ public interface RoomDao {
      */
     Room queryRoomById(int roomId);
 
+    /**
+     * 根据特定条件查询房间列表
+     * @param roomCondition
+     * @param rowIndex
+     * @param pageSize
+     * @return
+     */
+    List<Room> queryRoomList(@Param("roomCondition") Room roomCondition, @Param("rowIndex")int rowIndex, @Param("pageSize")int pageSize);
 
+    /**
+     * 查询对应的房间数
+     * @param roomCondition
+     * @return
+     */
+    int queryRoomCount(@Param("roomCondition")Room roomCondition);
+
+    /**
+     * 更新房间信息
+     * @param room
+     * @return
+     */
+    int updateRoom(Room room);
 }

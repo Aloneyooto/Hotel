@@ -1,5 +1,6 @@
 package com.alone.hotel.controller.superadmin;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.ImageExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.Room;
@@ -7,6 +8,7 @@ import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.service.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,11 +35,11 @@ public class RoomManagement {
     /**
      * 增加房间(formData提交)
      * @param roomStr json字符串
-     * @param filelist 文件流
+     * @param fileList 文件流
      * @return 成功或失败,失败返回失败信息
      */
     @PostMapping("/addroom")
-    private RoomExecution addRoom(@RequestParam("roomStr")String roomStr, @RequestParam("filelist")MultipartFile[] filelist){
+    private RoomExecution addRoom(@RequestParam("roomStr")String roomStr, @RequestParam("fileList")MultipartFile[] fileList){
         //TODO 验证码
         //List<ImageExecution> imageList = new ArrayList<ImageExecution>();
         Room room = null;
@@ -47,9 +49,9 @@ public class RoomManagement {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        if(room != null && filelist != null && filelist.length > 0){
+        if(room != null && fileList != null && fileList.length > 0){
             try{
-                RoomExecution roomExecution = roomService.addRoom(room, filelist);
+                RoomExecution roomExecution = roomService.addRoom(room, fileList);
                 if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
                     return new RoomExecution(RoomStateEnum.SUCCESS);
                 } else {
@@ -63,6 +65,11 @@ public class RoomManagement {
         }
     }
 
+    /**
+     * 根据房间号获取房间信息
+     * @param roomId
+     * @return
+     */
     @GetMapping("/getroombyid")
     private RoomExecution getRoomById(@RequestParam("roomId")int roomId){
         RoomExecution roomExecution = null;
@@ -78,5 +85,64 @@ public class RoomManagement {
             roomExecution = new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
         }
         return roomExecution;
+    }
+
+    /**
+     * 获取房间列表(json传参)
+     * 这个方法可能会出问题
+     * @param jsonParam
+     * @return
+     */
+    @CrossOrigin
+    @GetMapping("/getroomlist")
+    private RoomExecution getRoomList(@RequestBody JSONObject jsonParam){
+        int pageIndex = jsonParam.getInteger("pageIndex");
+        int pageSize = jsonParam.getInteger("pageSize");
+        int roomType = jsonParam.getInteger("roomType");
+        int roomState = jsonParam.getInteger("roomState");
+        if(pageIndex > -1 && pageSize > -1){
+            Room roomCondition = new Room();
+            if(roomType > -1){
+                roomCondition.setRoomType(roomType);
+            }
+            if(roomState > -1){
+                roomCondition.setRoomState(roomState);
+            }
+            RoomExecution re = roomService.getRoomList(roomCondition, pageIndex, pageSize);
+            return re;
+        } else {
+            return new RoomExecution(RoomStateEnum.PAGE_ERROR);
+        }
+    }
+
+    /**
+     * 修改房间
+     * @param roomStr
+     * @param fileList
+     * @return
+     */
+    @PostMapping("/modifyroom")
+    private RoomExecution modifyRoom(@RequestParam("roomStr")String roomStr, @RequestParam("fileList")MultipartFile[] fileList){
+        Room room = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            room = mapper.readValue(roomStr, Room.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if(room != null){
+            try{
+                RoomExecution roomExecution = roomService.addRoom(room, fileList);
+                if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
+                    return new RoomExecution(RoomStateEnum.SUCCESS);
+                } else {
+                    return new RoomExecution(RoomStateEnum.INNER_ERROR);
+                }
+            } catch (Exception e){
+                return new RoomExecution(RoomStateEnum.INNER_ERROR);
+            }
+        } else {
+            return new RoomExecution(RoomStateEnum.EMPTY);
+        }
     }
 }

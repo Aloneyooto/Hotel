@@ -14,6 +14,7 @@ public enum RoomStateEnum {
     INNER_ERROR(-1, "内部错误"),
     EMPTY(-1001, "房间属性为空"),
     ROOM_ID_ERROR(-1002, "房间号错误"),
+    PAGE_ERROR(-1003, "页码错误"),
     ;
 
     private int state;

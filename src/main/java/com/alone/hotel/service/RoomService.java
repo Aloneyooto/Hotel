@@ -30,4 +30,21 @@ public interface RoomService {
      * @return
      */
     Room getRoomById(int roomId);
+
+    /**
+     * 查询房间列表并分页,可输入的条件有房间类型,房间状态
+     * @param roomCondition
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    RoomExecution getRoomList(Room roomCondition, int pageIndex, int pageSize);
+
+    /**
+     * 修改房间
+     * @param room
+     * @param files
+     * @return
+     */
+    RoomExecution modifyRoom(Room room, MultipartFile[] files);
 }

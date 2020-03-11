@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -36,5 +38,24 @@ class RoomDaoTest {
     public void testQueryRoomById(){
         Room room = roomDao.queryRoomById(102);
         assertEquals(1, room.getRoomImgList().size());
+    }
+
+    @Test
+    public void testQueryRoomList(){
+        Room roomCondition = new Room();
+        roomCondition.setRoomType(1);
+        List<Room> roomList = roomDao.queryRoomList(roomCondition, 0, 3);
+        assertEquals(2, roomList.size());
+        int count = roomDao.queryRoomCount(roomCondition);
+        assertEquals(2, count);
+    }
+
+    @Test
+    public void testUpdateRoom(){
+        Room newroom = new Room();
+        newroom.setRoomId(101);
+        newroom.setRoomType(2);
+        int effectedNum = roomDao.updateRoom(newroom);
+        assertEquals(1, effectedNum);
     }
 }

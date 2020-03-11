@@ -11,8 +11,9 @@ import lombok.Getter;
  */
 @Getter
 public enum ResultEnum {
-    ROOM_INSERT_ERROR(10, "房间信息插入错误"),
-    ROOM_IMAGE_ERROR(11, "房间图片插入失败"),
+    ROOM_INSERT_ERROR(-10, "房间信息插入错误"),
+    ROOM_IMAGE_ERROR(-11, "房间图片插入失败"),
+    ROOM_UPDATE_ERROR(-12, "房间信息更新失败"),
     ;
     private Integer code;
     private String message;
