@@ -100,7 +100,7 @@ public class RoomManagement {
         int pageSize = jsonParam.getInteger("pageSize");
         int roomType = jsonParam.getInteger("roomType");
         int roomState = jsonParam.getInteger("roomState");
-        if(pageIndex > -1 && pageSize > -1){
+        if(pageIndex > -1 && pageSize > 0){
             Room roomCondition = new Room();
             if(roomType > -1){
                 roomCondition.setRoomType(roomType);
