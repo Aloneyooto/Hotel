@@ -91,9 +91,12 @@ public class RoomServiceImpl implements RoomService {
         List<Room> roomList = roomDao.queryRoomList(roomCondition, rowIndex, pageSize);
         //记录的总行数
         int count = roomDao.queryRoomCount(roomCondition);
-        RoomExecution re = new RoomExecution();
-        re.setRoomList(roomList);
-        re.setCount(count);
+        RoomExecution re = null;
+        if(roomList != null){
+            re = new RoomExecution();
+            re.setRoomList(roomList);
+            re.setCount(count);
+        }
         return re;
     }
 

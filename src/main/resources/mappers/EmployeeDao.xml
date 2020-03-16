@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.EmployeeDao">
+    <resultMap id="EmployeeMap" type="com.alone.hotel.entity.Employee">
+        <id column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="employee_age" property="employeeAge" />
+        <result column="employee_gender" property="employeeGender" />
+        <result column="employee_card_number" property="employeeCardNumber" />
+        <result column="employee_card_img" property="employeeCardImg" />
+        <result column="employee_phone" property="employeePhone" />
+        <result column="employee_create_time" property="employeeCreateTime" />
+        <result column="employee_leave_time" property="employeeLeaveTime" />
+        <association property="position" column="position_id" javaType="com.alone.hotel.entity.Position">
+            <id column="position_id" property="positionId" />
+            <result column="position_name" property="positionName" />
+            <result column="position_basic_salary" property="positionBasicSalary" />
+            <result column="position_note" property="positionNote" />
+        </association>
+    </resultMap>
+
+    <insert id="insertEmployee" parameterType="com.alone.hotel.entity.Employee" keyProperty="EmployeeId" keyColumn="employee_id">
+        insert into tb_employee(employee_id, employee_name, employee_age, employee_gender,
+                                employee_card_number, employee_card_img, employee_face_img,
+                                employee_phone, position_type, employee_create_time, employee_leave_time)
+        values (#{employeeId}, #{employeeName}, #{employeeAge}, #{employeeGender}, #{employeeCardNumber},#{employeeCardImg},
+                #{employeeFaceImg}, #{employeePhone}, #{position.positionId}, #{employeeCreateTime}, #{employeeLeaveTime})
+    </insert>
+
+    <select id="queryEmployeeById" resultMap="EmployeeMap" parameterType="String">
+        select e.employee_id, e.employee_name, e.employee_age, e.employee_gender, e.employee_card_number,
+        e.employee_card_img, e.employee_face_img, e.employee_phone, e.employee_create_time, e.employee_leave_time,
+        p.position_id, p.position_name, p.position_basic_salary, p.position_note
+        from tb_employee e left join tb_position p on e.position_type = p.position_id
+        where e.employee_id = #{employeeId};
+    </select>
+
+    <select id="queryEmployeeList" resultMap="EmployeeMap">
+        select e.employee_id, e.employee_name, e.employee_age, e.employee_gender, e.employee_card_number,
+        e.employee_card_img, e.employee_face_img, e.employee_phone, e.employee_create_time, e.employee_leave_time,
+        p.position_id, p.position_name, p.position_basic_salary, p.position_note
+        from tb_employee e , tb_position p
+        <where>
+            <if test="employeeCondition.employeeName != null">
+                and e.employee_name like '%' #{employeeCondition.employeeName} '%'
+            </if>
+            <if test="employeeCondition.employeeGender != null">
+                and e.employee_gender = #{employeeCondition.employeeGender}
+            </if>
+            <if test="employeeCondition.position != null">
+                and e.position_type = #{employeeCondition.position.positionId}
+            </if>
+            and e.position_type = p.position_id
+        </where>
+        limit #{rowIndex}, #{pageSize}
+    </select>
+
+    <select id="queryEmployeeCount" resultType="int">
+        select count(1)
+        from tb_employee e, tb_position p
+        <where>
+            <if test="employeeCondition.employeeName != null">
+                and e.employee_name like '%' #{employeeCondition.employeeName} '%'
+            </if>
+            <if test="employeeCondition.employeeGender != null">
+                and e.employee_gender = #{employeeCondition.employeeGender}
+            </if>
+            <if test="employeeCondition.position != null">
+                and e.position_type = #{employeeCondition.position.positionId}
+            </if>
+            and e.position_type = p.position_id
+        </where>
+    </select>
+
+    <update id="updateEmployee" parameterType="com.alone.hotel.entity.Employee" >
+        update tb_employee
+        <set>
+            <if test="employeeName != null">employee_name = #{employeeName},</if>
+            <if test="employeeAge != null">employee_age = #{employeeAge},</if>
+            <if test="employeeCardImg != null">employee_card_img = #{employeeCardImg},</if>
+            <if test="employeeFaceImg != null">employee_face_img = #{employeeFaceImg},</if>
+            <if test="employeePhone != null">employee_phone = #{employeePhone},</if>
+            <if test="position != null ">position_type = #{position.positionId},</if>
+            <if test="employeeLeaveTime != null">employee_leave_time = #{employeeLeaveTime},</if>
+        </set>
+        where employee_id = #{employeeId}
+    </update>
+
+    <delete id="deleteEmployee">
+        delete from tb_employee
+        where employee_id = #{employeeId}
+    </delete>
+</mapper>

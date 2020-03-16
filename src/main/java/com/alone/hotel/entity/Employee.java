@@ -21,7 +21,7 @@ public class Employee {
     private String employeeCardImg;
     private String employeeFaceImg;
     private String employeePhone;
-    private Integer positionType;
+    private Position position;
     private Date employeeCreateTime;
     private Date employeeLeaveTime;
 }
