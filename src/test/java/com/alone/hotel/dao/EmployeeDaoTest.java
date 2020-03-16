@@ -34,7 +34,7 @@ public class EmployeeDaoTest {
         employee.setEmployeeCardImg("test");
         employee.setEmployeePhone("10493845932");
         Position position = new Position();
-        position.setPositionId(1);
+        position.setPositionId(3);
         employee.setPosition(position);
         employee.setEmployeeCreateTime(new Date());
         int effectNum = employeeDao.insertEmployee(employee);

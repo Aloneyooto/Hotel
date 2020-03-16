@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.CleanerDao">
+    <resultMap id="cleanerMap" type="com.alone.hotel.entity.Cleaner">
+        <id column="employee_id" property="employee.employeeId" />
+        <result column="room_floor" property="roomFloor" />
+        <association property="employee" column="employee_id" javaType="com.alone.hotel.entity.Employee">
+            <id column="employee_id" property="employeeId" />
+            <result column="employee_name" property="employeeName"/>
+            <result column="employee_gender" property="employeeGender" />
+            <result column="employee_phone" property="employeePhone" />
+        </association>
+    </resultMap>
+
+    <insert id="insertCleaner" parameterType="com.alone.hotel.entity.Cleaner">
+        insert into tb_cleaner(employee_id, room_floor)
+        values (#{employee.employeeId}, #{roomFloor})
+    </insert>
+
+    <select id="queryCleanerById" resultMap="cleanerMap">
+        select c.employee_id, c.room_floor, e.employee_name, e.employee_gender, e.employee_phone
+        from tb_cleaner c, tb_employee e
+        where c.employee_id = e.employee_id
+        and c.employee_id = #{employeeId}
+    </select>
+
+    <select id="queryCleanerList" resultMap="cleanerMap">
+        select c.employee_id, c.room_floor, e.employee_name, e.employee_gender, e.employee_phone
+        from tb_cleaner c, tb_employee e
+        where c.employee_id = e.employee_id
+        and room_floor like '%' #{roomFloor} '%'
+        limit #{rowIndex}, #{pageSize}
+    </select>
+
+    <select id="queryCleanerCount" resultType="int">
+        select count(1)
+        from tb_cleaner c, tb_employee e
+        where c.employee_id = e.employee_id
+        and room_floor like '%' #{roomFloor} '%'
+    </select>
+
+    <update id="updateCleaner" parameterType="com.alone.hotel.entity.Cleaner">
+        update tb_cleaner
+        set room_floor = #{roomFloor}
+        where employee_id = #{employee.employeeId}
+    </update>
+
+    <delete id="deleteCleaner">
+        delete from tb_cleaner
+        where employee_id = #{employeeId}
+    </delete>
+</mapper>

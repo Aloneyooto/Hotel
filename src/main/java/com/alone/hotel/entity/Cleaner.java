@@ -11,6 +11,6 @@ import lombok.Data;
  */
 @Data
 public class Cleaner {
-    private String employeeId;
-    private Integer roomFloor;
+    private Employee employee;
+    private String roomFloor;
 }

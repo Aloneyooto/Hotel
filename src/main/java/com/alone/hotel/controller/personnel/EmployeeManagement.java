@@ -106,6 +106,7 @@ public class EmployeeManagement {
         EmployeeExecution employeeExecution = null;
         if(employeeId != null){
             try{
+                //TODO 删除清洁员列表的记录
                 employeeExecution = employeeService.deleteEmployee(employeeId);
             } catch (Exception e){
                 employeeExecution = new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
