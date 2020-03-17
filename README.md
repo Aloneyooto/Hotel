@@ -5,6 +5,6 @@ url和数据在开发说明里
 
 3.13 更新position
 
-3.16 更新employee, 
+3.16 更新employee, cleaner
 
 3.17 更新recreation
