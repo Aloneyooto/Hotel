@@ -8,9 +8,9 @@ type : `POST`
 
 接收数据:
 
-roomStr : 房间信息的json字符串
+String roomStr : 房间信息的json字符串
 
-fileList : 图片文件流
+MultipartFile[] fileList : 图片文件流
 
 返回数据:
 
@@ -24,7 +24,7 @@ type : GET
 
 接收数据:
 
-roomId : 房间号
+int roomId : 房间号
 
 返回数据：
 
@@ -44,13 +44,13 @@ type : GET
 
 含有如下信息的json字符串
 
-pageIndex: 页码
+int pageIndex: 页码
 
-pageSize: 页面大小（每一页显示记录的条数）
+int pageSize: 页面大小（每一页显示记录的条数）
 
-roomType : 房间类型
+int roomType : 房间类型
 
-roomState : 房间状态
+int roomState : 房间状态
 
 返回数据：
 
@@ -66,9 +66,9 @@ type : POST
 
 接收数据:
 
-roomStr : 房间信息的json字符串
+String roomStr : 房间信息的json字符串
 
-fileList : 图片文件流
+MultipartFile[] fileList : 图片文件流
 
 返回数据:
 
@@ -97,7 +97,7 @@ type : `GET`
 
 接收数据: 
 
-positionId ：职位ID
+int positionId ：职位ID
 
 返回数据:
 
@@ -111,13 +111,13 @@ type : `GET`
 
 接收数据:
 
-positionName:职位名称字符串
+String positionName:职位名称字符串
 
-positionNote:职位备注字符串
+String positionNote:职位备注字符串
 
-pageIndex：页码
+int pageIndex：页码
 
-pageSize:页面大小
+int pageSize:页面大小
 
 返回数据：
 
@@ -145,7 +145,7 @@ type : `POST`
 
 接收数据:
 
-positionId 职位id
+int positionId 职位id
 
 返回数据:
 
@@ -174,7 +174,7 @@ type : `GET`
 
 接收数据: 
 
-recreationId ：职位ID
+int recreationId ：职位ID
 
 返回数据:
 
@@ -188,11 +188,11 @@ type : `GET`
 
 接收数据:
 
-recreationName:职位名称字符串
+String recreationName:职位名称字符串
 
-pageIndex：页码
+int pageIndex：页码
 
-pageSize:页面大小
+int pageSize:页面大小
 
 返回数据：
 
@@ -220,7 +220,7 @@ type : `POST`
 
 接收数据:
 
-recreationId 职位id
+int recreationId 职位id
 
 返回数据:
 
@@ -233,11 +233,11 @@ url: `/addemployee`
 
 接收数据：
 
-employeeStr : 员工信息字符串
+String employeeStr : 员工信息字符串
 
-cardImg : 身份证图片
+MultipartFile cardImg : 身份证图片
 
-faceImg : 面部图片
+MultipartFile faceImg : 面部图片
 
 返回数据:
 
@@ -249,7 +249,7 @@ url : `/getemployeebyid`
 
 接收数据:
 
-employeeId : 工号
+String employeeId : 工号
 
 返回数据:
 
@@ -265,9 +265,9 @@ url : `/getemployeelist`
 
 Employee employeeCondition : 查询条件
 
-pageIndex : 页码
+int pageIndex : 页码
 
-pageSize : 页面大小
+int pageSize : 页面大小
 
 返回数据:
 
@@ -283,11 +283,11 @@ url : `/updateemployee`
 
 接收数据:
 
-employeeStr : 员工信息字符串
+String employeeStr : 员工信息字符串
 
-cardImg : 身份证图片
+MultipartFile cardImg : 身份证图片
 
-faceImg : 面部图片
+MultipartFile faceImg : 面部图片
 
 返回数据:
 
@@ -299,7 +299,7 @@ url : `/deleteemployee`
 
 接收数据:
 
-employeeId : 员工工号
+String employeeId : 员工工号
 
 返回数据:
 
