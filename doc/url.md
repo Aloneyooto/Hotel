@@ -151,6 +151,81 @@ positionId 职位id
 
 PositionExecution对象
 
+### Recreation
+### 增加其他娱乐项目列表
+
+url: '/addrecreation'
+
+type : `POST`
+
+接收数据:
+
+recreation对象
+
+返回数据:
+
+RecreationExecution对象(和RoomExecution一样)
+
+### 根据Id查询其他娱乐项目信息
+
+url : `/queryrecreationbyid`
+
+type : `GET`
+
+接收数据: 
+
+recreationId ：职位ID
+
+返回数据:
+
+RecreationExecution对象
+
+### 根据娱乐项目名称查询项目信息 可模糊查询
+
+url : `queryrecreationlist`
+
+type : `GET`
+
+接收数据:
+
+recreationName:职位名称字符串
+
+pageIndex：页码
+
+pageSize:页面大小
+
+返回数据：
+
+RecreationExecution对象（内含查询到的列表和该条件查询记录总数）
+
+### 修改娱乐项目信息
+
+url : `modifyrecreation`
+
+type : `POST`
+
+接收数据:
+
+Recreation对象
+
+返回数据:
+
+RecreationExecution对象
+
+### 删除其他娱乐项目
+
+url : `deleterecreation`
+
+type : `POST`
+
+接收数据:
+
+recreationId 职位id
+
+返回数据:
+
+RecreationExecution对象
+
 ## 一级路由 /personel
 ### 增加员工
 
