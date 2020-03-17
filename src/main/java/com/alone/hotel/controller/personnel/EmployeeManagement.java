@@ -1,8 +1,11 @@
 package com.alone.hotel.controller.personnel;
 
+import com.alone.hotel.dto.CleanerExecution;
 import com.alone.hotel.dto.EmployeeExecution;
 import com.alone.hotel.entity.Employee;
+import com.alone.hotel.enums.CleanerStateEnum;
 import com.alone.hotel.enums.EmployeeStateEnum;
+import com.alone.hotel.service.CleanerService;
 import com.alone.hotel.service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +28,8 @@ import java.io.IOException;
 public class EmployeeManagement {
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private CleanerService cleanerService;
 
     @PostMapping("/addemployee")
     private EmployeeExecution addEmployee(@RequestParam("employeeStr")String employeeStr, @RequestParam("cardImg")MultipartFile cardImg, @RequestParam("faceImg")MultipartFile faceImg){
@@ -106,8 +111,18 @@ public class EmployeeManagement {
         EmployeeExecution employeeExecution = null;
         if(employeeId != null){
             try{
-                //TODO 删除清洁员列表的记录
-                employeeExecution = employeeService.deleteEmployee(employeeId);
+                Employee employee = employeeService.queryEmployeeById(employeeId);
+                if(employee.getPosition().getPositionId() == 3){
+                    try {
+                        CleanerExecution cleanerExecution = cleanerService.deleteCleaner(employeeId);
+                        if(cleanerExecution.getState() != CleanerStateEnum.SUCCESS.getState()){
+                            return new EmployeeExecution(EmployeeStateEnum.CLEANER_DELETE_ERROR);
+                        }
+                        employeeExecution = employeeService.deleteEmployee(employeeId);
+                    } catch (Exception e){
+                        employeeExecution = new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
+                    }
+                }
             } catch (Exception e){
                 employeeExecution = new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
             }

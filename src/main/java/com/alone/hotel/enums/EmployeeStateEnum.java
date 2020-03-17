@@ -17,6 +17,7 @@ public enum EmployeeStateEnum {
     FACE_IMAGE_EMPTY(-2005, "脸部图片为空"),
     INSERT_ERROR(-2006, "插入失败"),
     UPDATE_ERROR(-2007, "更新失败"),
+    CLEANER_DELETE_ERROR(-2008, "清洁员信息删除错误"),
     ;
 
     private int state;
