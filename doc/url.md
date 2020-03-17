@@ -304,3 +304,67 @@ employeeId : 员工工号
 返回数据:
 
 EmployeeExecution处理结果对象
+
+### 增加清洁员楼层信息
+
+url : `/addcleaner`
+
+接收数据:
+
+Cleaner cleaner
+
+返回数据:
+
+CleanerExecution
+
+### 通过id查询清洁员
+
+url : `/querycleanerbyid`
+
+接收数据:
+
+String cleanerId
+
+返回数据:
+
+CleanerExecution
+
+### 查询清洁员信息列表
+
+url : `/querycleanerlist`
+
+接收数据:
+
+String roomFloor
+
+int pageIndex
+
+int pageSize
+
+返回数据:
+
+CleanerExecution
+
+### 修改清洁员信息
+
+url : `/modifycleaner`
+
+接收数据:
+
+Cleaner cleaner
+
+返回数据:
+
+CleanerExecution
+
+### 删除清洁员信息
+
+url : `/deletecleaner`
+
+接收数据:
+
+String cleanerId
+
+返回数据：
+
+CleanerExecution
