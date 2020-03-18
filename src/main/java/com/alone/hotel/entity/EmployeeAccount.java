@@ -13,5 +13,5 @@ import lombok.Data;
 public class EmployeeAccount {
     private String accountName;
     private String accountPassword;
-    private String accountPower;
+    private Integer accountPower;
 }

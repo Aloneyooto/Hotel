@@ -55,7 +55,7 @@ public class PositionManagement {
         Position positionCondition = new Position();
         positionCondition.setPositionName(positionName);
         positionCondition.setPositionNote(positionNote);
-        if(pageIndex > -1 && pageSize > 0){
+        if(pageIndex > 0 && pageSize > 0){
             try{
                 PositionExecution pe = positionService.queryPositionList(positionCondition, pageIndex, pageSize);
                 return pe;

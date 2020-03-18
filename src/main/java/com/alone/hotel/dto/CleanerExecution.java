@@ -21,9 +21,9 @@ public class CleanerExecution {
     private String stateInfo;
     //商品数量
     private int count;
-    //操作的房间
+    //操作的清洁员
     private Cleaner cleaner;
-    //操作的房间列表
+    //操作的清洁员列表
     private List<Cleaner> cleanerList;
 
     public CleanerExecution() {

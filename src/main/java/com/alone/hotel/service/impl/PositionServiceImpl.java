@@ -56,14 +56,18 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public PositionExecution queryPositionList(Position positionCondition, int pageIndex, int pageSize) {
-        //页数转换成数据库的行数
-        int rowIndex = PageUtil.calculateRowIndex(pageIndex, pageSize);
-        List<Position> positionList = positionDao.queryPositionList(positionCondition, rowIndex, pageSize);
-        int count = positionDao.queryPositionCount(positionCondition);
-        PositionExecution pe = new PositionExecution();
-        pe.setPositionList(positionList);
-        pe.setCount(count);
-        return pe;
+        if(pageIndex > 0 && pageSize > 0){
+            //页数转换成数据库的行数
+            int rowIndex = PageUtil.calculateRowIndex(pageIndex, pageSize);
+            List<Position> positionList = positionDao.queryPositionList(positionCondition, rowIndex, pageSize);
+            int count = positionDao.queryPositionCount(positionCondition);
+            PositionExecution pe = new PositionExecution();
+            pe.setPositionList(positionList);
+            pe.setCount(count);
+            return pe;
+        } else {
+            return new PositionExecution(PositionStateEnum.POSITION_PAGE_ERROR);
+        }
     }
 
     @Override

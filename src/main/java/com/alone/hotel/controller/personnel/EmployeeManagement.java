@@ -32,7 +32,9 @@ public class EmployeeManagement {
     private CleanerService cleanerService;
 
     @PostMapping("/addemployee")
-    private EmployeeExecution addEmployee(@RequestParam("employeeStr")String employeeStr, @RequestParam("cardImg")MultipartFile cardImg, @RequestParam("faceImg")MultipartFile faceImg){
+    private EmployeeExecution addEmployee(@RequestParam("employeeStr")String employeeStr,
+                                          @RequestParam("cardImg")MultipartFile cardImg,
+                                          @RequestParam("faceImg")MultipartFile faceImg){
         Employee employee = null;
         ObjectMapper mapper = new ObjectMapper();
         try {

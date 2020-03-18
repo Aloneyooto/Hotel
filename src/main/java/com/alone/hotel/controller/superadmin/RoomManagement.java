@@ -39,7 +39,8 @@ public class RoomManagement {
      * @return 成功或失败,失败返回失败信息
      */
     @PostMapping("/addroom")
-    private RoomExecution addRoom(@RequestParam("roomStr")String roomStr, @RequestParam("fileList")MultipartFile[] fileList){
+    private RoomExecution addRoom(@RequestParam("roomStr")String roomStr,
+                                  @RequestParam("fileList")MultipartFile[] fileList){
         //TODO 验证码
         //List<ImageExecution> imageList = new ArrayList<ImageExecution>();
         Room room = null;
