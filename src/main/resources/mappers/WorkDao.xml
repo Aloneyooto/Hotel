@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.WorkDao">
+    <resultMap id="WorkTimeMap" type="com.alone.hotel.entity.Work">
+        <id column="employee_id" property="employee.employeeId" />
+        <id column="work_time" property="workTime" jdbcType="DATE" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="status" property="status" />
+        <association property="employee" column="employee_id" javaType="com.alone.hotel.entity.Employee">
+            <id column="employee_id" property="employeeId" />
+            <result column="employee_name" property="employeeName" />
+            <result column="employee_age" property="employeeAge" />
+            <result column="employee_gender" property="employeeGender" />
+            <result column="employee_phone" property="employeePhone" />
+            <result column="position_type" property="position.positionId" />
+        </association>
+    </resultMap>
+
+    <insert id="addWorkMessage" parameterType="com.alone.hotel.entity.Work" keyProperty="employee.employeeId" keyColumn="employee_id">
+        insert into tb_work(employee_id, work_time, start_time, end_time, status)
+        values (#{employee.employeeId}, #{workTime}, #{startTime}, #{endTime}, #{status})
+    </insert>
+
+    <select id="queryWorkTimeById" resultMap="WorkTimeMap" parameterType="String">
+        select e.employee_id, e.employee_name, e.employee_age, e.employee_gender, e.employee_phone,
+        e.position_type, w.work_time, w.start_time, w.end_time, w.status
+        from tb_work w , tb_employee e
+        where e.employee_id = #{employee.employeeId}
+        and e.employee_id = w.employee_id
+    </select>
+
+
+    <update id="updateWorkTime" parameterType="com.alone.hotel.entity.Work" >
+        update tb_work
+        <set>
+            <if test="startTime != null ">start_time = #{startTime},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+            <if test="status != null ">status = #{status},</if>
+        </set>
+        where employee_id = #{employee.employeeId} and work_time = date(#{workTime})
+    </update>
+
+    <delete id="deleteWorkTime">
+        delete from tb_work
+        where employee_id = #{employeeId} and work_time = date(#{workTime})
+    </delete>
+</mapper>

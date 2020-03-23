@@ -14,4 +14,6 @@ public class CustomerAccount {
     private String accountName;
     private String password;
     private Integer flag;
+    //押金
+    private Double deposit;
 }

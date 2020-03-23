@@ -1,6 +1,7 @@
 package com.alone.hotel.entity;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -13,7 +14,8 @@ import java.util.Date;
  */
 @Data
 public class Work {
-    private String employeeId;
+    private Employee employee;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date workTime;
     private Date startTime;
     private Date endTime;
