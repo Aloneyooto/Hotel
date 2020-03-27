@@ -66,7 +66,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 if(effectNum <= 0){
                     throw new EmployeeException(EmployeeStateEnum.INSERT_ERROR.getStateInfo());
                 } else {
-                    //TODO 自动生成账号
                     return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
                 }
             } catch (Exception e){

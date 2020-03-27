@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.CustomerAccountDao">
+
+    <insert id="addCustomerAccount" parameterType="com.alone.hotel.entity.CustomerAccount" keyProperty="accountName" keyColumn="account_name">
+        insert into tb_customer_account(account_name, account_password, flag, deposit)
+        values (#{accountName}, #{accountPassword}, #{flag}, #{deposit})
+    </insert>
+
+    <select id="queryCustomerAccountByName" resultType="com.alone.hotel.entity.CustomerAccount" parameterType="String">
+        select account_name, account_password, flag, deposit, customer_card_number
+        from tb_customer_account
+        where account_name = #{accountName} and account_password = #{accountPassword}
+    </select>
+
+    <update id="updateCustomerAccount" parameterType="com.alone.hotel.entity.CustomerAccount" >
+        update tb_customer_account
+        <set>
+            <if test="accountPassword != null ">account_password = #{accountPassword},</if>
+            <if test="flag != null ">flag = #{flag},</if>
+            <if test="customerCardNumber != null ">customer_card_number = #{customerCardNumber}</if>
+        </set>
+        where account_name = #{accountName}
+    </update>
+
+    <delete id="deleteCustomerAccount">
+        delete from tb_customer_account
+        where account_name = #{accountName}
+    </delete>
+</mapper>

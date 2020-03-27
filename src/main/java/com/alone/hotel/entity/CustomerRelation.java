@@ -11,6 +11,6 @@ import lombok.Data;
  */
 @Data
 public class CustomerRelation {
-    private String customerId;
-    private String accountName;
+    private Customer customer;
+    private CustomerAccount account;
 }

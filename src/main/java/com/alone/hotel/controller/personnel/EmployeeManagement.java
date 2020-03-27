@@ -47,6 +47,7 @@ public class EmployeeManagement {
             try{
                 EmployeeExecution employeeExecution = employeeService.insertEmployee(employee, cardImg, faceImg);
                 if(employeeExecution.getState() == EmployeeStateEnum.SUCCESS.getState()){
+                    //TODO 自动生成账号
                     return new EmployeeExecution(EmployeeStateEnum.SUCCESS);
                 } else {
                     return new EmployeeExecution(EmployeeStateEnum.INSERT_ERROR);

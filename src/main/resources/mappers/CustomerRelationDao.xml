@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.CustomerRelationDao">
+    <resultMap id="customerAccountMap" type="com.alone.hotel.entity.CustomerAccount">
+    <id column="account_name" property="accountName" />
+    <collection property="customerList" column="customer_card_number" ofType="com.alone.hotel.entity.Customer">
+        <id column="customer_card_number" property="customerCardNumber" />
+        <result column="customer_name" property="customerName" />
+        <result column="customer_age" property="customerAge" />
+        <result column="customer_gender" property="customerGender" />
+        <result column="customer_card_img" property="customerCardImg" />
+        <result column="customer_face_img" property="customerFaceImg" />
+        <result column="customer_phone" property="customerPhone" />
+    </collection>
+    </resultMap>
+    
+    <resultMap id="customerMap" type="com.alone.hotel.entity.Customer">
+        <id column="customer_card_number" property="customerCardNumber" />
+        <collection property="accountList" column="account_name" ofType="com.alone.hotel.entity.CustomerAccount">
+            <id column="account_name" property="accountName" />
+            <result column="flag" property="flag" />
+            <result column="deposit" property="deposit" />
+        </collection>
+    </resultMap>
+
+    <insert id="addCustomerRelation" parameterType="com.alone.hotel.entity.CustomerRelation" keyProperty="customerCardNumber" keyColumn="customer_card_number">
+        insert into tb_customer_relation(customer_card_number, account_name)
+        values (#{customer.customerCardNumber}, #{account.accountName})
+    </insert>
+
+    <select id="queryCustomerByAccount" resultMap="customerAccountMap" parameterType="com.alone.hotel.entity.CustomerRelation">
+      select r.account_name, c.customer_name, c.customer_age, c.customer_gender,
+      c.customer_card_number, c.customer_card_img, c.customer_face_img, c.customer_phone
+      from tb_customer c, tb_customer_relation r
+      where r.customer_card_number = c.customer_card_number
+      and r.account_name = #{customerRelation.account.accountName}
+    </select>
+
+    <select id="queryAccountByCustomer" resultMap="customerMap" parameterType="String">
+        select r.customer_card_number, c.account_name, c.flag, c.deposit
+        from tb_customer_relation r, tb_customer_account c
+        where r.account_name = c.account_name
+        and r.customer_card_number = #{customerCardNumber}
+    </select>
+
+    <delete id="deleteCustomerRelation">
+        delete from tb_customer_relation
+        where customer_card_number = #{customer.customerCardNumber} and account_name = #{account.accountName}
+    </delete>
+</mapper>
