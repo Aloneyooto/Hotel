@@ -1,11 +1,14 @@
 package com.alone.hotel.service.impl;
 
 import com.alone.hotel.dao.RecreateOrderDao;
+import com.alone.hotel.dao.RecreationDao;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.RecreateOrder;
+import com.alone.hotel.entity.Recreation;
 import com.alone.hotel.enums.OrderStateEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RecreateOrderService;
+import com.alone.hotel.service.RecreationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +33,8 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
     private static final DecimalFormat orderNumberFormat = new DecimalFormat("000");
     @Autowired
     private RecreateOrderDao recreateOrderDao;
+    @Autowired
+    private RecreationDao recreationDao;
 
     @Override
     @Transactional
@@ -42,6 +47,12 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
                 //生成订单ID
                 String orderId = generateRoomOrderId(recreateOrder.getHandInTime());
                 recreateOrder.setOrderId(orderId);
+                //计算订单价格
+                Recreation recreation = recreationDao.queryRecreationById(recreateOrder.getRecreation().getRecreationId());
+                double price = recreation.getRecreationPrice() * getDatePoor(recreateOrder.getStartTime(), recreateOrder.getEndTime());
+                recreateOrder.setOrderPrice(price);
+                recreateOrder.setRecreation(recreation);
+                //添加订单
                 int effectNum = recreateOrderDao.addRecreateOrder(recreateOrder);
                 if(effectNum <= 0){
                     throw new OrderException(OrderStateEnum.RECREATE_ORDER_INSERT_ERROR.getStateInfo());
@@ -109,5 +120,30 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
         //订单字符串
         String orderStr = dateStr + numberStr;
         return orderStr;
+    }
+
+    /**
+     * 计算两个时间之间相差多少小时
+     * @param endDate
+     * @param startDate
+     * @return
+     */
+    public static int getDatePoor(Date startDate, Date endDate) {
+
+        long nd = 1000 * 24 * 60 * 60;
+        long nh = 1000 * 60 * 60;
+        long nm = 1000 * 60;
+        // long ns = 1000;
+        // 获得两个时间的毫秒时间差异
+        long diff = endDate.getTime() - startDate.getTime();
+        // 计算差多少天
+        long day = diff / nd;
+        // 计算差多少小时
+        long hour = diff % nd / nh;
+        // 计算差多少分钟
+        long min = diff % nd % nh / nm;
+        // 计算差多少秒//输出结果
+        // long sec = diff % nd % nh % nm / ns;
+        return (int)hour;
     }
 }

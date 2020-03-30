@@ -1,8 +1,10 @@
 package com.alone.hotel.service.impl;
 
 import com.alone.hotel.dao.RoomOrderDao;
+import com.alone.hotel.dao.RoomTypeDao;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.RoomOrder;
+import com.alone.hotel.entity.RoomType;
 import com.alone.hotel.enums.OrderStateEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RoomOrderService;
@@ -30,6 +32,8 @@ public class RoomOrderServiceImpl implements RoomOrderService {
     private static final DecimalFormat orderNumberFormat = new DecimalFormat("000");
     @Autowired
     private RoomOrderDao roomOrderDao;
+    @Autowired
+    private RoomTypeDao roomTypeDao;
 
     @Override
     @Transactional
@@ -40,6 +44,11 @@ public class RoomOrderServiceImpl implements RoomOrderService {
                 //设置初始值
                 roomOrder.setHandInTime(new Date());
                 roomOrder.setOrderStatus(0);
+                //算钱
+                RoomType roomType = roomTypeDao.queryRoomTypeById(roomOrder.getRoomType().getTypeId());
+                Double price = roomType.getTypePrice() * getDiscrepantDays(roomOrder.getStartTime(), roomOrder.getEndTime());
+                roomOrder.setOrderPrice(price);
+                roomOrder.setRoomType(roomType);
                 //添加订单
                 int effectNum = roomOrderDao.addRoomOrder(roomOrder);
                 if(effectNum <= 0){
@@ -99,5 +108,15 @@ public class RoomOrderServiceImpl implements RoomOrderService {
         } else {
             return new OrderExecution(OrderStateEnum.ROOM_ORDER_ID_EMPTY);
         }
+    }
+
+    /**
+     * 计算相差天数
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
+    private int getDiscrepantDays(Date dateStart, Date dateEnd){
+        return (int) ((dateEnd.getTime() - dateStart.getTime()) / 1000 / 60 / 60 / 24);
     }
 }

@@ -21,14 +21,14 @@ public interface RecreationDao {
     int addRecreation(Recreation recreation);
 
     /**
-     * 根据职位号查询对应职位信息
+     * 根据娱乐项目号查询对应娱乐项目信息
      * @param recreationId
      * @return
      */
     Recreation queryRecreationById(int recreationId);
 
     /**
-     * 根据查询条件查询对应职位信息
+     * 根据查询条件查询对应娱乐项目信息
      * @param recreationCondition
      * @param rowIndex
      * @param pageSize
@@ -37,20 +37,20 @@ public interface RecreationDao {
     List<Recreation> queryRecreationList(@Param("recreationCondition") Recreation recreationCondition, @Param("rowIndex") int rowIndex, @Param("pageSize") int pageSize);
 
     /**
-     * 职位信息总数
+     * 娱乐项目信息总数
      * @return
      */
     int queryRecreationCount(@Param("recreationCondition") Recreation recreationCondition);
 
     /**
-     * 修改职位信息
+     * 修改娱乐项目信息
      * @param recreation
      * @return
      */
     int updateRecreation(Recreation recreation);
 
     /**
-     * 删除职位信息
+     * 删除娱乐项目信息
      * @param recreationId
      * @return
      */

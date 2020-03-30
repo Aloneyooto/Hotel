@@ -42,6 +42,8 @@ public class CustomerOrderManagement {
     private RoomOrderRelationService roomOrderRelationService;
     @Autowired
     private CheckInService checkInService;
+    @Autowired
+    private RoomTypeService roomTypeService;
 
     /**
      * 增加房间订单
@@ -102,6 +104,7 @@ public class CustomerOrderManagement {
                     return new OrderExecution(OrderStateEnum.ROOM_UPDATE_ERROR);
                 }
             }
+            //插入房间订单
             OrderExecution orderExecution = roomOrderService.addRoomOrder(roomOrder);
             if(orderExecution.getState() == OrderStateEnum.SUCCESS.getState()){
                 return new OrderExecution(OrderStateEnum.SUCCESS, roomOrder, roomList);
@@ -182,7 +185,44 @@ public class CustomerOrderManagement {
         }
     }
 
+    @PostMapping("/addrecreateorder")
+    private OrderExecution addRecreateOrder(RecreateOrder recreateOrder){
+        if(recreateOrder != null){
+            return recreateOrderService.addRecreateOrder(recreateOrder);
+        } else {
+            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+        }
+    }
 
+    @GetMapping("/queryrecreateorderbycustomer")
+    private OrderExecution queryRecreateOrderByCustomer(RecreateOrder recreateOrder){
+        if(recreateOrder != null){
+            List<RecreateOrder> recreateOrderList = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
+            return new OrderExecution(OrderStateEnum.SUCCESS, null, recreateOrderList);
+        } else {
+            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+        }
+    }
+
+    @PostMapping("/updaterecreateorder")
+    private OrderExecution updateRecreateOrder(RecreateOrder recreateOrder){
+        if(recreateOrder != null && recreateOrder.getOrderStatus() != 1){
+            return recreateOrderService.updateRecreateOrder(recreateOrder);
+        } else {
+            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+        }
+    }
+
+    @PostMapping("/deleterecreateorder")
+    private OrderExecution deleteRecreateOrder(String recreateOrderId){
+        if(recreateOrderId != null){
+            return recreateOrderService.deleteRecreateOrder(recreateOrderId);
+        } else {
+            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_ID_EMPTY);
+        }
+    }
+
+    //TODO 获取账号所有订单
 
     /**
      * 生成房间订单ID
