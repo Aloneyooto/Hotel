@@ -108,7 +108,7 @@ public class RoomServiceImpl implements RoomService {
      */
     @Override
     @Transactional
-    public RoomExecution modifyRoom(Room room, MultipartFile[] files) {
+    public RoomExecution updateRoom(Room room, MultipartFile[] files) {
         if(room != null){
             //更新图片
             if(files != null){

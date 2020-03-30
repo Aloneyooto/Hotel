@@ -152,7 +152,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     /**
-     * 生成工号 入职日期+部门号(2位)+员工号
+     * 生成工号 入职日期+部门号(3位)+员工号
      * @param position
      * @return
      */

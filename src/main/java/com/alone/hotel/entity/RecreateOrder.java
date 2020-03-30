@@ -14,10 +14,11 @@ import java.util.Date;
 @Data
 public class RecreateOrder {
     private String orderId;
-    private String customerId;
-    private Integer recreationId;
+    private Customer customer;
+    private Recreation recreation;
     private Double orderPrice;
     private Date startTime;
     private Date endTime;
     private Integer orderStatus;
+    private Date handInTime;
 }

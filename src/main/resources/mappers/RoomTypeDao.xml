@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.RoomTypeDao">
+
+    <insert id="addRoomType" parameterType="com.alone.hotel.entity.RoomType" keyProperty="typeId" keyColumn="type_id">
+        insert into tb_room_type(type_name, type_price, max_amount)
+        values (#{typeName}, #{typePrice}, #{maxAmount})
+    </insert>
+
+    <select id="queryRoomTypeById" resultType="com.alone.hotel.entity.RoomType">
+        select type_id, type_name, type_price, max_amount
+        from tb_room_type
+        where type_id = #{typeId}
+    </select>
+
+    <select id="queryRoomType" resultType="com.alone.hotel.entity.RoomType">
+        select type_id, type_name, type_price, max_amount
+        from tb_room_type
+    </select>
+
+    <update id="updateRoomType" parameterType="com.alone.hotel.entity.RoomType" >
+        update tb_room_type
+        <set>
+            <if test="typeName != null ">type_name = #{typeName}</if>
+            <if test="typePrice != null ">type_price = #{typePrice}</if>
+            <if test="maxAmount != null ">max_amount = #{maxAmount}</if>
+        </set>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteRoomType">
+        delete from tb_room_type
+        where type_id = #{typeId}
+    </delete>
+</mapper>

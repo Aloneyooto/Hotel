@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.ImageExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.Room;
+import com.alone.hotel.entity.RoomType;
 import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.service.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -99,11 +100,13 @@ public class RoomManagement {
     private RoomExecution getRoomList(@RequestBody JSONObject jsonParam){
         int pageIndex = jsonParam.getInteger("pageIndex");
         int pageSize = jsonParam.getInteger("pageSize");
-        int roomType = jsonParam.getInteger("roomType");
+        int roomTypeId = jsonParam.getInteger("roomType");
         int roomState = jsonParam.getInteger("roomState");
         if(pageIndex > -1 && pageSize > 0){
             Room roomCondition = new Room();
-            if(roomType > -1){
+            if(roomTypeId > -1){
+                RoomType roomType = new RoomType();
+                roomType.setTypeId(roomTypeId);
                 roomCondition.setRoomType(roomType);
             }
             if(roomState > -1){
@@ -122,8 +125,8 @@ public class RoomManagement {
      * @param fileList
      * @return
      */
-    @PostMapping("/modifyroom")
-    private RoomExecution modifyRoom(@RequestParam("roomStr")String roomStr, @RequestParam("fileList")MultipartFile[] fileList){
+    @PostMapping("/updateroom")
+    private RoomExecution updateRoom(@RequestParam("roomStr")String roomStr, @RequestParam("fileList")MultipartFile[] fileList){
         Room room = null;
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -133,7 +136,7 @@ public class RoomManagement {
         }
         if(room != null){
             try{
-                RoomExecution roomExecution = roomService.addRoom(room, fileList);
+                RoomExecution roomExecution = roomService.updateRoom(room, fileList);
                 if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
                     return new RoomExecution(RoomStateEnum.SUCCESS);
                 } else {

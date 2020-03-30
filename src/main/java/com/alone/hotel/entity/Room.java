@@ -17,8 +17,8 @@ public class Room {
     private String roomFloor;
     private String roomDesc;
     private Integer roomState;
-    private Integer roomType;
-    private Double roomPrice;
 
+    private RoomType roomType;
     private List<RoomImg> roomImgList;
+    private List<Customer> customerList;
 }

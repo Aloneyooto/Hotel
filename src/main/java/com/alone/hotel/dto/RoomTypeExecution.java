@@ -1,7 +1,7 @@
 package com.alone.hotel.dto;
 
-import com.alone.hotel.entity.Room;
-import com.alone.hotel.enums.RoomStateEnum;
+import com.alone.hotel.entity.RoomType;
+import com.alone.hotel.enums.RoomTypeStateEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.List;
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.dto
  * @Author: Alone
- * @CreateTime: 2020-03-09 16:41
- * @Description: 房间信息传输类
+ * @CreateTime: 2020-03-29 21:20
+ * @Description:
  */
 @Data
-public class RoomExecution {
+public class RoomTypeExecution {
     //结果状态
     private int state;
     //状态标识
@@ -22,27 +22,27 @@ public class RoomExecution {
     //房间数量
     private int count;
     //操作的房间
-    private Room room;
+    private RoomType roomType;
     //操作的房间列表
-    private List<Room> roomList;
+    private List<RoomType> roomTypeList;
 
-    public RoomExecution() {
+    public RoomTypeExecution() {
     }
 
-    public RoomExecution(RoomStateEnum stateEnum){
+    public RoomTypeExecution(RoomTypeStateEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public RoomExecution(RoomStateEnum stateEnum, Room room){
+    public RoomTypeExecution(RoomTypeStateEnum stateEnum, RoomType roomType){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
-        this.room = room;
+        this.roomType = roomType;
     }
 
-    public RoomExecution(RoomStateEnum stateEnum, List<Room> roomList){
+    public RoomTypeExecution(RoomTypeStateEnum stateEnum, List<RoomType> roomTypeList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
-        this.roomList = roomList;
+        this.roomTypeList = roomTypeList;
     }
 }

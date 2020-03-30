@@ -6,8 +6,11 @@
         <result column="room_floor" property="roomFloor"/>
         <result column="room_desc" property="roomDesc" />
         <result column="room_state" property="roomState" />
-        <result column="room_type" property="roomType" />
-        <result column="room_price" property="roomPrice" />
+        <association property="roomType" javaType="com.alone.hotel.entity.RoomType">
+            <id column="type_id" property="typeId" />
+            <result column="type_name" property="typeName" />
+            <result column="type_price" property="typePrice" />
+        </association>
         <collection property="roomImgList" column="room_id" ofType="com.alone.hotel.entity.RoomImg">
             <id column="room_img_id" property="roomImgId" />
             <result column="room_img_addr" property="roomImgAddr" />
@@ -17,23 +20,26 @@
     </resultMap>
 
     <insert id="insertRoom" parameterType="com.alone.hotel.entity.Room" keyProperty="roomId" keyColumn="room_id">
-        insert into tb_room(room_id, room_floor, room_desc, room_state, room_type, room_price)
-        values (#{roomId}, #{roomFloor}, #{roomDesc}, #{roomState}, #{roomType}, #{roomPrice})
+        insert into tb_room(room_id, room_floor, room_desc, room_state, room_type)
+        values (#{roomId}, #{roomFloor}, #{roomDesc}, #{roomState}, #{roomType.typeId})
     </insert>
 
     <select id="queryRoomById" resultMap="roomMap" parameterType="Integer">
-        select r.room_id, r.room_floor, r.room_desc, r.room_state, r.room_type, r.room_price,
-        rm.room_img_id, rm.room_img_addr, rm.priority
-        from tb_room r left join tb_room_img rm on r.room_id = rm.room_id
-        where r.room_id = #{roomId} order by rm.priority desc;
+        select r.room_id, r.room_floor, r.room_desc, r.room_state, r.room_type,
+        rt.type_name, rt.type_price, rm.room_img_id, rm.room_img_addr, rm.priority
+        from tb_room r, tb_room_img rm, tb_room_type rt
+        where r.room_id = #{roomId}
+        and r.room_id = rm.room_id
+        and r.room_type = rt.type_id
+        order by rm.priority desc;
     </select>
 
     <select id="queryRoomList" resultType="com.alone.hotel.entity.Room">
-        select room_id, room_floor, room_desc, room_state, room_type, room_price
+        select room_id, room_floor, room_desc, room_state, room_type
         from tb_room
         <where>
             <if test="roomCondition.roomType != null ">
-                and room_type = #{roomCondition.roomType}
+                and room_type = #{roomCondition.roomType.typeId}
             </if>
             <if test="roomCondition.roomState != null ">
                 and room_state = #{roomCondition.roomState}
@@ -47,7 +53,7 @@
         from tb_room
         <where>
             <if test="roomCondition.roomType != null ">
-                and room_type = #{roomCondition.roomType}
+                and room_type = #{roomCondition.roomType.typeId}
             </if>
             <if test="roomCondition.roomState != null ">
                 and room_state = #{roomCondition.roomState}
@@ -58,11 +64,10 @@
     <update id="updateRoom" parameterType="com.alone.hotel.entity.Room" >
         update tb_room
         <set>
-            <if test="roomFloor != null">room_floor = #{roomFloor}</if>
-            <if test="roomDesc != null">room_desc = #{roomDesc}</if>
-            <if test="roomState != null">room_state = #{roomState}</if>
-            <if test="roomType != null ">room_type = #{roomType}</if>
-            <if test="roomPrice != null">room_price = #{roomPrice}</if>
+            <if test="roomFloor != null">room_floor = #{roomFloor},</if>
+            <if test="roomDesc != null">room_desc = #{roomDesc},</if>
+            <if test="roomState != null">room_state = #{roomState},</if>
+            <if test="roomType != null ">room_type = #{roomType.typeId},</if>
         </set>
         where room_id = #{roomId}
     </update>

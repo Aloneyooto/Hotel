@@ -3,6 +3,7 @@ package com.alone.hotel.service;
 import com.alone.hotel.dto.ImageExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.Room;
+import com.alone.hotel.entity.RoomType;
 import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.utils.ImageUtil;
 import org.junit.jupiter.api.Test;
@@ -34,9 +35,10 @@ class RoomServiceTest {
         Room room = new Room();
         room.setRoomId(102);
         room.setRoomDesc("test");
-        room.setRoomType(1);
+        RoomType roomType = new RoomType();
+        roomType.setTypeId(1);
+        room.setRoomType(roomType);
         room.setRoomFloor("1层");
-        room.setRoomPrice(105.2);
         File file = new File("E:\\proresources\\images\\latestbg.jpg");
         InputStream inputStream = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
@@ -59,7 +61,7 @@ class RoomServiceTest {
         MultipartFile[] multipartFiles = new MultipartFile[2];
         multipartFiles[0] = new MockMultipartFile(file.getName(), inputStream);
         multipartFiles[1] = new MockMultipartFile(file1.getName(), inputStream1);
-        RoomExecution roomExecution = roomService.modifyRoom(room, multipartFiles);
+        RoomExecution roomExecution = roomService.updateRoom(room, multipartFiles);
         assertEquals(RoomStateEnum.SUCCESS.getState(), roomExecution.getState());
     }
 }

@@ -2,16 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.alone.hotel.dao.CustomerRelationDao">
     <resultMap id="customerAccountMap" type="com.alone.hotel.entity.CustomerAccount">
-    <id column="account_name" property="accountName" />
-    <collection property="customerList" column="customer_card_number" ofType="com.alone.hotel.entity.Customer">
-        <id column="customer_card_number" property="customerCardNumber" />
-        <result column="customer_name" property="customerName" />
-        <result column="customer_age" property="customerAge" />
-        <result column="customer_gender" property="customerGender" />
-        <result column="customer_card_img" property="customerCardImg" />
-        <result column="customer_face_img" property="customerFaceImg" />
-        <result column="customer_phone" property="customerPhone" />
-    </collection>
+        <id column="account_name" property="accountName" />
+        <collection property="customerList" column="customer_card_number" ofType="com.alone.hotel.entity.Customer">
+            <id column="customer_card_number" property="customerCardNumber" />
+            <result column="customer_name" property="customerName" />
+            <result column="customer_age" property="customerAge" />
+            <result column="customer_gender" property="customerGender" />
+            <result column="customer_card_img" property="customerCardImg" />
+            <result column="customer_face_img" property="customerFaceImg" />
+            <result column="customer_phone" property="customerPhone" />
+        </collection>
     </resultMap>
     
     <resultMap id="customerMap" type="com.alone.hotel.entity.Customer">

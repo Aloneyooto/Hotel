@@ -2,17 +2,15 @@ package com.alone.hotel.entity;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.entity
  * @Author: Alone
- * @CreateTime: 2020-03-09 08:46
- * @Description: 入住信息表
+ * @CreateTime: 2020-03-30 15:35
+ * @Description:
  */
 @Data
-public class CheckIn {
-    private Room room;
+public class RoomOrderRelation {
+    private RoomOrder roomOrder;
     private Customer customer;
 }

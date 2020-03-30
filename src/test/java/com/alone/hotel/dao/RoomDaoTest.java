@@ -1,6 +1,7 @@
 package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.Room;
+import com.alone.hotel.entity.RoomType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +29,9 @@ class RoomDaoTest {
         room.setRoomFloor("1层");
         room.setRoomDesc("大床 10-25m²");
         room.setRoomState(0);
-        room.setRoomType(1);
-        room.setRoomPrice(100.1);
+        RoomType roomType = new RoomType();
+        roomType.setTypeId(1);
+        room.setRoomType(roomType);
         int effectNum = roomDao.insertRoom(room);
         assertEquals(1, effectNum);
     }
@@ -37,13 +39,15 @@ class RoomDaoTest {
     @Test
     public void testQueryRoomById(){
         Room room = roomDao.queryRoomById(102);
-        assertEquals(1, room.getRoomImgList().size());
+        assertEquals(2, room.getRoomImgList().size());
     }
 
     @Test
     public void testQueryRoomList(){
         Room roomCondition = new Room();
-        roomCondition.setRoomType(1);
+        RoomType roomType = new RoomType();
+        roomType.setTypeId(1);
+        roomCondition.setRoomType(roomType);
         List<Room> roomList = roomDao.queryRoomList(roomCondition, 0, 3);
         assertEquals(2, roomList.size());
         int count = roomDao.queryRoomCount(roomCondition);
@@ -54,7 +58,10 @@ class RoomDaoTest {
     public void testUpdateRoom(){
         Room newroom = new Room();
         newroom.setRoomId(101);
-        newroom.setRoomType(2);
+        newroom.setRoomState(0);
+        RoomType roomType = new RoomType();
+        roomType.setTypeId(1);
+        newroom.setRoomType(roomType);
         int effectedNum = roomDao.updateRoom(newroom);
         assertEquals(1, effectedNum);
     }

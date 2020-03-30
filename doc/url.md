@@ -1,4 +1,4 @@
-# 酒店管理系统
+# 服务端
 ## 一级路由 /superadmin
 ### 增加房间
 
@@ -60,7 +60,7 @@ RoomExecution对象 ：含有标识码和处理结果信息字符串
 
 ### 修改房间
 
-url : `/modifyroom`
+url : `/updateroom`
 
 type : POST
 
@@ -368,3 +368,12 @@ String cleanerId
 返回数据：
 
 CleanerExecution
+
+# 顾客端
+## 一级路由 /customer
+### 顾客登录
+url: `/login`
+
+接收数据:
+
+

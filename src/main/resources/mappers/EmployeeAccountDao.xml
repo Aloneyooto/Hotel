@@ -13,7 +13,6 @@
         where account_name = #{accountName};
     </select>
 
-
     <update id="updateEmployeeAccount" parameterType="com.alone.hotel.entity.EmployeeAccount" >
         update tb_employee_account
         <set>

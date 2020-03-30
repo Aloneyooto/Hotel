@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.CheckInDao">
+    <resultMap id="checkInMap" type="com.alone.hotel.entity.Room">
+        <id column="room_id" property="roomId" />
+        <collection property="customerList" column="customer_card_number" ofType="com.alone.hotel.entity.Customer">
+            <id column="customer_card_number" property="customerCardNumber" />
+            <result column="customer_name" property="customerName" />
+            <result column="customer_age" property="customerAge" />
+            <result column="customer_gender" property="customerGender" />
+            <result column="customer_card_img" property="customerCardImg" />
+            <result column="customer_face_img" property="customerFaceImg" />
+            <result column="customer_phone" property="customerPhone" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="customerQueryMap" type="com.alone.hotel.entity.CheckIn">
+        <id column="customer_card_number" property="customer.customerCardNumber" />
+        <association property="room" column="room_id" javaType="com.alone.hotel.entity.Room">
+            <id column="room_id" property="roomId" />
+            <result column="room_floor" property="roomFloor" />
+            <result column="room_desc" property="roomDesc" />
+            <result column="room_state" property="roomState" />
+            <result column="room_type" property="roomType.typeId" />
+        </association>
+    </resultMap>
+
+    <insert id="addCheckInMessage" parameterType="com.alone.hotel.entity.CheckIn">
+        insert into tb_check_in(room_id, customer_card_number)
+        values (#{room.roomId}, #{customer.customerCardNumber})
+    </insert>
+
+    <select id="queryCheckInByRoom" resultMap="checkInMap" parameterType="Integer">
+        select ch.room_id, c.customer_card_number, c.customer_name, c.customer_age,
+        c.customer_gender, c.customer_card_img, c.customer_face_img, c.customer_phone
+        from tb_check_in ch, tb_customer c
+        where ch.customer_card_number = c.customer_card_number
+        and ch.room_id = #{roomId}
+    </select>
+
+    <select id="queryCheckInByCustomer" resultMap="customerQueryMap">
+        select ch.customer_card_number, r.room_id, r.room_floor, r.room_desc, r.room_state, r.room_type
+        from tb_check_in ch, tb_room r
+        where ch.room_id = r.room_id
+        and ch.customer_card_number = #{customerCardNumber}
+    </select>
+
+    <delete id="deleteCheckInMessage">
+        delete from tb_check_in
+        where room_id = #{room.roomId} and customer_card_number = #{customer.customerCardNumber}
+    </delete>
+</mapper>
