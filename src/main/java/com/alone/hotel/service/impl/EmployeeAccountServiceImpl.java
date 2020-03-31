@@ -41,8 +41,8 @@ public class EmployeeAccountServiceImpl implements EmployeeAccountService {
     }
 
     @Override
-    public EmployeeAccount queryEmployeeAccountByName(String employeeAccountName) {
-        return employeeAccountDao.queryEmployeeAccountByName(employeeAccountName);
+    public EmployeeAccount queryEmployeeAccountByName(String employeeAccountName, String employeeAccountPassword) {
+        return employeeAccountDao.queryEmployeeAccountByName(employeeAccountName, employeeAccountPassword);
     }
 
     @Override

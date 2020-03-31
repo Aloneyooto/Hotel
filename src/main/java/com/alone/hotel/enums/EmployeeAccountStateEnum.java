@@ -14,6 +14,7 @@ public enum EmployeeAccountStateEnum {
     INNER_ERROR(-5001, "内部错误"),
     EMPLOYEE_ACCOUNT_EMPTY(-5002, "账号信息为空"),
     EMPLOYEE_ACCOUNT_NAME_ERROR(-5003, "用户名错误"),
+    EMPLOYEE_ACCOUNT_ERROR(-5004, "账号信息错误"),
     ;
 
     private int state;

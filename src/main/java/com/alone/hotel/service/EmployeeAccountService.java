@@ -21,7 +21,7 @@ public interface EmployeeAccountService {
      * 查找员工账号
      * @return
      */
-    EmployeeAccount queryEmployeeAccountByName(String employeeAccountName);
+    EmployeeAccount queryEmployeeAccountByName(String employeeAccountName, String employeeAccountPassword);
 
     /**
      * 修改员工账号

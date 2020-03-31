@@ -2,6 +2,7 @@ package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.EmployeeAccount;
 import com.alone.hotel.enums.EmployeeAccountStateEnum;
+import lombok.Data;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @CreateTime: 2020-03-18 15:08
  * @Description:
  */
+@Data
 public class EmployeeAccountExecution {
     //结果状态
     private int state;
@@ -35,5 +37,4 @@ public class EmployeeAccountExecution {
         this.stateInfo = stateEnum.getStateInfo();
         this.employeeAccount = employeeAccount;
     }
-
 }

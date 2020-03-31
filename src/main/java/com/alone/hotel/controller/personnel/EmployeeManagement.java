@@ -1,11 +1,15 @@
 package com.alone.hotel.controller.personnel;
 
 import com.alone.hotel.dto.CleanerExecution;
+import com.alone.hotel.dto.EmployeeAccountExecution;
 import com.alone.hotel.dto.EmployeeExecution;
 import com.alone.hotel.entity.Employee;
+import com.alone.hotel.entity.EmployeeAccount;
 import com.alone.hotel.enums.CleanerStateEnum;
+import com.alone.hotel.enums.EmployeeAccountStateEnum;
 import com.alone.hotel.enums.EmployeeStateEnum;
 import com.alone.hotel.service.CleanerService;
+import com.alone.hotel.service.EmployeeAccountService;
 import com.alone.hotel.service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +34,8 @@ public class EmployeeManagement {
     private EmployeeService employeeService;
     @Autowired
     private CleanerService cleanerService;
+    @Autowired
+    private EmployeeAccountService employeeAccountService;
 
     @PostMapping("/addemployee")
     private EmployeeExecution addEmployee(@RequestParam("employeeStr")String employeeStr,
@@ -45,10 +51,23 @@ public class EmployeeManagement {
         //空值判断
         if(employee != null && cardImg != null && faceImg != null){
             try{
-                EmployeeExecution employeeExecution = employeeService.insertEmployee(employee, cardImg, faceImg);
+                EmployeeExecution employeeExecution = employeeService.addEmployee(employee, cardImg, faceImg);
                 if(employeeExecution.getState() == EmployeeStateEnum.SUCCESS.getState()){
-                    //TODO 自动生成账号
-                    return new EmployeeExecution(EmployeeStateEnum.SUCCESS);
+                    try{
+                        //自动生成账号
+                        EmployeeAccount employeeAccount = new EmployeeAccount();
+                        //用户名为工号
+                        employeeAccount.setAccountName(employeeExecution.getEmployee().getEmployeeId());
+                        //初始密码为123456
+                        employeeAccount.setAccountPassword("123456");
+                        EmployeeAccountExecution employeeAccountExecution = employeeAccountService.addEmployeeAccount(employeeAccount);
+                        if(employeeAccountExecution.getState() != EmployeeAccountStateEnum.SUCCESS.getState()){
+                            return new EmployeeExecution(EmployeeStateEnum.CREATE_ACCOUNT_ERROR);
+                        }
+                    } catch (Exception e){
+                        return new EmployeeExecution(EmployeeStateEnum.CREATE_ACCOUNT_ERROR);
+                    }
+                    return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
                 } else {
                     return new EmployeeExecution(EmployeeStateEnum.INSERT_ERROR);
                 }

@@ -19,7 +19,7 @@ public interface EmployeeDao {
      * @param employee
      * @return
      */
-    int insertEmployee(Employee employee);
+    int addEmployee(Employee employee);
 
     /**
      * 查询对应工号的员工

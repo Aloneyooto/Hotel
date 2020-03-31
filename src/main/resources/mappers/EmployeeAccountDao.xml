@@ -10,7 +10,7 @@
     <select id="queryEmployeeAccountByName" resultType="com.alone.hotel.entity.EmployeeAccount" parameterType="String">
         select account_name, account_password, account_power
         from tb_employee_account
-        where account_name = #{accountName};
+        where account_name = #{accountName} and account_password = #{accountPassword};
     </select>
 
     <update id="updateEmployeeAccount" parameterType="com.alone.hotel.entity.EmployeeAccount" >

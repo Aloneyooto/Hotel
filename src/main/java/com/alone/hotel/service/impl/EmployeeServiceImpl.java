@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeExecution insertEmployee(Employee employee, MultipartFile cardImg, MultipartFile faceImg) throws IOException {
+    public EmployeeExecution addEmployee(Employee employee, MultipartFile cardImg, MultipartFile faceImg) throws IOException {
         //非空判断
         if(employee != null && employee.getEmployeeCardNumber() != null && employee.getEmployeeName() != null && employee.getPosition() != null){
             //设初始值
@@ -62,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             //插入信息
             try {
-                int effectNum = employeeDao.insertEmployee(employee);
+                int effectNum = employeeDao.addEmployee(employee);
                 if(effectNum <= 0){
                     throw new EmployeeException(EmployeeStateEnum.INSERT_ERROR.getStateInfo());
                 } else {

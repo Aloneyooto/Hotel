@@ -37,7 +37,7 @@ public class EmployeeDaoTest {
         position.setPositionId(3);
         employee.setPosition(position);
         employee.setEmployeeCreateTime(new Date());
-        int effectNum = employeeDao.insertEmployee(employee);
+        int effectNum = employeeDao.addEmployee(employee);
         assertEquals(1, effectNum);
     }
 

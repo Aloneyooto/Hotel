@@ -21,7 +21,7 @@ public interface EmployeeService {
      * @param faceImg
      * @return
      */
-    EmployeeExecution insertEmployee(Employee employee, MultipartFile cardImg, MultipartFile faceImg) throws IOException;
+    EmployeeExecution addEmployee(Employee employee, MultipartFile cardImg, MultipartFile faceImg) throws IOException;
 
     /**
      * 查询对应工号的员工

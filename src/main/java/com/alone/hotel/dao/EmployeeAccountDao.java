@@ -18,11 +18,11 @@ public interface EmployeeAccountDao {
     int addEmployeeAccount(EmployeeAccount employeeAccount);
 
     /**
-     * 通过用户名查找账号
+     * 通过用户名和密码查找账号
      * @param accountName
      * @return
      */
-    EmployeeAccount queryEmployeeAccountByName(String accountName);
+    EmployeeAccount queryEmployeeAccountByName(String accountName, String accountPassword);
 
     /**
      * 修改账户信息
