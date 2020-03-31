@@ -15,6 +15,8 @@ public enum EmployeeAccountStateEnum {
     EMPLOYEE_ACCOUNT_EMPTY(-5002, "账号信息为空"),
     EMPLOYEE_ACCOUNT_NAME_ERROR(-5003, "用户名错误"),
     EMPLOYEE_ACCOUNT_ERROR(-5004, "账号信息错误"),
+    OLD_PASSWORD_ERROR(-5005, "旧密码错误"),
+    NEW_PASSWORD_ERROR(-5006, "两次输入密码不一致"),
     ;
 
     private int state;

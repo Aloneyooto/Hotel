@@ -369,6 +369,38 @@ String cleanerId
 
 CleanerExecution
 
+### 员工登录
+url : `/login`
+
+接收数据:
+
+String accountname : 用户名
+
+String password ：密码
+
+返回数据:
+
+处理结果
+
+处理的账号
+
+### 员工修改密码
+url : `/changepwd`
+
+接收数据:
+
+String accountName : 用户名
+
+String oldPsw ：旧密码
+
+String newPsw ：新密码
+
+String newPsw2 ：新密码2
+
+返回数据:
+
+处理结果
+
 # 顾客端
 ## 一级路由 /customer
 ### 顾客登录

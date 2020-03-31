@@ -36,4 +36,28 @@ public class EmployeeAccountManagement {
             return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
         }
     }
+
+    @PostMapping("/changepwd")
+    private EmployeeAccountExecution changePwd(String accountName, String oldPsw, String newPsw, String newPsw2){
+        if(accountName != null && oldPsw != null && newPsw != null && newPsw2 != null){
+            if(newPsw.equals(newPsw2)){
+                //查找账号的原来信息
+                EmployeeAccount employeeAccount = employeeAccountService.queryEmployeeAccountByName(accountName, oldPsw);
+                if(employeeAccount != null){
+                    //将密码更换成新的
+                    employeeAccount.setAccountPassword(newPsw);
+                    EmployeeAccountExecution employeeAccountExecution = employeeAccountService.updateEmployeeAccount(employeeAccount);
+                    return employeeAccountExecution;
+                } else {
+                    //旧密码错误
+                    return new EmployeeAccountExecution(EmployeeAccountStateEnum.OLD_PASSWORD_ERROR);
+                }
+            } else {
+                //两次输入的密码不一致
+                return new EmployeeAccountExecution(EmployeeAccountStateEnum.NEW_PASSWORD_ERROR);
+            }
+        } else {
+            return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
+        }
+    }
 }
