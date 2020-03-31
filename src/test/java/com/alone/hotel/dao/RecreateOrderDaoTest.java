@@ -52,8 +52,8 @@ public class RecreateOrderDaoTest {
         Customer customer = new Customer();
         customer.setCustomerCardNumber("12345789012345678");
         recreateOrder.setCustomer(customer);
-        List<RecreateOrder> recreateOrders = recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder);
-        assertEquals(1, recreateOrders.size());
+        Customer customerResult = recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder);
+        assertEquals(1, customerResult.getRecreateOrderList().size());
     }
 
     @Test

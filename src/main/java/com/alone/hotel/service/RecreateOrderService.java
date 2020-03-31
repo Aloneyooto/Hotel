@@ -1,6 +1,7 @@
 package com.alone.hotel.service;
 
 import com.alone.hotel.dto.OrderExecution;
+import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.RecreateOrder;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface RecreateOrderService {
      * @param recreateOrder
      * @return
      */
-    List<RecreateOrder> queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
+    Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
 
     /**
      * 更新其他消费记录

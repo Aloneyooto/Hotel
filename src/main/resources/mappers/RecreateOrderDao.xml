@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.alone.hotel.dao.RecreateOrderDao">
+    <resultMap id="recreateOrderMap" type="com.alone.hotel.entity.Customer">
+        <id column="customer_card_number" property="customerCardNumber" />
+        <result column="customer_name" property="customerName" />
+        <collection property="recreateOrderList" ofType="com.alone.hotel.entity.RecreateOrder">
+            <id column="order_id" property="orderId" />
+            <result column="recreation_id" property="recreation.recreationId" />
+            <result column="order_price" property="orderPrice" />
+            <result column="start_time" property="startTime" />
+            <result column="end_time" property="endTime" />
+            <result column="order_status" property="orderStatus" />
+            <result column="hand_in_time" property="handInTime" />
+        </collection>
+    </resultMap>
+
     <insert id="addRecreateOrder" parameterType="com.alone.hotel.entity.RecreateOrder" keyProperty="orderId" keyColumn="order_id">
         insert into tb_recreate_order(order_id, customer_card_number, recreation_id, order_price,
         start_time, end_time, order_status, hand_in_time)
@@ -8,9 +22,10 @@
         #{endTime}, #{orderStatus}, #{handInTime})
     </insert>
 
-    <select id="queryRecreateOrderByCustomer" resultType="com.alone.hotel.entity.RecreateOrder">
-        select order_id, customer_card_number, recreation_id, order_price, start_time, end_time, order_status
-        from tb_recreate_order
+    <select id="queryRecreateOrderByCustomer" resultMap="recreateOrderMap">
+        select ro.order_id, c.customer_card_number, c.customer_name,
+        ro.recreation_id, ro.order_price, ro.start_time, ro.end_time, ro.order_status
+        from tb_recreate_order ro, tb_customer c
         <where>
             <if test="recreation != null and recreation.recreationId != null ">
                 and recreation_id = #{recreation.recreationId}
@@ -18,7 +33,8 @@
             <if test="orderStatus != null">
                 and order_status = #{orderStatus}
             </if>
-            and customer_card_number = #{customer.customerCardNumber}
+            and c.customer_card_number = #{customer.customerCardNumber}
+            and ro.customer_card_number = c.customer_card_number
         </where>
     </select>
 

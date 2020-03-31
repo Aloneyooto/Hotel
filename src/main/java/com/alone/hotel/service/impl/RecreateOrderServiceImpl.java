@@ -3,6 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.RecreateOrderDao;
 import com.alone.hotel.dao.RecreationDao;
 import com.alone.hotel.dto.OrderExecution;
+import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.RecreateOrder;
 import com.alone.hotel.entity.Recreation;
 import com.alone.hotel.enums.OrderStateEnum;
@@ -67,7 +68,7 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
     }
 
     @Override
-    public List<RecreateOrder> queryRecreateOrderByCustomer(RecreateOrder recreateOrder) {
+    public Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder) {
         return recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder);
     }
 

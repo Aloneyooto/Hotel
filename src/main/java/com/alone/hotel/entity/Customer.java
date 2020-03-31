@@ -21,5 +21,7 @@ public class Customer {
     private String customerCardImg;
     private String customerFaceImg;
     private String customerPhone;
+
     private List<CustomerAccount> accountList;
+    private List<RecreateOrder> recreateOrderList;
 }

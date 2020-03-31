@@ -197,8 +197,8 @@ public class CustomerOrderManagement {
     @GetMapping("/queryrecreateorderbycustomer")
     private OrderExecution queryRecreateOrderByCustomer(RecreateOrder recreateOrder){
         if(recreateOrder != null){
-            List<RecreateOrder> recreateOrderList = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
-            return new OrderExecution(OrderStateEnum.SUCCESS, null, recreateOrderList);
+            Customer customer = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
+            return new OrderExecution(OrderStateEnum.SUCCESS, null, customer.getRecreateOrderList());
         } else {
             return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
         }
@@ -222,7 +222,35 @@ public class CustomerOrderManagement {
         }
     }
 
-    //TODO 获取账号所有订单
+    /**
+     * 获取账号所有订单
+     * @param account
+     * @return
+     */
+    @GetMapping("/queryallordersbyaccount")
+    private OrderExecution queryAllOrdersByAccount(CustomerAccount account){
+        //空值判断
+        if(account != null && account.getAccountName() != null){
+            //查询房间订单
+            List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(account.getAccountName());
+            //去room_order_relation里查询顾客列表
+            for (RoomOrder roomOrder : roomOrderList) {
+                //查询到的顾客列表
+                RoomOrder orderResult = roomOrderRelationService.queryCustomerByOrderId(roomOrder.getOrderId());
+                //根据顾客ID查询recreate_order
+                List<Customer> customerList = orderResult.getCustomerList();
+                for (Customer customer : customerList) {
+                    RecreateOrder recreateOrder = new RecreateOrder();
+                    recreateOrder.setCustomer(customer);
+                    Customer customerResult = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
+                    customer.setRecreateOrderList(customerResult.getRecreateOrderList());
+                }
+            }
+            return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
+        } else {
+            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
+        }
+    }
 
     /**
      * 生成房间订单ID

@@ -1,5 +1,6 @@
 package com.alone.hotel.dao;
 
+import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.RecreateOrder;
 
 import java.util.Date;
@@ -25,7 +26,7 @@ public interface RecreateOrderDao {
      * @param recreateOrder
      * @return
      */
-    List<RecreateOrder> queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
+    Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
 
     /**
      * 查询某天已生成的订单数

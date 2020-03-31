@@ -20,5 +20,7 @@ public class CustomerAccount {
     private Double deposit;
     //账号主人id
     private String customerCardNumber;
+
     private List<Customer> customerList;
+    //private List<RoomOrder> roomOrderList;
 }
