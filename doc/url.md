@@ -408,4 +408,19 @@ url: `/login`
 
 接收数据:
 
+String accountname : 用户名
 
+String password : 密码
+
+返回数据:
+
+CustomerAccountExecution
+
+### 顾客注册
+url : `/register`
+
+接收数据:
+
+String accountName : 用户名
+
+String accountPassword : 密码
