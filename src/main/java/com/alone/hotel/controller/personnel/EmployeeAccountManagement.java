@@ -5,6 +5,7 @@ import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.EmployeeAccount;
 import com.alone.hotel.enums.EmployeeAccountStateEnum;
 import com.alone.hotel.service.EmployeeAccountService;
+import com.alone.hotel.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeAccountManagement {
     @Autowired
     private EmployeeAccountService employeeAccountService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @PostMapping("/login")
     private EmployeeAccountExecution login(String accountname, String password){
         if(accountname != null && password != null){
             EmployeeAccount employeeAccount = employeeAccountService.queryEmployeeAccountByName(accountname, password);
             if(employeeAccount != null){
+                //查询账号权限
+                Employee employee = employeeService.queryEmployeeById(employeeAccount.getAccountName());
+                employeeAccount.setAccountPower(employee.getPosition().getPositionId());
                 return new EmployeeAccountExecution(EmployeeAccountStateEnum.SUCCESS, employeeAccount);
             } else {
                 return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_ERROR);
