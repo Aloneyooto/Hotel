@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @BelongsProject: hotel
@@ -58,7 +59,7 @@ public class CustomerAccountManagement {
                 if(customerAccount != null){
                     //将密码更换成新的
                     customerAccount.setAccountPassword(newPsw);
-                    CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount);
+                    CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
                     return customerAccountExecution;
                 } else {
                     //旧密码错误

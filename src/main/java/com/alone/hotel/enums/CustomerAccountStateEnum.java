@@ -16,6 +16,7 @@ public enum CustomerAccountStateEnum {
     ACCOUNT_NAME_EMPTY(-9003, "用户名为空"),
     NAME_OR_PASSWORD_ERROR(-9004, "用户名或密码错误"),
     NEW_PASSWORD_ERROR(-9005, "两次输入新密码不一致"),
+    HEAD_IMAGE_ERROR(-9006, "头像上传失败"),
     ;
 
     private int state;

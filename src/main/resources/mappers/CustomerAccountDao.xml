@@ -3,12 +3,12 @@
 <mapper namespace="com.alone.hotel.dao.CustomerAccountDao">
 
     <insert id="addCustomerAccount" parameterType="com.alone.hotel.entity.CustomerAccount" keyProperty="accountName" keyColumn="account_name">
-        insert into tb_customer_account(account_name, account_password, flag, deposit)
-        values (#{accountName}, #{accountPassword}, #{flag}, #{deposit})
+        insert into tb_customer_account(account_name, account_password, flag, deposit, head_img)
+        values (#{accountName}, #{accountPassword}, #{flag}, #{deposit}, #{headImg})
     </insert>
 
     <select id="queryCustomerAccountByName" resultType="com.alone.hotel.entity.CustomerAccount" parameterType="String">
-        select account_name, account_password, flag, deposit, customer_card_number
+        select account_name, account_password, flag, deposit, customer_card_number, head_img
         from tb_customer_account
         where account_name = #{accountName} and account_password = #{accountPassword}
     </select>
@@ -18,7 +18,8 @@
         <set>
             <if test="accountPassword != null ">account_password = #{accountPassword},</if>
             <if test="flag != null ">flag = #{flag},</if>
-            <if test="customerCardNumber != null ">customer_card_number = #{customerCardNumber}</if>
+            <if test="customerCardNumber != null ">customer_card_number = #{customerCardNumber},</if>
+            <if test="headImg != null ">head_img = #{headImg},</if>
         </set>
         where account_name = #{accountName}
     </update>

@@ -43,7 +43,7 @@ public class EmployeeServiceTest {
         Position position = new Position();
         position.setPositionId(2);
         employee.setPosition(position);
-        EmployeeExecution employeeExecution = employeeService.insertEmployee(employee, cardFile, faceFile);
+        EmployeeExecution employeeExecution = employeeService.addEmployee(employee, cardFile, faceFile);
         assertEquals(EmployeeStateEnum.SUCCESS.getState(), employeeExecution.getState());
     }
 

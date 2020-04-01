@@ -2,6 +2,7 @@ package com.alone.hotel.service;
 
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.entity.CustomerAccount;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @BelongsProject: hotel
@@ -30,7 +31,7 @@ public interface CustomerAccountService {
      * @param customerAccount
      * @return
      */
-    CustomerAccountExecution updateCustomerAccount(CustomerAccount customerAccount);
+    CustomerAccountExecution updateCustomerAccount(CustomerAccount customerAccount, MultipartFile headImg);
 
     /**
      * 删除账号

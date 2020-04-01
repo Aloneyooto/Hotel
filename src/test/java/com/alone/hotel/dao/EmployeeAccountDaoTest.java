@@ -32,7 +32,7 @@ public class EmployeeAccountDaoTest {
 
     @Test
     public void testQueryEmployeeAccountByName(){
-        EmployeeAccount employeeAccount = employeeAccountDao.queryEmployeeAccountByName("1");
+        EmployeeAccount employeeAccount = employeeAccountDao.queryEmployeeAccountByName("1", "123456");
         assertEquals("123456", employeeAccount.getAccountPassword());
     }
 

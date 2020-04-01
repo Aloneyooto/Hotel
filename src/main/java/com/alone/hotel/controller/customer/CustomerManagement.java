@@ -63,7 +63,8 @@ public class CustomerManagement {
                 //在进行实名认证
                 customerAccount.setFlag(1);
                 customerAccount.setCustomerCardNumber(customer.getCustomerCardNumber());
-                CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount);
+                //To check
+                CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
                 if(customerAccountExecution.getState() != CustomerAccountStateEnum.SUCCESS.getState()){
                     return new CustomerExecution(CustomerStateEnum.CERTIFICATION_ERROR);
                 }

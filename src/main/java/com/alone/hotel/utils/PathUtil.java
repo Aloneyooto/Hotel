@@ -51,6 +51,21 @@ public class PathUtil {
     }
 
     /**
+     * 获取头像图片上传路径
+     * @param accountName
+     * @return
+     */
+    public static String getHeadImagePath(String accountName){
+        String imagePath = "/upload/images/item/head/" + accountName + "/";
+        try {
+            imagePath = URLDecoder.decode(imagePath, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return imagePath;
+    }
+
+    /**
      * 获取用户图片上传路径
      * @param id ID
      * @param imageType 图片类型
