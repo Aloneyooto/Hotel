@@ -21,11 +21,17 @@ public interface CustomerDao {
     int addCustomer(Customer customer);
 
     /**
-     * 查询对应工号的员工
-     * @param customerId
+     * 根据身份证号查询顾客信息
+     * @param customerCardNumber
      * @return
      */
-    Customer queryCustomerById(String customerId);
+    Customer queryCustomerById(String customerCardNumber);
+
+    /**
+     * 查询所有顾客的面部图片地址
+     * @return
+     */
+    List<Customer> queryCustomerFaceImages();
 
     /**
      * 修改顾客信息

@@ -27,6 +27,12 @@ public class CustomerDaoTest {
         customer.setCustomerAge(19);
         customer.setCustomerGender(0);
         int effectNum = customerDao.addCustomer(customer);
+//        Customer customer = new Customer();
+//        customer.setCustomerCardNumber("345678901234567890");
+//        customer.setCustomerName("二傻子");
+//        customer.setCustomerAge(20);
+//        customer.setCustomerGender(0);
+//        int effectNum = customerDao.addCustomer(customer)
         assertEquals(1, effectNum);
     }
 
@@ -37,7 +43,13 @@ public class CustomerDaoTest {
     }
 
     @Test
-    public void testUpdateCustomer(){
+    public void testQueryCustomerFaceImages(){
+        List<Customer> faceImgList = customerDao.queryCustomerFaceImages();
+        assertEquals(3, faceImgList.size());
+    }
+
+    @Test
+    public void testUpdateCustomer() throws IOException {
         Customer customer = new Customer();
         customer.setCustomerCardNumber("12345789012345678");
         customer.setCustomerPhone("14723849302");

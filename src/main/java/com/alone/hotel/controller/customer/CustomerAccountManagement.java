@@ -7,6 +7,7 @@ import com.alone.hotel.service.CustomerAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ public class CustomerAccountManagement {
     private CustomerAccountService customerAccountService;
 
     @PostMapping("/login")
-    private CustomerAccountExecution login(String accountname, String password){
+    private CustomerAccountExecution login(@RequestParam String accountname, @RequestParam String password){
         if(accountname != null && password != null){
             CustomerAccount customerAccount = customerAccountService.queryCustomerAccountByName(accountname, password);
             if(customerAccount != null){
@@ -38,7 +39,7 @@ public class CustomerAccountManagement {
     }
 
     @PostMapping("/register")
-    private CustomerAccountExecution register(String accountName, String accountPassword){
+    private CustomerAccountExecution register(@RequestParam String accountName, @RequestParam String accountPassword){
         if(accountName != null && accountPassword != null){
             CustomerAccount customerAccount = new CustomerAccount();
             customerAccount.setAccountName(accountName);
@@ -51,7 +52,7 @@ public class CustomerAccountManagement {
     }
 
     @PostMapping("/changepwd")
-    private CustomerAccountExecution changePwd(String accountName, String oldPsw, String newPsw, String newPsw2){
+    private CustomerAccountExecution changePwd(@RequestParam String accountName, @RequestParam String oldPsw, @RequestParam String newPsw, @RequestParam String newPsw2){
         if(accountName != null && oldPsw != null && newPsw != null && newPsw2 != null){
             if(newPsw.equals(newPsw2)){
                 //查找账号的原来信息

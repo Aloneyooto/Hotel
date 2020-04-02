@@ -25,7 +25,7 @@ public class PathUtil {
         if(os.toLowerCase().startsWith("win")){
             basePath = "E:/proresources/images/hotel";
         } else {
-            basePath = "/home/alone/hotel/image/upload";
+            basePath = "/root/hotel/";
         }
         try {
             basePath = URLDecoder.decode(basePath, "UTF-8");

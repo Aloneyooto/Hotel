@@ -13,6 +13,11 @@
         where customer_card_number = #{customerCardNumber};
     </select>
 
+    <select id="queryCustomerFaceImages" resultType="com.alone.hotel.entity.Customer">
+        select customer_card_number, customer_name, customer_face_img
+        from tb_customer;
+    </select>
+
     <update id="updateCustomer" parameterType="com.alone.hotel.entity.Customer" >
         update tb_customer
         <set>

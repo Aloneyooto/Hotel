@@ -18,8 +18,8 @@ public class CustomerAccount {
     private Integer flag;
     //押金
     private Double deposit;
-    //账号主人id
-    private String customerCardNumber;
+    //账号主人信息
+    private Customer customer;
     //头像
     private String headImg;
 

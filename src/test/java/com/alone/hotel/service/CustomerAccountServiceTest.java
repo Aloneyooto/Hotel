@@ -38,7 +38,7 @@ public class CustomerAccountServiceTest {
         File file = new File("E:\\she said\\life\\mao.jpg");
         InputStream inputStream = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
-        CustomerAccountExecution customerAccountExecution = customerAccountService.addCustomerAccount(customerAccount, multipartFile);
+        CustomerAccountExecution customerAccountExecution = customerAccountService.addCustomerAccount(customerAccount);
         assertEquals(customerAccountExecution.getState(), CustomerAccountStateEnum.SUCCESS.getState());
     }
 
