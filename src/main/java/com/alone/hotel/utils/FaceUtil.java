@@ -6,9 +6,14 @@ import com.arcsoft.face.enums.DetectMode;
 import com.arcsoft.face.enums.DetectOrient;
 import com.arcsoft.face.enums.ErrorInfo;
 import com.arcsoft.face.toolkit.ImageInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.Executors;
 
@@ -33,6 +38,8 @@ public class FaceUtil {
     private static int errorCode;
 
     private static Map<String, FaceFeature> faceStoreMap;
+
+    private static FunctionConfiguration configuration;
 
     /**
      * 获取引擎文件路径
@@ -86,6 +93,14 @@ public class FaceUtil {
         functionConfiguration.setSupportIRLiveness(true);
         engineConfiguration.setFunctionConfiguration(functionConfiguration);
 
+        //设置活体测试
+        errorCode = faceEngine.setLivenessParam(0.5f, 0.7f);
+        //人脸属性检测
+        configuration = new FunctionConfiguration();
+        configuration.setSupportAge(true);
+        configuration.setSupportFace3dAngle(true);
+        configuration.setSupportGender(true);
+        configuration.setSupportLiveness(true);
 
         //初始化引擎
         errorCode = faceEngine.init(engineConfiguration);
@@ -139,18 +154,28 @@ public class FaceUtil {
      */
     public static String compareFaces(File file){
         //TODO 可能需要MultipartFile转换为file
-        //人脸检测
-        ImageInfo imageInfo = getRGBData(file);
-        List<FaceInfo> faceInfoList = new ArrayList<FaceInfo>();
-        errorCode = faceEngine.detectFaces(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList);
+        ImageInfo imageInfo = null;
+        List<FaceInfo> faceInfoList = null;
+        FaceFeature newFaceFeature = null;
+        FaceFeature sourceFaceFeature = null;
+        FaceSimilar faceSimilar = null;
 
-        //特征提取
-        FaceFeature newFaceFeature = new FaceFeature();
-        errorCode = faceEngine.extractFaceFeature(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList.get(0), newFaceFeature);
-
-        FaceFeature sourceFaceFeature = new FaceFeature();
-        sourceFaceFeature.setFeatureData(newFaceFeature.getFeatureData());
-        FaceSimilar faceSimilar = new FaceSimilar();
+        if(file != null){
+            //人脸检测
+            imageInfo = getRGBData(file);
+            faceInfoList = new ArrayList<FaceInfo>();
+            errorCode = faceEngine.detectFaces(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList);
+        }
+        if(imageInfo != null && faceInfoList != null){
+            //特征提取
+            newFaceFeature = new FaceFeature();
+            errorCode = faceEngine.extractFaceFeature(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList.get(0), newFaceFeature);
+        }
+        if(newFaceFeature != null){
+            sourceFaceFeature = new FaceFeature();
+            sourceFaceFeature.setFeatureData(newFaceFeature.getFeatureData());
+            faceSimilar = new FaceSimilar();
+        }
         Set<String> keySet = faceStoreMap.keySet();
         for (String s : keySet) {
             FaceFeature oldFaceFeature = faceStoreMap.get(s);
@@ -163,6 +188,59 @@ public class FaceUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 是否是活体
+     * @return
+     */
+    public static Boolean isAlive(ImageInfo imageInfo, List<FaceInfo> faceInfoList){
+        errorCode = faceEngine.process(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList, configuration);
+        //活体检测
+        List<LivenessInfo> livenessInfoList = new ArrayList<LivenessInfo>();
+        errorCode = faceEngine.getLiveness(livenessInfoList);
+        if(livenessInfoList.get(0).getLiveness() == 1){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * MultipartFile 转 File
+     *
+     * @param file
+     * @throws Exception
+     */
+    public static File multipartFileToFile(MultipartFile file) throws Exception {
+
+        File toFile = null;
+        if (file.equals("") || file.getSize() <= 0) {
+            file = null;
+        } else {
+            InputStream ins = null;
+            ins = file.getInputStream();
+            toFile = new File(file.getOriginalFilename());
+            inputStreamToFile(ins, toFile);
+            ins.close();
+        }
+        return toFile;
+    }
+
+    //获取流文件
+    private static void inputStreamToFile(InputStream ins, File file) {
+        try {
+            OutputStream os = new FileOutputStream(file);
+            int bytesRead = 0;
+            byte[] buffer = new byte[8192];
+            while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            os.close();
+            ins.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void example() {
