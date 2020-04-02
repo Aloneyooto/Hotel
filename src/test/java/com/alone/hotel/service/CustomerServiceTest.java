@@ -61,15 +61,21 @@ public class CustomerServiceTest {
 
     @Test
     public void testUpdateCustomer() throws IOException {
+//        Customer customer = new Customer();
+//        customer.setCustomerCardNumber("234586948501234567");
+//        customer.setCustomerGender(1);
+//        File cardImgFile = new File("E:\\proresources\\images\\kidsama.jpg");
+//        InputStream inputStream = new FileInputStream(cardImgFile);
+//        MultipartFile cardFile = new MockMultipartFile(cardImgFile.getName(), inputStream);
+//        File faceImgFile = new File("E:\\she said\\life\\Subaru.png");
+//        InputStream inputStream1 = new FileInputStream(faceImgFile);
+//        MultipartFile faceFile = new MockMultipartFile(faceImgFile.getName(), inputStream1);
         Customer customer = new Customer();
-        customer.setCustomerCardNumber("234586948501234567");
-        customer.setCustomerGender(1);
-        File cardImgFile = new File("E:\\proresources\\images\\kidsama.jpg");
-        InputStream inputStream = new FileInputStream(cardImgFile);
-        MultipartFile cardFile = new MockMultipartFile(cardImgFile.getName(), inputStream);
-        File faceImgFile = new File("E:\\she said\\life\\Subaru.png");
-        InputStream inputStream1 = new FileInputStream(faceImgFile);
-        MultipartFile faceFile = new MockMultipartFile(faceImgFile.getName(), inputStream1);
+        customer.setCustomerCardNumber("103945844930123478");
+        File faceImgFile = new File("E:\\she said\\life\\yjs1.jpeg");
+        InputStream inputStream = new FileInputStream(faceImgFile);
+        MultipartFile faceFile = new MockMultipartFile(faceImgFile.getName(), inputStream);
+        MultipartFile cardFile = null;
         CustomerExecution customerExecution = customerService.updateCustomer(customer, cardFile, faceFile);
         assertEquals(CustomerStateEnum.SUCCESS.getState(), customerExecution.getState());
     }

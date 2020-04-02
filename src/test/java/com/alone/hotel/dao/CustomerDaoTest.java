@@ -1,9 +1,14 @@
 package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.Customer;
+import com.alone.hotel.utils.FaceUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest
 public class CustomerDaoTest {
+
     @Autowired
     private CustomerDao customerDao;
 
@@ -61,5 +67,16 @@ public class CustomerDaoTest {
     public void testDeleteCustomer(){
         int effectNum = customerDao.deleteCustomer("12345789012345678");
         assertEquals(1, effectNum);
+    }
+
+    @Test
+    public void testCompareFace(){
+        List<Customer> customerList = customerDao.queryCustomerFaceImages();
+        FaceUtil.initEngine();
+        FaceUtil.getDataSoureFeature(customerList);
+        String customerCardNumber = FaceUtil.compareFaces(new File("E:\\she said\\life\\yjs3.jpg"));
+        FaceUtil.destoryEngine();
+        System.out.println(customerCardNumber);
+        assertEquals("12345789012345678", customerCardNumber);
     }
 }
