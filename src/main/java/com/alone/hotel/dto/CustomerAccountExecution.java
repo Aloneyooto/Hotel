@@ -3,6 +3,7 @@ package com.alone.hotel.dto;
 import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.enums.CustomerAccountStateEnum;
 import lombok.Data;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -19,11 +20,10 @@ public class CustomerAccountExecution {
     private int state;
     //状态标识
     private String stateInfo;
-    //商品数量
     private int count;
-    //操作的
+    //操作的账号
     private CustomerAccount customerAccount;
-    //操作的列表
+    //操作的账号列表
     private List<CustomerAccount> customerAccountList;
 
     public CustomerAccountExecution() {

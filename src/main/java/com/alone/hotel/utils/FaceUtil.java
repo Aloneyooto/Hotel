@@ -55,7 +55,7 @@ public class FaceUtil {
         } else {
             sdkKey = "9mbcQt4jDW4HihSQcN4fBx1gHtQUR3TWtGtLi2W8wvAj";
             //根据linux上路径的改变
-            enginePath = "";
+            enginePath = "/root/hotel/ArcSoft_ArcFace_Java_Linux_x64_V3.0/libs/LINUX64";
         }
         return enginePath;
     }

@@ -25,9 +25,9 @@ public class CustomerAccountManagement {
     private CustomerAccountService customerAccountService;
 
     @PostMapping("/login")
-    private CustomerAccountExecution login(@RequestParam String accountname, @RequestParam String password){
-        if(accountname != null && password != null){
-            CustomerAccount customerAccount = customerAccountService.queryCustomerAccountByName(accountname, password);
+    private CustomerAccountExecution login(@RequestParam String accountName, @RequestParam String password){
+        if(accountName != null && password != null){
+            CustomerAccount customerAccount = customerAccountService.queryCustomerAccountByName(accountName, password);
             if(customerAccount != null){
                 return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS, customerAccount);
             } else {

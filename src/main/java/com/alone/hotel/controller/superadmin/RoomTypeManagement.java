@@ -5,10 +5,7 @@ import com.alone.hotel.entity.RoomType;
 import com.alone.hotel.enums.RoomTypeStateEnum;
 import com.alone.hotel.service.RoomTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +23,7 @@ public class RoomTypeManagement {
     private RoomTypeService roomTypeService;
 
     @PostMapping("/addroomtype")
-    private RoomTypeExecution addRoomType(RoomType roomType){
+    private RoomTypeExecution addRoomType(@RequestParam("roomType") RoomType roomType){
         if(roomType != null){
             return roomTypeService.addRoomType(roomType);
         } else {
@@ -35,7 +32,7 @@ public class RoomTypeManagement {
     }
 
     @GetMapping("/queryroomtypebyid")
-    private RoomTypeExecution queryRoomTypeById(int roomTypeId){
+    private RoomTypeExecution queryRoomTypeById(@RequestParam("roomTypeId") int roomTypeId){
         if(roomTypeId > 0){
             try {
                 RoomType roomType = roomTypeService.queryRoomTypeById(roomTypeId);
@@ -59,7 +56,7 @@ public class RoomTypeManagement {
     }
 
     @PostMapping("/updateroomtype")
-    private RoomTypeExecution updateRoomType(RoomType roomType){
+    private RoomTypeExecution updateRoomType(@RequestParam("roomType") RoomType roomType){
         if(roomType != null){
             return roomTypeService.updateRoomType(roomType);
         } else {
@@ -68,7 +65,7 @@ public class RoomTypeManagement {
     }
 
     @PostMapping("/deleteroomtype")
-    private RoomTypeExecution deleteRoomType(int roomTypeId){
+    private RoomTypeExecution deleteRoomType(@RequestParam("roomTypeId") int roomTypeId){
         if(roomTypeId > 0){
             return roomTypeService.deleteRoomType(roomTypeId);
         } else {
