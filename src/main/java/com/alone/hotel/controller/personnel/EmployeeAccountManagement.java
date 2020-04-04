@@ -9,6 +9,7 @@ import com.alone.hotel.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,9 +28,9 @@ public class EmployeeAccountManagement {
     private EmployeeService employeeService;
 
     @PostMapping("/login")
-    private EmployeeAccountExecution login(String accountname, String password){
-        if(accountname != null && password != null){
-            EmployeeAccount employeeAccount = employeeAccountService.queryEmployeeAccountByName(accountname, password);
+    private EmployeeAccountExecution login(@RequestParam String accountName,@RequestParam String password){
+        if(accountName != null && password != null){
+            EmployeeAccount employeeAccount = employeeAccountService.queryEmployeeAccountByName(accountName, password);
             if(employeeAccount != null){
                 //查询账号权限
                 Employee employee = employeeService.queryEmployeeById(employeeAccount.getAccountName());
@@ -44,7 +45,7 @@ public class EmployeeAccountManagement {
     }
 
     @PostMapping("/changepwd")
-    private EmployeeAccountExecution changePwd(String accountName, String oldPsw, String newPsw, String newPsw2){
+    private EmployeeAccountExecution changePwd(@RequestParam String accountName, @RequestParam String oldPsw, @RequestParam String newPsw, @RequestParam String newPsw2){
         if(accountName != null && oldPsw != null && newPsw != null && newPsw2 != null){
             if(newPsw.equals(newPsw2)){
                 //查找账号的原来信息

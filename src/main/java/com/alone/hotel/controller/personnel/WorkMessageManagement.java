@@ -43,7 +43,7 @@ public class WorkMessageManagement {
     }
 
     @RequestMapping("/queryworktimebyid")
-    private WorkExecution queryWorkTimeById(String employeeId){
+    private WorkExecution queryWorkTimeById(@RequestParam String employeeId){
         if(employeeId != null){
             try {
                 WorkExecution workExecution = workService.queryWorkTimeById(employeeId);
@@ -61,7 +61,7 @@ public class WorkMessageManagement {
     }
 
     @RequestMapping("/updateworktime")
-    private WorkExecution updateWorkTime(Work work){
+    private WorkExecution updateWorkTime(@RequestParam Work work){
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try {
                 WorkExecution workExecution = workService.updateWorkTime(work);
@@ -79,7 +79,7 @@ public class WorkMessageManagement {
     }
 
     @RequestMapping("/deleteworktime")
-    private WorkExecution deleteWorkTime(String employeeId, Date workTime){
+    private WorkExecution deleteWorkTime(@RequestParam String employeeId, @RequestParam Date workTime){
         if(employeeId != null && workTime != null){
             try {
                 WorkExecution  workExecution = workService.deleteWorkTime(employeeId, workTime);

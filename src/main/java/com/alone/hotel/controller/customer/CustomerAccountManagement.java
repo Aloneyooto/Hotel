@@ -75,5 +75,4 @@ public class CustomerAccountManagement {
         }
     }
 
-    //TODO logout
 }
