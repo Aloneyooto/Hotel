@@ -27,6 +27,7 @@ import java.util.Map;
  * @CreateTime: 2020-03-09 21:22
  * @Description:
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/superadmin")
 public class RoomManagement {

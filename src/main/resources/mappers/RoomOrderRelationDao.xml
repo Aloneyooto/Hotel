@@ -3,27 +3,35 @@
 <mapper namespace="com.alone.hotel.dao.RoomOrderRelationDao">
     <resultMap id="roomOrderRelationMap" type="com.alone.hotel.entity.RoomOrder">
         <id column="room_order_id" property="orderId" />
-        <collection property="customerList" column="customer_card_number" ofType="com.alone.hotel.entity.Customer">
-            <id column="customer_card_number" property="customerCardNumber" />
-            <result column="customer_name" property="customerName" />
-            <result column="customer_age" property="customerAge" />
-            <result column="customer_gender" property="customerGender" />
-            <result column="customer_card_img" property="customerCardImg" />
-            <result column="customer_face_img" property="customerFaceImg" />
-            <result column="customer_phone" property="customerPhone" />
+        <collection property="roomList" column="room_id" ofType="com.alone.hotel.entity.Room">
+            <id column="room_id" property="roomId" />
+            <result column="room_floor" property="roomFloor"/>
+            <result column="room_desc" property="roomDesc" />
+            <result column="room_state" property="roomState" />
+            <result column="room_type" property="roomType.typeId" />
         </collection>
     </resultMap>
 
     <insert id="addRoomOrderRelation" parameterType="com.alone.hotel.entity.RoomOrderRelation">
-        insert into tb_room_order_relation(room_order_id, customer_card_number)
-        values (#{roomOrder.orderId}, #{customer.customerCardNumber})
+        insert into tb_room_order_relation(room_order_id, room_id)
+        values (#{roomOrder.orderId}, #{room.roomId})
     </insert>
 
-    <select id="queryCustomerByOrderId" resultMap="roomOrderRelationMap" parameterType="String">
-        select re.room_order_id, c.customer_card_number, c.customer_name, c.customer_age,
-        c.customer_gender, c.customer_card_img, c.customer_face_img, c.customer_phone
-        from tb_room_order_relation re, tb_customer c
-        where re.customer_card_number = c.customer_card_number
+    <insert id="batchAddRoomOrderRelation" parameterType="java.util.List">
+        insert into tb_room_order_relation(room_order_id, room_id)
+        values
+        <foreach collection="list" item="roomOrderRelation" index="index" separator=",">
+            (
+            #{roomOrderRelation.roomOrder.orderId},
+            #{roomOrderRelation.room.roomId}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryRoomByOrderId" resultMap="roomOrderRelationMap" parameterType="String">
+        select re.room_order_id, r.room_id, r.room_floor, r.room_desc, r.room_state, r.room_type
+        from tb_room_order_relation re, tb_room r
+        where re.room_id = r.room_id
         and re.room_order_id = #{roomOrderId}
     </select>
 

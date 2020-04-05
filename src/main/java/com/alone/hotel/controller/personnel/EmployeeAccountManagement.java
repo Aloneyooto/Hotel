@@ -7,10 +7,7 @@ import com.alone.hotel.enums.EmployeeAccountStateEnum;
 import com.alone.hotel.service.EmployeeAccountService;
 import com.alone.hotel.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @BelongsProject: hotel
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @CreateTime: 2020-03-31 10:36
  * @Description:
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/personnel")
 public class EmployeeAccountManagement {

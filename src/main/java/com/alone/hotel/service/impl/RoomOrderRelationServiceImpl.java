@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.service.impl
@@ -25,7 +27,7 @@ public class RoomOrderRelationServiceImpl implements RoomOrderRelationService {
     @Override
     @Transactional
     public Boolean addRoomOrderRelation(RoomOrderRelation roomOrderRelation) {
-        if(roomOrderRelation != null && roomOrderRelation.getCustomer() != null && roomOrderRelation.getRoomOrder() != null){
+        if(roomOrderRelation != null && roomOrderRelation.getRoom() != null && roomOrderRelation.getRoomOrder() != null){
             try {
                 int effectNum = roomOrderRelationDao.addRoomOrderRelation(roomOrderRelation);
                 if(effectNum <= 0){
@@ -41,8 +43,27 @@ public class RoomOrderRelationServiceImpl implements RoomOrderRelationService {
     }
 
     @Override
-    public RoomOrder queryCustomerByOrderId(String orderId) {
-        return roomOrderRelationDao.queryCustomerByOrderId(orderId);
+    @Transactional
+    public Boolean batchAddRoomOrderRelation(List<RoomOrderRelation> roomOrderRelationList) {
+        if(roomOrderRelationList != null){
+            try {
+                int effectNum = roomOrderRelationDao.batchAddRoomOrderRelation(roomOrderRelationList);
+                if(effectNum < roomOrderRelationList.size()){
+                    return false;
+                }
+                return true;
+            } catch (Exception e){
+                throw new OrderException(OrderStateEnum.RELATION_INSERT_ERROR.getStateInfo());
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    @Override
+    public RoomOrder queryRoomByOrderId(String orderId) {
+        return roomOrderRelationDao.queryRoomByOrderId(orderId);
     }
 
     @Override

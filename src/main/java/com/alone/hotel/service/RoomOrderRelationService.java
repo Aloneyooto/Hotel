@@ -3,6 +3,8 @@ package com.alone.hotel.service;
 import com.alone.hotel.entity.RoomOrder;
 import com.alone.hotel.entity.RoomOrderRelation;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.service
@@ -12,21 +14,28 @@ import com.alone.hotel.entity.RoomOrderRelation;
  */
 public interface RoomOrderRelationService {
     /**
-     * 添加订单与入住人的关联信息
+     * 添加订单与房间的关联信息
      * @param roomOrderRelation
      * @return
      */
     Boolean addRoomOrderRelation(RoomOrderRelation roomOrderRelation);
 
     /**
-     * 根据订单号查询入住人的信息
+     * 批量添加关联信息
+     * @param roomOrderRelationList
+     * @return
+     */
+    Boolean batchAddRoomOrderRelation(List<RoomOrderRelation> roomOrderRelationList);
+
+    /**
+     * 根据订单号查询房间的信息
      * @param orderId
      * @return
      */
-    RoomOrder queryCustomerByOrderId(String orderId);
+    RoomOrder queryRoomByOrderId(String orderId);
 
     /**
-     * 删除订单与入住人的关联信息
+     * 删除订单与房间的关联信息
      * @param roomOrderId
      * @return
      */

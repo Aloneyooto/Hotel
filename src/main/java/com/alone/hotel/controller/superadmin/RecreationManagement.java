@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @CreateTime: 2020-03-17 21:05
  * @Description:
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/superadmin")
 public class RecreationManagement {

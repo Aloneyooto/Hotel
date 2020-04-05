@@ -7,13 +7,11 @@ import com.alone.hotel.enums.OrderStateEnum;
 import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,8 +40,6 @@ public class CustomerOrderManagement {
     private RoomOrderRelationService roomOrderRelationService;
     @Autowired
     private CheckInService checkInService;
-    @Autowired
-    private RoomTypeService roomTypeService;
 
     /**
      * 增加房间订单
@@ -51,7 +47,7 @@ public class CustomerOrderManagement {
      * @return
      */
     @PostMapping("/addroomorder")
-    private OrderExecution addRoomOrder(RoomOrder roomOrder){
+    private OrderExecution addRoomOrder(@RequestParam RoomOrder roomOrder){
         //空值判断
         if(roomOrder != null && roomOrder.getAccount() != null && roomOrder.getRoomType() != null){
             //查询房间数量是否满足订单需求
@@ -66,23 +62,22 @@ public class CustomerOrderManagement {
             }
             //选出房间号
             List<Room> roomList = roomExecution.getRoomList();
+            //获取入住人列表
             List<Customer> customerList = roomOrder.getCustomerList();
             //生成订单ID
             String roomOrderId = generateRoomOrderId(new Date());
             roomOrder.setOrderId(roomOrderId);
-            //向订单-入住人表写入信息
-            if(roomOrder.getCustomerList() != null){
-                for (Customer customer : customerList) {
-                    RoomOrderRelation roomOrderRelation = new RoomOrderRelation();
-                    roomOrderRelation.setRoomOrder(roomOrder);
-                    roomOrderRelation.setCustomer(customer);
-                    boolean effected = roomOrderRelationService.addRoomOrderRelation(roomOrderRelation);
-                    if(effected == false){
-                        return new OrderExecution(OrderStateEnum.RELATION_INSERT_ERROR);
-                    }
-                }
-            } else {
-                return new OrderExecution(OrderStateEnum.CUSTOMER_EMPTY);
+            //向订单-房间表写入信息
+            List<RoomOrderRelation> roomOrderRelationList = new ArrayList<RoomOrderRelation>();
+            for (Room room : roomList) {
+                RoomOrderRelation roomOrderRelation = new RoomOrderRelation();
+                roomOrderRelation.setRoomOrder(roomOrder);
+                roomOrderRelation.setRoom(room);
+                roomOrderRelationList.add(roomOrderRelation);
+            }
+            Boolean result = roomOrderRelationService.batchAddRoomOrderRelation(roomOrderRelationList);
+            if(result == false){
+                return new OrderExecution(OrderStateEnum.RELATION_INSERT_ERROR);
             }
             //向房间-入住人表写入信息
             int i = 0, j = 0;
@@ -116,8 +111,13 @@ public class CustomerOrderManagement {
         }
     }
 
+    /**
+     * 获取账户所定的房间订单
+     * @param customerAccount
+     * @return
+     */
     @GetMapping("/queryroomorderbyaccountname")
-    private OrderExecution queryRoomOrderByAccountName(CustomerAccount customerAccount){
+    private OrderExecution queryRoomOrderByAccountName(@RequestParam CustomerAccount customerAccount){
         if(customerAccount != null){
             try {
                 List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(customerAccount.getAccountName());
@@ -130,8 +130,13 @@ public class CustomerOrderManagement {
         }
     }
 
+    /**
+     * 更新房间订单
+     * @param roomOrder
+     * @return
+     */
     @PostMapping("/updateroomorder")
-    private OrderExecution updateRoomOrder(RoomOrder roomOrder){
+    private OrderExecution updateRoomOrder(@RequestParam RoomOrder roomOrder){
         if(roomOrder != null && roomOrder.getOrderId() != null){
             try {
                 OrderExecution orderExecution = roomOrderService.updateRoomOrder(roomOrder);
@@ -144,8 +149,13 @@ public class CustomerOrderManagement {
         }
     }
 
+    /**
+     * 删除房间订单
+     * @param roomOrder
+     * @return
+     */
     @PostMapping("/deleteroomorder")
-    private OrderExecution deleteRoomOrder(RoomOrder roomOrder){
+    private OrderExecution deleteRoomOrder(@RequestParam RoomOrder roomOrder){
         if(roomOrder != null && roomOrder.getOrderId() != null && roomOrder.getCustomerList() != null){
             try{
                 List<Customer> customerList = roomOrder.getCustomerList();
@@ -186,7 +196,7 @@ public class CustomerOrderManagement {
     }
 
     @PostMapping("/addrecreateorder")
-    private OrderExecution addRecreateOrder(RecreateOrder recreateOrder){
+    private OrderExecution addRecreateOrder(@RequestParam RecreateOrder recreateOrder){
         if(recreateOrder != null){
             return recreateOrderService.addRecreateOrder(recreateOrder);
         } else {
@@ -195,7 +205,7 @@ public class CustomerOrderManagement {
     }
 
     @GetMapping("/queryrecreateorderbycustomer")
-    private OrderExecution queryRecreateOrderByCustomer(RecreateOrder recreateOrder){
+    private OrderExecution queryRecreateOrderByCustomer(@RequestParam RecreateOrder recreateOrder){
         if(recreateOrder != null){
             Customer customer = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
             return new OrderExecution(OrderStateEnum.SUCCESS, null, customer.getRecreateOrderList());
@@ -205,7 +215,7 @@ public class CustomerOrderManagement {
     }
 
     @PostMapping("/updaterecreateorder")
-    private OrderExecution updateRecreateOrder(RecreateOrder recreateOrder){
+    private OrderExecution updateRecreateOrder(@RequestParam RecreateOrder recreateOrder){
         if(recreateOrder != null && recreateOrder.getOrderStatus() != 1){
             return recreateOrderService.updateRecreateOrder(recreateOrder);
         } else {
@@ -214,7 +224,7 @@ public class CustomerOrderManagement {
     }
 
     @PostMapping("/deleterecreateorder")
-    private OrderExecution deleteRecreateOrder(String recreateOrderId){
+    private OrderExecution deleteRecreateOrder(@RequestParam String recreateOrderId){
         if(recreateOrderId != null){
             return recreateOrderService.deleteRecreateOrder(recreateOrderId);
         } else {
@@ -224,27 +234,34 @@ public class CustomerOrderManagement {
 
     /**
      * 获取账号所有订单
-     * @param account
+     * 不能用
+     * @param accountName
      * @return
      */
     @GetMapping("/queryallordersbyaccount")
-    private OrderExecution queryAllOrdersByAccount(CustomerAccount account){
+    private OrderExecution queryAllOrdersByAccount(@RequestParam String accountName){
         //空值判断
-        if(account != null && account.getAccountName() != null){
+        if(accountName != null){
             //查询房间订单
-            List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(account.getAccountName());
-            //去room_order_relation里查询顾客列表
+            List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(accountName);
+            //去room_order_relation里查询房间列表
             for (RoomOrder roomOrder : roomOrderList) {
-                //查询到的顾客列表
-                RoomOrder orderResult = roomOrderRelationService.queryCustomerByOrderId(roomOrder.getOrderId());
-                //根据顾客ID查询recreate_order
-                List<Customer> customerList = orderResult.getCustomerList();
-                for (Customer customer : customerList) {
-                    RecreateOrder recreateOrder = new RecreateOrder();
-                    recreateOrder.setCustomer(customer);
-                    Customer customerResult = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
-                    customer.setRecreateOrderList(customerResult.getRecreateOrderList());
+                //查询到的房间列表
+                RoomOrder orderResult = roomOrderRelationService.queryRoomByOrderId(roomOrder.getOrderId());
+                List<Room> roomList = orderResult.getRoomList();
+                for (Room room : roomList) {
+                    room = checkInService.queryCheckInByRoom(room.getRoomId());
+                    //根据顾客ID查询recreate_order
+                    List<Customer> customerList = room.getCustomerList();
+                    for (Customer customer : customerList) {
+                        RecreateOrder recreateOrder = new RecreateOrder();
+                        recreateOrder.setCustomer(customer);
+                        Customer customerResult = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
+                        customer.setRecreateOrderList(customerResult.getRecreateOrderList());
+                    }
+                    room.setCustomerList(customerList);
                 }
+                roomOrder.setRoomList(roomList);
             }
             return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
         } else {

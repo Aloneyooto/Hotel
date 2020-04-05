@@ -24,5 +24,6 @@ public class RoomOrder {
     private Integer orderStatus;
     private Date handInTime;
 
+    private List<Room> roomList;
     private List<Customer> customerList;
 }

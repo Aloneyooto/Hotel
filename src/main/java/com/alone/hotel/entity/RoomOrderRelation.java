@@ -12,5 +12,5 @@ import lombok.Data;
 @Data
 public class RoomOrderRelation {
     private RoomOrder roomOrder;
-    private Customer customer;
+    private Room room;
 }

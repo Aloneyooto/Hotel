@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class Room {
     private Integer roomId;
-    private String roomFloor;
+    private Integer roomFloor;
     private String roomDesc;
     private Integer roomState;
 

@@ -26,7 +26,7 @@ class RoomDaoTest {
     public void testInsertRoom(){
         Room room = new Room();
         room.setRoomId(101);
-        room.setRoomFloor("1层");
+        room.setRoomFloor(1);
         room.setRoomDesc("大床 10-25m²");
         room.setRoomState(0);
         RoomType roomType = new RoomType();

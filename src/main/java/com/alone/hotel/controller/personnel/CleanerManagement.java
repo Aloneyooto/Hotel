@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @CreateTime: 2020-03-16 22:52
  * @Description:
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/personnel")
 public class CleanerManagement {

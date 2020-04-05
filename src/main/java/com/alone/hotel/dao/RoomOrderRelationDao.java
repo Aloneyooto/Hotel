@@ -15,18 +15,25 @@ import java.util.List;
  */
 public interface RoomOrderRelationDao {
     /**
-     * 添加订单与入住人的关联信息
+     * 添加订单与房间的关联信息
      * @param roomOrderRelation
      * @return
      */
     int addRoomOrderRelation(RoomOrderRelation roomOrderRelation);
 
     /**
-     * 根据订单号查询入住人的信息
+     * 批量添加关联信息
+     * @param roomOrderRelationList
+     * @return
+     */
+    int batchAddRoomOrderRelation(List<RoomOrderRelation> roomOrderRelationList);
+
+    /**
+     * 根据订单号查询房间的信息
      * @param orderId
      * @return
      */
-    RoomOrder queryCustomerByOrderId(String orderId);
+    RoomOrder queryRoomByOrderId(String orderId);
 
     /**
      * 删除订单与入住人的关联信息

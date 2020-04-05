@@ -5,9 +5,7 @@ import com.alone.hotel.entity.Work;
 import com.alone.hotel.enums.WorkStateEnum;
 import com.alone.hotel.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -24,7 +22,7 @@ public class WorkMessageManagement {
     @Autowired
     private WorkService workService;
 
-    @RequestMapping("/addworkmessage")
+    @PostMapping("/addworkmessage")
     private WorkExecution addWorkMessage(@RequestParam("work") Work work){
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try{
@@ -42,8 +40,8 @@ public class WorkMessageManagement {
         }
     }
 
-    @RequestMapping("/queryworktimebyid")
-    private WorkExecution queryWorkTimeById(@RequestParam String employeeId){
+    @GetMapping("/queryworktimebyid")
+    private WorkExecution queryWorkTimeById(@RequestParam("employeeId") String employeeId){
         if(employeeId != null){
             try {
                 WorkExecution workExecution = workService.queryWorkTimeById(employeeId);
@@ -60,8 +58,8 @@ public class WorkMessageManagement {
         }
     }
 
-    @RequestMapping("/updateworktime")
-    private WorkExecution updateWorkTime(@RequestParam Work work){
+    @PostMapping("/updateworktime")
+    private WorkExecution updateWorkTime(@RequestParam("work") Work work){
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try {
                 WorkExecution workExecution = workService.updateWorkTime(work);
@@ -78,8 +76,8 @@ public class WorkMessageManagement {
         }
     }
 
-    @RequestMapping("/deleteworktime")
-    private WorkExecution deleteWorkTime(@RequestParam String employeeId, @RequestParam Date workTime){
+    @PostMapping("/deleteworktime")
+    private WorkExecution deleteWorkTime(@RequestParam("employeeId") String employeeId, @RequestParam("workTime") Date workTime){
         if(employeeId != null && workTime != null){
             try {
                 WorkExecution  workExecution = workService.deleteWorkTime(employeeId, workTime);

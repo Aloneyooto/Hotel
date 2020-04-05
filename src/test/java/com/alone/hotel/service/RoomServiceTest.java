@@ -38,7 +38,7 @@ class RoomServiceTest {
         RoomType roomType = new RoomType();
         roomType.setTypeId(1);
         room.setRoomType(roomType);
-        room.setRoomFloor("1层");
+        room.setRoomFloor(1);
         File file = new File("E:\\proresources\\images\\latestbg.jpg");
         InputStream inputStream = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);

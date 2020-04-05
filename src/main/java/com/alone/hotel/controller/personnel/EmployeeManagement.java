@@ -27,6 +27,7 @@ import java.io.IOException;
  * @CreateTime: 2020-03-16 10:07
  * @Description:
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/personnel")
 public class EmployeeManagement {

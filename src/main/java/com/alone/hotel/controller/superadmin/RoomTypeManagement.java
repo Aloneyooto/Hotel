@@ -16,6 +16,7 @@ import java.util.List;
  * @CreateTime: 2020-03-30 10:19
  * @Description:
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/superadmin")
 public class RoomTypeManagement {
