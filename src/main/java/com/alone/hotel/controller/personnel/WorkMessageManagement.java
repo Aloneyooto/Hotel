@@ -1,5 +1,6 @@
 package com.alone.hotel.controller.personnel;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.WorkExecution;
 import com.alone.hotel.entity.Work;
 import com.alone.hotel.enums.WorkStateEnum;
@@ -7,6 +8,8 @@ import com.alone.hotel.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,11 +22,12 @@ import java.util.Date;
 @RestController
 @RequestMapping("/personnel")
 public class WorkMessageManagement {
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Autowired
     private WorkService workService;
 
     @PostMapping("/addworkmessage")
-    private WorkExecution addWorkMessage(@RequestParam("work") Work work){
+    private WorkExecution addWorkMessage(@RequestBody Work work){
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try{
                 WorkExecution workExecution = workService.addWorkMessage(work);
@@ -59,7 +63,7 @@ public class WorkMessageManagement {
     }
 
     @PostMapping("/updateworktime")
-    private WorkExecution updateWorkTime(@RequestParam("work") Work work){
+    private WorkExecution updateWorkTime(@RequestBody Work work){
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try {
                 WorkExecution workExecution = workService.updateWorkTime(work);
@@ -77,16 +81,25 @@ public class WorkMessageManagement {
     }
 
     @PostMapping("/deleteworktime")
-    private WorkExecution deleteWorkTime(@RequestParam("employeeId") String employeeId, @RequestParam("workTime") Date workTime){
-        if(employeeId != null && workTime != null){
-            try {
-                WorkExecution  workExecution = workService.deleteWorkTime(employeeId, workTime);
-                return workExecution;
-            } catch (Exception e){
-                return new WorkExecution(WorkStateEnum.INNER_ERROR);
+    private WorkExecution deleteWorkTime(@RequestBody JSONObject jsonObject){
+        //String employeeId, Date workTime
+        try {
+            String employeeId = jsonObject.getString("employeeId");
+            String dateStr = jsonObject.getString("workTime");
+            Date workTime = simpleDateFormat.parse(dateStr);
+            if(employeeId != null && workTime != null){
+                try {
+                    WorkExecution  workExecution = workService.deleteWorkTime(employeeId, workTime);
+                    return workExecution;
+                } catch (Exception e){
+                    return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                }
+            } else {
+                return new WorkExecution(WorkStateEnum.EMPTY);
             }
-        } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+        } catch (Exception e) {
+            return new WorkExecution(WorkStateEnum.INNER_ERROR);
         }
+
     }
 }

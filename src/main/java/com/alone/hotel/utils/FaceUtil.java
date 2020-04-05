@@ -153,7 +153,8 @@ public class FaceUtil {
      * @return
      */
     public static String compareFaces(File file){
-        //TODO 可能需要MultipartFile转换为file
+        //MultipartFile转换为file
+        //File file = multipartFileToFile(faceFile);
         ImageInfo imageInfo = null;
         List<FaceInfo> faceInfoList = null;
         FaceFeature newFaceFeature = null;

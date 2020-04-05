@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @BelongsProject: hotel
@@ -65,6 +66,12 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer queryCustomerById(String customerId) {
         return customerDao.queryCustomerById(customerId);
     }
+
+    @Override
+    public List<Customer> queryCustomerFaceImages() {
+        return customerDao.queryCustomerFaceImages();
+    }
+
 
     @Override
     @Transactional

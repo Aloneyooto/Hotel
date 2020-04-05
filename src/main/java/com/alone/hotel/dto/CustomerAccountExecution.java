@@ -20,11 +20,6 @@ public class CustomerAccountExecution {
     private int state;
     //状态标识
     private String stateInfo;
-    private int count;
-    //操作的账号
-    private CustomerAccount customerAccount;
-    //操作的账号列表
-    private List<CustomerAccount> customerAccountList;
 
     public CustomerAccountExecution() {
     }
@@ -32,17 +27,5 @@ public class CustomerAccountExecution {
     public CustomerAccountExecution(CustomerAccountStateEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
-    }
-
-    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum, CustomerAccount customerAccount){
-        this.state = stateEnum.getState();
-        this.stateInfo = stateEnum.getStateInfo();
-        this.customerAccount = customerAccount;
-    }
-
-    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum, List<CustomerAccount> customerList){
-        this.state = stateEnum.getState();
-        this.stateInfo = stateEnum.getStateInfo();
-        this.customerAccountList = customerAccountList;
     }
 }

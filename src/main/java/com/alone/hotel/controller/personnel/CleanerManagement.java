@@ -22,7 +22,7 @@ public class CleanerManagement {
     private CleanerService cleanerService;
 
     @PostMapping("/addcleaner")
-    private CleanerExecution addCleaner(@RequestParam("cleaner") Cleaner cleaner){
+    private CleanerExecution addCleaner(@RequestBody Cleaner cleaner){
         if(cleaner != null && cleaner.getEmployee().getEmployeeId() != null){
             try{
                 CleanerExecution pe = cleanerService.addCleaner(cleaner);
@@ -68,7 +68,7 @@ public class CleanerManagement {
     }
 
     @PostMapping("/modifycleaner")
-    private CleanerExecution modifyCleaner(@RequestParam("cleaner")Cleaner cleaner){
+    private CleanerExecution modifyCleaner(@RequestBody Cleaner cleaner){
         if(cleaner != null && cleaner.getEmployee().getEmployeeId() != null){
             try{
                 CleanerExecution cleanerExecution = cleanerService.updateCleaner(cleaner);
@@ -82,7 +82,7 @@ public class CleanerManagement {
     }
 
     @PostMapping("/deletecleaner")
-    private CleanerExecution deleteCleaner(@RequestParam("cleanerId")String cleanerId){
+    private CleanerExecution deleteCleaner(@RequestBody String cleanerId){
         if(cleanerId != null){
             try{
                 CleanerExecution cleanerExecution = cleanerService.deleteCleaner(cleanerId);

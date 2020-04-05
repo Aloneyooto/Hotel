@@ -1,5 +1,6 @@
 package com.alone.hotel.controller.customer;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.dto.CustomerExecution;
 import com.alone.hotel.dto.CustomerRelationExecution;
@@ -12,12 +13,12 @@ import com.alone.hotel.enums.CustomerStateEnum;
 import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.service.CustomerRelationService;
 import com.alone.hotel.service.CustomerService;
+import com.alone.hotel.utils.FaceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @BelongsProject: hotel
@@ -113,7 +114,7 @@ public class CustomerManagement {
      * @return
      */
     @PostMapping("/updatecustomermessage")
-    private CustomerExecution updateCustomerMessage(Customer customer, MultipartFile cardImg, MultipartFile faceImg){
+    private CustomerExecution updateCustomerMessage(@RequestParam("customer") Customer customer, @RequestParam("cardImg") MultipartFile cardImg, @RequestParam("faceImg") MultipartFile faceImg){
         //判断顾客信息是否为空
         if(customer != null){
             try{
@@ -133,15 +134,21 @@ public class CustomerManagement {
 
     /**
      * 删除顾客信息
-     * @param customer
-     * @param customerAccount
+     * @param jsonObject
      * @return
      */
     @PostMapping("/deletecustomermessage")
-    private CustomerExecution deleteCustomerMessage(Customer customer, CustomerAccount customerAccount){
-        if(customer != null && customerAccount != null){
+    private CustomerExecution deleteCustomerMessage(@RequestBody JSONObject jsonObject){
+        //String accountName, String customerCardNumber
+        String accountName = jsonObject.getString("accountName");
+        String customerCardNumber = jsonObject.getString("customerCardNumber");
+        if(accountName != null && customerCardNumber != null){
             //删除customerrelation里的对应内容
             CustomerRelation customerRelation = new CustomerRelation();
+            CustomerAccount customerAccount = new CustomerAccount();
+            customerAccount.setAccountPassword(accountName);
+            Customer customer = new Customer();
+            customer.setCustomerCardNumber(customerCardNumber);
             customerRelation.setAccount(customerAccount);
             customerRelation.setCustomer(customer);
             try {
@@ -162,5 +169,21 @@ public class CustomerManagement {
         } else {
             return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
         }
+    }
+
+    /**
+     * 在电梯处的识别
+     * @param faceFile
+     * @param roomId
+     */
+    @GetMapping("/compareFacesAtElevator")
+    private void compareFacesAtElevator(@RequestParam MultipartFile faceFile, @RequestParam Integer roomId){
+        //初始化引擎
+        FaceUtil.initEngine();
+        //查询数据库内已有的人脸
+        List<Customer> customerList = customerService.queryCustomerFaceImages();
+        //生成人脸特征信息
+        FaceUtil.getDataSoureFeature(customerList);
+
     }
 }

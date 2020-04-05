@@ -47,7 +47,7 @@ public class CustomerOrderManagement {
      * @return
      */
     @PostMapping("/addroomorder")
-    private OrderExecution addRoomOrder(@RequestParam RoomOrder roomOrder){
+    private OrderExecution addRoomOrder(@RequestBody RoomOrder roomOrder){
         //空值判断
         if(roomOrder != null && roomOrder.getAccount() != null && roomOrder.getRoomType() != null){
             //查询房间数量是否满足订单需求
@@ -117,7 +117,7 @@ public class CustomerOrderManagement {
      * @return
      */
     @GetMapping("/queryroomorderbyaccountname")
-    private OrderExecution queryRoomOrderByAccountName(@RequestParam CustomerAccount customerAccount){
+    private OrderExecution queryRoomOrderByAccountName(CustomerAccount customerAccount){
         if(customerAccount != null){
             try {
                 List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(customerAccount.getAccountName());
@@ -136,7 +136,7 @@ public class CustomerOrderManagement {
      * @return
      */
     @PostMapping("/updateroomorder")
-    private OrderExecution updateRoomOrder(@RequestParam RoomOrder roomOrder){
+    private OrderExecution updateRoomOrder(@RequestBody RoomOrder roomOrder){
         if(roomOrder != null && roomOrder.getOrderId() != null){
             try {
                 OrderExecution orderExecution = roomOrderService.updateRoomOrder(roomOrder);
@@ -155,7 +155,7 @@ public class CustomerOrderManagement {
      * @return
      */
     @PostMapping("/deleteroomorder")
-    private OrderExecution deleteRoomOrder(@RequestParam RoomOrder roomOrder){
+    private OrderExecution deleteRoomOrder(@RequestBody RoomOrder roomOrder){
         if(roomOrder != null && roomOrder.getOrderId() != null && roomOrder.getCustomerList() != null){
             try{
                 List<Customer> customerList = roomOrder.getCustomerList();
@@ -196,7 +196,7 @@ public class CustomerOrderManagement {
     }
 
     @PostMapping("/addrecreateorder")
-    private OrderExecution addRecreateOrder(@RequestParam RecreateOrder recreateOrder){
+    private OrderExecution addRecreateOrder(@RequestBody RecreateOrder recreateOrder){
         if(recreateOrder != null){
             return recreateOrderService.addRecreateOrder(recreateOrder);
         } else {
@@ -215,7 +215,7 @@ public class CustomerOrderManagement {
     }
 
     @PostMapping("/updaterecreateorder")
-    private OrderExecution updateRecreateOrder(@RequestParam RecreateOrder recreateOrder){
+    private OrderExecution updateRecreateOrder(@RequestBody RecreateOrder recreateOrder){
         if(recreateOrder != null && recreateOrder.getOrderStatus() != 1){
             return recreateOrderService.updateRecreateOrder(recreateOrder);
         } else {
@@ -224,7 +224,7 @@ public class CustomerOrderManagement {
     }
 
     @PostMapping("/deleterecreateorder")
-    private OrderExecution deleteRecreateOrder(@RequestParam String recreateOrderId){
+    private OrderExecution deleteRecreateOrder(@RequestBody String recreateOrderId){
         if(recreateOrderId != null){
             return recreateOrderService.deleteRecreateOrder(recreateOrderId);
         } else {

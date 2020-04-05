@@ -5,9 +5,13 @@ import com.alone.hotel.utils.FaceUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,11 +74,12 @@ public class CustomerDaoTest {
     }
 
     @Test
-    public void testCompareFace(){
+    public void testCompareFace() throws Exception {
         List<Customer> customerList = customerDao.queryCustomerFaceImages();
         FaceUtil.initEngine();
         FaceUtil.getDataSoureFeature(customerList);
-        String customerCardNumber = FaceUtil.compareFaces(new File("E:\\she said\\life\\yjs3.jpg"));
+        File file = new File("E:\\she said\\life\\yjs3.jpg");
+        String customerCardNumber = FaceUtil.compareFaces(file);
         FaceUtil.destoryEngine();
         System.out.println(customerCardNumber);
         assertEquals("12345789012345678", customerCardNumber);

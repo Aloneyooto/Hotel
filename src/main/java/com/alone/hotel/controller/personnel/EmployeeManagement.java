@@ -130,7 +130,7 @@ public class EmployeeManagement {
     }
 
     @PostMapping("/deleteEmployee")
-    private EmployeeExecution deleteEmployee(@RequestParam String employeeId){
+    private EmployeeExecution deleteEmployee(@RequestBody String employeeId){
         EmployeeExecution employeeExecution = null;
         if(employeeId != null){
             try{

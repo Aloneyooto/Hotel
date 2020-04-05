@@ -70,7 +70,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
                 if(effectNum <= 0){
                     throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS, customerAccount);
+                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS);
             } catch (Exception e){
                 throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
             }

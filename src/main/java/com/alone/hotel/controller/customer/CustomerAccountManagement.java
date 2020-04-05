@@ -1,15 +1,15 @@
 package com.alone.hotel.controller.customer;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.enums.CustomerAccountStateEnum;
 import com.alone.hotel.service.CustomerAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * @BelongsProject: hotel
@@ -24,12 +24,12 @@ public class CustomerAccountManagement {
     @Autowired
     private CustomerAccountService customerAccountService;
 
-    @PostMapping("/login")
-    private CustomerAccountExecution login(@RequestParam String accountName, @RequestParam String password){
-        if(accountName != null && password != null){
-            CustomerAccount customerAccount = customerAccountService.queryCustomerAccountByName(accountName, password);
-            if(customerAccount != null){
-                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS, customerAccount);
+    @PostMapping(value = "/login")
+    public CustomerAccountExecution login(@RequestBody CustomerAccount customerAccount){
+        if(customerAccount.getAccountName() != null && customerAccount.getAccountPassword() != null){
+            CustomerAccount account = customerAccountService.queryCustomerAccountByName(customerAccount.getAccountName(), customerAccount.getAccountPassword());
+            if(account != null){
+                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS);
             } else {
                 return new CustomerAccountExecution(CustomerAccountStateEnum.NAME_OR_PASSWORD_ERROR);
             }
@@ -39,11 +39,8 @@ public class CustomerAccountManagement {
     }
 
     @PostMapping("/register")
-    private CustomerAccountExecution register(@RequestParam String accountName, @RequestParam String accountPassword){
-        if(accountName != null && accountPassword != null){
-            CustomerAccount customerAccount = new CustomerAccount();
-            customerAccount.setAccountName(accountName);
-            customerAccount.setAccountPassword(accountPassword);
+    private CustomerAccountExecution register(@RequestBody CustomerAccount customerAccount){
+        if(customerAccount.getAccountName() != null && customerAccount.getAccountName() != null){
             CustomerAccountExecution customerAccountExecution = customerAccountService.addCustomerAccount(customerAccount);
             return customerAccountExecution;
         } else {
@@ -52,7 +49,12 @@ public class CustomerAccountManagement {
     }
 
     @PostMapping("/changepwd")
-    private CustomerAccountExecution changePwd(@RequestParam String accountName, @RequestParam String oldPsw, @RequestParam String newPsw, @RequestParam String newPsw2){
+    private CustomerAccountExecution changePwd(@RequestBody JSONObject jsonObject){
+        //String accountName, String oldPsw, String newPsw, String newPsw2
+        String accountName = jsonObject.get("accountName").toString();
+        String oldPsw = jsonObject.get("oldPsw").toString();
+        String newPsw = jsonObject.get("newPsw").toString();
+        String newPsw2 = jsonObject.get("newPsw2").toString();
         if(accountName != null && oldPsw != null && newPsw != null && newPsw2 != null){
             if(newPsw.equals(newPsw2)){
                 //查找账号的原来信息

@@ -4,6 +4,8 @@ import com.alone.hotel.dto.CustomerExecution;
 import com.alone.hotel.entity.Customer;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.service
@@ -25,6 +27,12 @@ public interface CustomerService {
      * @return
      */
     Customer queryCustomerById(String customerCardNumber);
+
+    /**
+     * 查询所有顾客的面部图片地址
+     * @return
+     */
+    List<Customer> queryCustomerFaceImages();
 
     /**
      * 更新顾客信息

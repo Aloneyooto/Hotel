@@ -1,5 +1,6 @@
 package com.alone.hotel.controller.personnel;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.EmployeeAccountExecution;
 import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.EmployeeAccount;
@@ -26,7 +27,10 @@ public class EmployeeAccountManagement {
     private EmployeeService employeeService;
 
     @PostMapping("/login")
-    private EmployeeAccountExecution login(@RequestParam String accountName,@RequestParam String password){
+    private EmployeeAccountExecution login(@RequestBody JSONObject jsonObject){
+        //String accountName, String password
+        String accountName = jsonObject.getString("accountName");
+        String password = jsonObject.getString("password");
         if(accountName != null && password != null){
             EmployeeAccount employeeAccount = employeeAccountService.queryEmployeeAccountByName(accountName, password);
             if(employeeAccount != null){
@@ -43,7 +47,11 @@ public class EmployeeAccountManagement {
     }
 
     @PostMapping("/changepwd")
-    private EmployeeAccountExecution changePwd(@RequestParam String accountName, @RequestParam String oldPsw, @RequestParam String newPsw, @RequestParam String newPsw2){
+    private EmployeeAccountExecution changePwd(@RequestBody JSONObject jsonObject){
+        String accountName = jsonObject.get("accountName").toString();
+        String oldPsw = jsonObject.get("oldPsw").toString();
+        String newPsw = jsonObject.get("newPsw").toString();
+        String newPsw2 = jsonObject.get("newPsw2").toString();
         if(accountName != null && oldPsw != null && newPsw != null && newPsw2 != null){
             if(newPsw.equals(newPsw2)){
                 //查找账号的原来信息
