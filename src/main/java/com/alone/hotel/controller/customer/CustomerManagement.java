@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.dto.CustomerExecution;
 import com.alone.hotel.dto.CustomerRelationExecution;
+import com.alone.hotel.dto.RoomExecution;
+import com.alone.hotel.entity.CheckIn;
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.entity.CustomerRelation;
 import com.alone.hotel.enums.CustomerAccountStateEnum;
 import com.alone.hotel.enums.CustomerRelationStateEnum;
 import com.alone.hotel.enums.CustomerStateEnum;
+import com.alone.hotel.enums.RoomStateEnum;
+import com.alone.hotel.service.CheckInService;
 import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.service.CustomerRelationService;
 import com.alone.hotel.service.CustomerService;
@@ -18,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,10 +38,15 @@ import java.util.List;
 public class CustomerManagement {
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private CustomerAccountService customerAccountService;
+
     @Autowired
     private CustomerRelationService customerRelationService;
+
+    @Autowired
+    private CheckInService checkInService;
 
     /**
      * 增加顾客信息
@@ -172,18 +183,29 @@ public class CustomerManagement {
     }
 
     /**
-     * 在电梯处的识别
+     * 人脸识别
      * @param faceFile
      * @param roomId
      */
-    @GetMapping("/compareFacesAtElevator")
-    private void compareFacesAtElevator(@RequestParam MultipartFile faceFile, @RequestParam Integer roomId){
+    @GetMapping("/compareFaces")
+    private RoomExecution compareFaces(@RequestParam MultipartFile faceFile, @RequestParam Integer roomId){
         //初始化引擎
         FaceUtil.initEngine();
         //查询数据库内已有的人脸
         List<Customer> customerList = customerService.queryCustomerFaceImages();
         //生成人脸特征信息
         FaceUtil.getDataSoureFeature(customerList);
-
+        try {
+            File newFile = FaceUtil.multipartFileToFile(faceFile);
+            String customerCardNumber = FaceUtil.compareFaces(newFile);
+            CheckIn checkIn = checkInService.queryCheckInByCustomer(customerCardNumber);
+            if(roomId == checkIn.getRoom().getRoomId()){
+                return new RoomExecution(RoomStateEnum.SUCCESS, checkIn.getRoom());
+            } else {
+                return new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+            }
+        } catch (IOException e) {
+            return new RoomExecution(RoomStateEnum.INNER_ERROR);
+        }
     }
 }

@@ -33,7 +33,6 @@ public interface CheckInService {
     CheckIn queryCheckInByCustomer(String customerCardNumber);
 
 
-
     /**
      * 删除入住关联信息
      * @param checkIn
