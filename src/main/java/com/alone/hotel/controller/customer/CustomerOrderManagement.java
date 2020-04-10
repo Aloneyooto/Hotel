@@ -238,36 +238,39 @@ public class CustomerOrderManagement {
      * @param accountName
      * @return
      */
-    @GetMapping("/queryallordersbyaccount")
-    private OrderExecution queryAllOrdersByAccount(@RequestParam String accountName){
-        //空值判断
-        if(accountName != null){
-            //查询房间订单
-            List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(accountName);
-            //去room_order_relation里查询房间列表
-            for (RoomOrder roomOrder : roomOrderList) {
-                //查询到的房间列表
-                RoomOrder orderResult = roomOrderRelationService.queryRoomByOrderId(roomOrder.getOrderId());
-                List<Room> roomList = orderResult.getRoomList();
-                for (Room room : roomList) {
-                    room = checkInService.queryCheckInByRoom(room.getRoomId());
-                    //根据顾客ID查询recreate_order
-                    List<Customer> customerList = room.getCustomerList();
-                    for (Customer customer : customerList) {
-                        RecreateOrder recreateOrder = new RecreateOrder();
-                        recreateOrder.setCustomer(customer);
-                        Customer customerResult = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
-                        customer.setRecreateOrderList(customerResult.getRecreateOrderList());
-                    }
-                    room.setCustomerList(customerList);
-                }
-                roomOrder.setRoomList(roomList);
-            }
-            return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
-        } else {
-            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
-        }
-    }
+//    @GetMapping("/queryallordersbyaccount")
+//    private OrderExecution queryAllOrdersByAccount(@RequestParam String accountName){
+//        //空值判断
+//        if(accountName != null){
+//            //查询房间订单
+//            List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(accountName);
+//            //去room_order_relation里查询房间列表
+//            for (RoomOrder roomOrder : roomOrderList) {
+//                //查询到的房间列表
+//                RoomOrder orderResult = roomOrderRelationService.queryRoomByOrderId(roomOrder.getOrderId());
+//                List<Room> roomList = orderResult.getRoomList();
+//                for (Room room : roomList) {
+//                    room = checkInService.queryCheckInByRoom(room.getRoomId());
+//                    //根据顾客ID查询recreate_order
+//                    List<Customer> customerList = room.getCustomerList();
+//                    for (Customer customer : customerList) {
+//                        RecreateOrder recreateOrder = new RecreateOrder();
+//                        recreateOrder.setCustomer(customer);
+//                        Customer customerResult = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
+//                        customer.setRecreateOrderList(customerResult.getRecreateOrderList());
+//                    }
+//                    for (int i = 0; i < customerList.size(); i++){
+//
+//                    }
+//                    room.setCustomerList(customerList);
+//                }
+//                roomOrder.setRoomList(roomList);
+//            }
+//            return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
+//        } else {
+//            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
+//        }
+//    }
 
     /**
      * 生成房间订单ID

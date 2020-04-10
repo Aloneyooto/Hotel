@@ -31,7 +31,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     @Override
     @Transactional
     public CustomerAccountExecution addCustomerAccount(CustomerAccount customerAccount) {
-        if(customerAccount != null){
+        if(customerAccount != null && customerAccount.getAccountName() != null && customerAccount.getAccountPassword() != null){
             try{
                 //未进行实名验证
                 customerAccount.setFlag(0);

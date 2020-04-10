@@ -38,9 +38,9 @@ public class CustomerAccountManagement {
         }
     }
 
-    @PostMapping("/register")
-    private CustomerAccountExecution register(@RequestBody CustomerAccount customerAccount){
-        if(customerAccount.getAccountName() != null && customerAccount.getAccountName() != null){
+    @PostMapping(value = "/register")
+    public CustomerAccountExecution register(@RequestBody CustomerAccount customerAccount){
+        if(customerAccount.getAccountName() != null && customerAccount.getAccountPassword() != null){
             CustomerAccountExecution customerAccountExecution = customerAccountService.addCustomerAccount(customerAccount);
             return customerAccountExecution;
         } else {
@@ -48,8 +48,8 @@ public class CustomerAccountManagement {
         }
     }
 
-    @PostMapping("/changepwd")
-    private CustomerAccountExecution changePwd(@RequestBody JSONObject jsonObject){
+    @PostMapping(value = "/changepwd")
+    public CustomerAccountExecution changePwd(@RequestBody JSONObject jsonObject){
         //String accountName, String oldPsw, String newPsw, String newPsw2
         String accountName = jsonObject.get("accountName").toString();
         String oldPsw = jsonObject.get("oldPsw").toString();
