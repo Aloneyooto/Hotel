@@ -12,7 +12,7 @@ public enum CustomerStateEnum {
     INNER_ERROR(-8001, "内部错误"),
     CARD_IMAGE_EMPTY(-8002, "证件图片为空"),
     FACE_IMAGE_EMPTY(-8003, "面部图片为空"),
-    BASIC_MESSAGE_EMPTY(-8004, "基本信息为空"),
+    BASIC_MESSAGE_ERROR(-8004, "基本信息不合法"),
     FILE_INSERT_ERROR(-8005, "文件插入出错"),
     ID_CARD_EMPTY(-8006, "身份证号为空"),
     CERTIFICATION_ERROR(-8007, "实名认证失败"),

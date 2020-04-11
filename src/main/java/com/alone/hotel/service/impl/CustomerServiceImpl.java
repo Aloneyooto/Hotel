@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public CustomerExecution addCustomer(Customer customer, MultipartFile cardImg, MultipartFile faceImg) {
         //非空判断
-        if(customer != null && customer.getCustomerCardNumber() != null && customer.getCustomerName() != null){
+        if(customer != null && customer.getCustomerCardNumber() != null && customer.getCustomerName() != null && customer.getCustomerCardNumber().length() == 18){
             try {
                 //文件流
                 if(cardImg != null){
@@ -58,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
                 return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
+            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
         }
     }
 
@@ -101,7 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
                 throw new CustomerException(CustomerStateEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
+            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
         }
     }
 

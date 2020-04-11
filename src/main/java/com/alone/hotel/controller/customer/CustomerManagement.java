@@ -21,7 +21,9 @@ import com.alone.hotel.utils.FaceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -50,19 +52,46 @@ public class CustomerManagement {
 
     /**
      * 增加顾客信息
-     * @param customer 入住人信息
-     * @param cardImg 证件图片
-     * @param faceImg 面部图片
-     * @param customerAccount 账号信息
-     * @param flag 实名认证标记
+     * @Param request
      * @return
      */
     @PostMapping("/addcustomermessage")
-    private CustomerExecution addCustomerMessage(Customer customer, MultipartFile cardImg, MultipartFile faceImg,
-                                                 CustomerAccount customerAccount, int flag){
-        if(customer != null){
+    private CustomerExecution addCustomerMessage(HttpServletRequest request){
+        //Customer customer, MultipartFile cardImg, MultipartFile faceImg, CustomerAccount customerAccount, int flag
+        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+        String customerCardNumber = params.getParameter("customerCardNumber");
+        //保证身份证号不为空
+        if(customerCardNumber != null && customerCardNumber.length() == 18){
+            Customer customer = new Customer();
+            CustomerAccount customerAccount = new CustomerAccount();
+            int customerAge = 0;
+            int customerGender = 0;
+            String customerPhone = null;
+            MultipartFile cardImg = params.getFile("cardImg");
+            MultipartFile faceImg = params.getFile("faceImg");
+            int flag = Integer.parseInt(params.getParameter("flag"));
+            String customerName = params.getParameter("customerName");
+            if(params.getParameter("customerAge") != null){
+                customerAge = Integer.parseInt(params.getParameter("customerAge"));
+            }
+            if(params.getParameter("customerGender") != null){
+                customerGender = Integer.parseInt(params.getParameter("customerGender"));
+            }
+            if(params.getParameter("customerPhone") != null){
+                customerPhone = params.getParameter("customerPhone");
+            }
+            String accountName = params.getParameter("accountName");
+            String accountPassword = params.getParameter("accountPassword");
+
+
             //添加顾客信息
             try{
+                customer.setCustomerCardNumber(customerCardNumber);
+                customer.setCustomerName(customerName);
+                customer.setCustomerAge(customerAge);
+                customer.setCustomerGender(customerGender);
+                customer.setCustomerPhone(customerPhone);
+
                 CustomerExecution customerExecution = customerService.addCustomer(customer, cardImg, faceImg);
                 if(customerExecution.getState() != CustomerStateEnum.SUCCESS.getState()){
                     return customerExecution;
@@ -75,6 +104,10 @@ public class CustomerManagement {
                 //在进行实名认证
                 customerAccount.setFlag(1);
                 customerAccount.setCustomer(customer);
+
+                customerAccount.setAccountName(accountName);
+                customerAccount.setAccountPassword(accountPassword);
+
                 //To check
                 CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
                 if(customerAccountExecution.getState() != CustomerAccountStateEnum.SUCCESS.getState()){
@@ -92,7 +125,7 @@ public class CustomerManagement {
                 return new CustomerExecution(CustomerStateEnum.RELATION_INSERT_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
+            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
         }
     }
 
@@ -113,7 +146,7 @@ public class CustomerManagement {
                 return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
+            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
         }
     }
 
@@ -139,7 +172,7 @@ public class CustomerManagement {
                   return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
+            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
         }
     }
 
@@ -178,7 +211,7 @@ public class CustomerManagement {
                 return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_EMPTY);
+            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
         }
     }
 
