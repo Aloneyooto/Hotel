@@ -1,6 +1,8 @@
 package com.alone.hotel.controller.customer;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.dto.CustomerExecution;
 import com.alone.hotel.dto.CustomerRelationExecution;
@@ -18,7 +20,10 @@ import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.service.CustomerRelationService;
 import com.alone.hotel.service.CustomerService;
 import com.alone.hotel.utils.FaceUtil;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -50,11 +55,15 @@ public class CustomerManagement {
     @Autowired
     private CheckInService checkInService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 增加顾客信息
      * @Param request
      * @return
      */
+    @UserLoginToken
     @PostMapping("/addcustomermessage")
     private CustomerExecution addCustomerMessage(HttpServletRequest request){
         //Customer customer, MultipartFile cardImg, MultipartFile faceImg, CustomerAccount customerAccount, int flag
@@ -80,6 +89,7 @@ public class CustomerManagement {
             if(params.getParameter("customerPhone") != null){
                 customerPhone = params.getParameter("customerPhone");
             }
+            //TODO
             String accountName = params.getParameter("accountName");
             String accountPassword = params.getParameter("accountPassword");
 
@@ -131,22 +141,28 @@ public class CustomerManagement {
 
     /**
      * 列出该账号存放的顾客信息
-     * @param customerAccount
+     * @param request
      * @return
      */
+    @UserLoginToken
     @GetMapping("/querycustomerbyaccount")
-    private CustomerExecution queryCustomerByAccount(CustomerAccount customerAccount){
-        if(customerAccount != null){
-            CustomerRelation customerRelation = new CustomerRelation();
-            customerRelation.setAccount(customerAccount);
-            CustomerAccount account = customerRelationService.queryCustomerByAccount(customerRelation);
-            if(account != null){
+    private CustomerExecution queryCustomerByAccount(HttpServletRequest request){
+        try {
+            //获取token
+            String token = request.getHeader("token");
+            //获取customerAccount对象
+            String jsonStr = (String)redisTemplate.opsForValue().get(token);
+            CustomerAccount customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+            if(customerAccount != null){
+                CustomerRelation customerRelation = new CustomerRelation();
+                customerRelation.setAccount(customerAccount);
+                CustomerAccount account = customerRelationService.queryCustomerByAccount(customerRelation);
                 return new CustomerExecution(CustomerStateEnum.SUCCESS, account.getCustomerList());
             } else {
-                return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+                return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
             }
-        } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+        } catch (Exception e){
+            return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
         }
     }
 
@@ -157,6 +173,7 @@ public class CustomerManagement {
      * @param faceImg
      * @return
      */
+    @UserLoginToken
     @PostMapping("/updatecustomermessage")
     private CustomerExecution updateCustomerMessage(@RequestParam("customer") Customer customer, @RequestParam("cardImg") MultipartFile cardImg, @RequestParam("faceImg") MultipartFile faceImg){
         //判断顾客信息是否为空
@@ -181,6 +198,7 @@ public class CustomerManagement {
      * @param jsonObject
      * @return
      */
+    @UserLoginToken
     @PostMapping("/deletecustomermessage")
     private CustomerExecution deleteCustomerMessage(@RequestBody JSONObject jsonObject){
         //String accountName, String customerCardNumber
@@ -220,6 +238,7 @@ public class CustomerManagement {
      * @param faceFile
      * @param roomId
      */
+    @UserLoginToken
     @GetMapping("/compareFaces")
     private RoomExecution compareFaces(@RequestParam MultipartFile faceFile, @RequestParam Integer roomId){
         //初始化引擎

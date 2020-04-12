@@ -1,5 +1,6 @@
 package com.alone.hotel.controller.customer;
 
+import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.*;
@@ -46,6 +47,7 @@ public class CustomerOrderManagement {
      * @param roomOrder
      * @return
      */
+    @UserLoginToken
     @PostMapping("/addroomorder")
     private OrderExecution addRoomOrder(@RequestBody RoomOrder roomOrder){
         //空值判断
@@ -116,6 +118,7 @@ public class CustomerOrderManagement {
      * @param customerAccount
      * @return
      */
+    @UserLoginToken
     @GetMapping("/queryroomorderbyaccountname")
     private OrderExecution queryRoomOrderByAccountName(CustomerAccount customerAccount){
         if(customerAccount != null){
@@ -135,6 +138,7 @@ public class CustomerOrderManagement {
      * @param roomOrder
      * @return
      */
+    @UserLoginToken
     @PostMapping("/updateroomorder")
     private OrderExecution updateRoomOrder(@RequestBody RoomOrder roomOrder){
         if(roomOrder != null && roomOrder.getOrderId() != null){
@@ -154,6 +158,7 @@ public class CustomerOrderManagement {
      * @param roomOrder
      * @return
      */
+    @UserLoginToken
     @PostMapping("/deleteroomorder")
     private OrderExecution deleteRoomOrder(@RequestBody RoomOrder roomOrder){
         if(roomOrder != null && roomOrder.getOrderId() != null && roomOrder.getCustomerList() != null){
@@ -195,6 +200,7 @@ public class CustomerOrderManagement {
         }
     }
 
+    @UserLoginToken
     @PostMapping("/addrecreateorder")
     private OrderExecution addRecreateOrder(@RequestBody RecreateOrder recreateOrder){
         if(recreateOrder != null){
@@ -204,6 +210,7 @@ public class CustomerOrderManagement {
         }
     }
 
+    @UserLoginToken
     @GetMapping("/queryrecreateorderbycustomer")
     private OrderExecution queryRecreateOrderByCustomer(@RequestParam RecreateOrder recreateOrder){
         if(recreateOrder != null){
@@ -214,6 +221,7 @@ public class CustomerOrderManagement {
         }
     }
 
+    @UserLoginToken
     @PostMapping("/updaterecreateorder")
     private OrderExecution updateRecreateOrder(@RequestBody RecreateOrder recreateOrder){
         if(recreateOrder != null && recreateOrder.getOrderStatus() != 1){
@@ -223,6 +231,7 @@ public class CustomerOrderManagement {
         }
     }
 
+    @UserLoginToken
     @PostMapping("/deleterecreateorder")
     private OrderExecution deleteRecreateOrder(@RequestBody String recreateOrderId){
         if(recreateOrderId != null){
@@ -238,6 +247,7 @@ public class CustomerOrderManagement {
      * @param accountName
      * @return
      */
+//    @UserLoginToken
 //    @GetMapping("/queryallordersbyaccount")
 //    private OrderExecution queryAllOrdersByAccount(@RequestParam String accountName){
 //        //空值判断

@@ -7,10 +7,16 @@
         values (#{accountName}, #{accountPassword}, #{flag}, #{deposit}, #{headImg})
     </insert>
 
-    <select id="queryCustomerAccountByName" resultType="com.alone.hotel.entity.CustomerAccount" parameterType="String">
+    <select id="queryCustomerAccountByNameAndPwd" resultType="com.alone.hotel.entity.CustomerAccount" parameterType="String">
         select account_name, account_password, flag, deposit, customer_card_number, head_img
         from tb_customer_account
         where account_name = #{accountName} and account_password = #{accountPassword}
+    </select>
+
+    <select id="queryCustomerAccountByName" resultType="com.alone.hotel.entity.CustomerAccount" parameterType="String">
+        select account_name, account_password, flag, deposit, customer_card_number, head_img
+        from tb_customer_account
+        where account_name = #{accountName}
     </select>
 
     <update id="updateCustomerAccount" parameterType="com.alone.hotel.entity.CustomerAccount" >

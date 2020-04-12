@@ -31,9 +31,15 @@ public class CustomerAccountDaoTest {
     }
 
     @Test
-    public void testQueryCustomerAccountByName(){
-        CustomerAccount customerAccount = customerAccountDao.queryCustomerAccountByName("alone", "123456");
+    public void testQueryCustomerAccountByNameAndPsw(){
+        CustomerAccount customerAccount = customerAccountDao.queryCustomerAccountByNameAndPsw("alone", "123456");
         assertEquals(1000d, customerAccount.getDeposit());
+    }
+
+    @Test
+    public void testQueryCustomerAccountByName(){
+        CustomerAccount customerAccount = customerAccountDao.queryCustomerAccountByName("12");
+        assertEquals("123456", customerAccount.getAccountPassword());
     }
 
     @Test

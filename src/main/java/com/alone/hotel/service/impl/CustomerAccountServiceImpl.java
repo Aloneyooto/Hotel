@@ -49,9 +49,15 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     }
 
     @Override
-    public CustomerAccount queryCustomerAccountByName(String accountName, String password) {
-        return customerAccountDao.queryCustomerAccountByName(accountName, password);
+    public CustomerAccount queryCustomerAccountByNameAndPsw(String accountName, String password) {
+        return customerAccountDao.queryCustomerAccountByNameAndPsw(accountName, password);
     }
+
+    @Override
+    public CustomerAccount queryCustomerAccountByName(String accountName) {
+        return customerAccountDao.queryCustomerAccountByName(accountName);
+    }
+
 
     @Override
     @Transactional

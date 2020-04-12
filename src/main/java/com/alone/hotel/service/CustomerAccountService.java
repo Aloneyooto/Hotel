@@ -1,6 +1,7 @@
 package com.alone.hotel.service;
 
 import com.alone.hotel.dto.CustomerAccountExecution;
+import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.CustomerAccount;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,14 @@ public interface CustomerAccountService {
      * @param accountName
      * @return
      */
-    CustomerAccount queryCustomerAccountByName(String accountName, String password);
+    CustomerAccount queryCustomerAccountByNameAndPsw(String accountName, String password);
+
+    /**
+     * 通过用户名查询账号
+     * @param accountName
+     * @return
+     */
+    CustomerAccount queryCustomerAccountByName(String accountName);
 
     /**
      * 更新账号信息
