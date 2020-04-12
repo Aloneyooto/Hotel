@@ -72,7 +72,6 @@ public class CustomerManagement {
         //保证身份证号不为空
         if(customerCardNumber != null && customerCardNumber.length() == 18){
             Customer customer = new Customer();
-            CustomerAccount customerAccount = new CustomerAccount();
             int customerAge = 0;
             int customerGender = 0;
             String customerPhone = null;
@@ -89,9 +88,15 @@ public class CustomerManagement {
             if(params.getParameter("customerPhone") != null){
                 customerPhone = params.getParameter("customerPhone");
             }
-            //TODO
-            String accountName = params.getParameter("accountName");
-            String accountPassword = params.getParameter("accountPassword");
+
+            //获取token
+            String token = params.getHeader("token");
+            CustomerAccount customerAccount = null;
+            if(token != null){
+                //获取customerAccount对象
+                String jsonStr = (String)redisTemplate.opsForValue().get(token);
+                customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+            }
 
 
             //添加顾客信息
@@ -115,8 +120,6 @@ public class CustomerManagement {
                 customerAccount.setFlag(1);
                 customerAccount.setCustomer(customer);
 
-                customerAccount.setAccountName(accountName);
-                customerAccount.setAccountPassword(accountPassword);
 
                 //To check
                 CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
@@ -167,16 +170,43 @@ public class CustomerManagement {
     }
 
     /**
-     *
-     * @param customer
-     * @param cardImg
-     * @param faceImg
+     * 修改顾客信息
+     * @param request
      * @return
      */
     @UserLoginToken
     @PostMapping("/updatecustomermessage")
-    private CustomerExecution updateCustomerMessage(@RequestParam("customer") Customer customer, @RequestParam("cardImg") MultipartFile cardImg, @RequestParam("faceImg") MultipartFile faceImg){
-        //判断顾客信息是否为空
+    private CustomerExecution updateCustomerMessage(HttpServletRequest request){
+//        @RequestParam("customer") Customer customer, @RequestParam("cardImg") MultipartFile cardImg, @RequestParam("faceImg") MultipartFile faceImg
+//        判断顾客信息是否为空
+        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+        String customerCardNumber = params.getParameter("customerCardNumber");
+        Customer customer = new Customer();
+        MultipartFile cardImg = params.getFile("cardImg");
+        MultipartFile faceImg = params.getFile("faceImg");
+        if(customerCardNumber != null && customerCardNumber.length() == 18){
+            customer.setCustomerCardNumber(customerCardNumber);
+            int customerAge = 0;
+            int customerGender = 0;
+            String customerPhone = null;
+            String customerName = null;
+            if(params.getParameter("customerName") != null){
+                customerName = params.getParameter("customerName");
+                customer.setCustomerName(customerName);
+            }
+            if(params.getParameter("customerAge") != null){
+                customerAge = Integer.parseInt(params.getParameter("customerAge"));
+                customer.setCustomerAge(customerAge);
+            }
+            if(params.getParameter("customerGender") != null){
+                customerGender = Integer.parseInt(params.getParameter("customerGender"));
+                customer.setCustomerGender(customerGender);
+            }
+            if(params.getParameter("customerPhone") != null){
+                customerPhone = params.getParameter("customerPhone");
+                customer.setCustomerPhone(customerPhone);
+            }
+        }
         if(customer != null){
             try{
                 CustomerExecution customerExecution = customerService.updateCustomer(customer, cardImg, faceImg);
@@ -195,20 +225,28 @@ public class CustomerManagement {
 
     /**
      * 删除顾客信息
-     * @param jsonObject
+     * @param request
      * @return
      */
     @UserLoginToken
     @PostMapping("/deletecustomermessage")
-    private CustomerExecution deleteCustomerMessage(@RequestBody JSONObject jsonObject){
+    private CustomerExecution deleteCustomerMessage(HttpServletRequest request){
         //String accountName, String customerCardNumber
-        String accountName = jsonObject.getString("accountName");
-        String customerCardNumber = jsonObject.getString("customerCardNumber");
-        if(accountName != null && customerCardNumber != null){
+
+        //获取token
+        String token = request.getHeader("token");
+        CustomerAccount customerAccount = null;
+        if(token != null){
+            //获取customerAccount对象
+            String jsonStr = (String)redisTemplate.opsForValue().get(token);
+            customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+        }
+
+        String customerCardNumber = request.getParameter("customerCardNumber");
+
+        if(customerCardNumber != null){
             //删除customerrelation里的对应内容
             CustomerRelation customerRelation = new CustomerRelation();
-            CustomerAccount customerAccount = new CustomerAccount();
-            customerAccount.setAccountPassword(accountName);
             Customer customer = new Customer();
             customer.setCustomerCardNumber(customerCardNumber);
             customerRelation.setAccount(customerAccount);
