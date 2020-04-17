@@ -10,6 +10,7 @@ import com.alone.hotel.enums.OrderStateEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RecreateOrderService;
 import com.alone.hotel.service.RecreationService;
+import com.alone.hotel.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +72,21 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
     public Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder) {
         return recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder);
     }
+
+    @Override
+    public OrderExecution queryRecreateOrderList(RecreateOrder orderCondition, int pageIndex, int pageSize) {
+        //页数转换成数据库的行数
+        int rowIndex = PageUtil.calculateRowIndex(pageIndex, pageSize);
+        //查询所需记录
+        List<RecreateOrder> recreateOrderList = recreateOrderDao.queryRecreateOrderList(orderCondition, rowIndex, pageSize);
+        //总记录数
+        int count = recreateOrderDao.queryRecreateOrderCount(orderCondition);
+        OrderExecution orderExecution = new OrderExecution();
+        orderExecution.setRecreateOrderCount(count);
+        orderExecution.setRecreateOrderList(recreateOrderList);
+        return orderExecution;
+    }
+
 
     @Override
     @Transactional

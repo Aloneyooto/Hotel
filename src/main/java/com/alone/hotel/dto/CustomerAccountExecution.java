@@ -24,6 +24,8 @@ public class CustomerAccountExecution {
     private String token;
     //账户信息
     private CustomerAccount customerAccount;
+    //操作账户列表
+    private List<CustomerAccount> customerAccountList;
 
     public CustomerAccountExecution() {
     }
@@ -43,5 +45,11 @@ public class CustomerAccountExecution {
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customerAccount = customerAccount;
+    }
+
+    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum, List<CustomerAccount> customerAccountList){
+        this.state = stateEnum.getState();
+        this.stateInfo = stateEnum.getStateInfo();
+        this.customerAccountList = customerAccountList;
     }
 }

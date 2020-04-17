@@ -10,6 +10,8 @@ import com.alone.hotel.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.controller.personnel
@@ -26,6 +28,11 @@ public class EmployeeAccountManagement {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * 登录
+     * @param jsonObject
+     * @return
+     */
     @PostMapping("/login")
     private EmployeeAccountExecution login(@RequestBody JSONObject jsonObject){
         //String accountName, String password
@@ -36,7 +43,9 @@ public class EmployeeAccountManagement {
             if(employeeAccount != null){
                 //查询账号权限
                 Employee employee = employeeService.queryEmployeeById(employeeAccount.getAccountName());
-                employeeAccount.setAccountPower(employee.getPosition().getPositionId());
+                if(!employee.getPosition().getPositionId().equals(employeeAccount.getAccountPower())){
+                    employeeAccount.setAccountPower(employee.getPosition().getPositionId());
+                }
                 return new EmployeeAccountExecution(EmployeeAccountStateEnum.SUCCESS, employeeAccount);
             } else {
                 return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_ERROR);
@@ -46,6 +55,11 @@ public class EmployeeAccountManagement {
         }
     }
 
+    /**
+     * 修改密码
+     * @param jsonObject
+     * @return
+     */
     @PostMapping("/changepwd")
     private EmployeeAccountExecution changePwd(@RequestBody JSONObject jsonObject){
         String accountName = jsonObject.get("accountName").toString();
@@ -69,6 +83,35 @@ public class EmployeeAccountManagement {
                 //两次输入的密码不一致
                 return new EmployeeAccountExecution(EmployeeAccountStateEnum.NEW_PASSWORD_ERROR);
             }
+        } else {
+            return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
+        }
+    }
+
+    /**
+     * 获取全部员工账号
+     * @return
+     */
+    @GetMapping("/queryemployeeaccountlist")
+    private EmployeeAccountExecution queryEmployeeAccountList(){
+        try {
+            List<EmployeeAccount> employeeAccountList = employeeAccountService.queryEmployeeAccountList();
+            return new EmployeeAccountExecution(EmployeeAccountStateEnum.SUCCESS, employeeAccountList);
+        } catch (Exception e){
+            return new EmployeeAccountExecution(EmployeeAccountStateEnum.INNER_ERROR);
+        }
+    }
+
+    /**
+     * 修改账号权限
+     * @param employeeAccount
+     * @return
+     */
+    @PostMapping("/updateaccountpower")
+    private EmployeeAccountExecution updateAccountPower(@RequestBody EmployeeAccount employeeAccount){
+        if(employeeAccount != null && employeeAccount.getAccountName() != null){
+            EmployeeAccountExecution result = employeeAccountService.updateEmployeeAccount(employeeAccount);
+            return result;
         } else {
             return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
         }

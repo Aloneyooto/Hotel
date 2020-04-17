@@ -44,6 +44,62 @@
         where date(hand_in_time) = date(#{handInTime})
     </select>
 
+    <select id="queryRecreateOrderList" resultType="com.alone.hotel.entity.RecreateOrder">
+        select order_id, c.customer_card_number, c.customer_name, re.recreation_id, re.recreation_name,
+        order_price, start_time, end_time, order_status, hand_in_time
+        from tb_recreate_order ro, tb_recreation re, tb_customer c
+        <where>
+            <if test="orderCondition.recreation != null and orderCondition.recreation.recreationId != null ">
+                and re.recreation_id = #{orderCondition.recreation.recreationId}
+            </if>
+            <if test="orderCondition.recreation != null and orderCondition.recreation.recreationName != null ">
+                and recreation_name like '%' {orderCondition.recreation.recreationName} '%'
+            </if>
+            <if test="orderCondition.customer != null and orderCondition.customer.customerCardNumber != null ">
+                and c.customer_card_number = {orderCondition.customer.customerCardNumber}
+            </if>
+            <if test="orderCondition.customer != null and orderCondition.customer.customerName != null ">
+                and customer_name like '%' {orderCondition.customer.customerName} '%'
+            </if>
+            <if test="orderCondition.orderStatus != null">
+                and order_status = #{orderCondition.orderStatus}
+            </if>
+            <if test="orderCondition.handInTime != null ">
+                and date(hand_in_time) = date(orderCondition.handInTIme)
+            </if>
+            and ro.recreation_id = re.recreation_id
+            and ro.customer_card_number = c.customer_card_number
+        </where>
+        limit #{rowIndex}, #{pageSize}
+    </select>
+
+    <select id="queryRecreateOrderCount" resultType="int">
+        select count(1)
+        from tb_recreate_order ro, tb_recreation re, tb_customer c
+        <where>
+            <if test="orderCondition.recreation != null and orderCondition.recreation.recreationId != null ">
+                and re.recreation_id = #{orderCondition.recreation.recreationId}
+            </if>
+            <if test="orderCondition.recreation != null and orderCondition.recreation.recreationName != null ">
+                and recreation_name like '%' {orderCondition.recreation.recreationName} '%'
+            </if>
+            <if test="orderCondition.customer != null and orderCondition.customer.customerCardNumber != null ">
+                and c.customer_card_number = {orderCondition.customer.customerCardNumber}
+            </if>
+            <if test="orderCondition.customer != null and orderCondition.customer.customerName != null ">
+                and customer_name like '%' {orderCondition.customer.customerName} '%'
+            </if>
+            <if test="orderCondition.orderStatus != null">
+                and order_status = #{orderCondition.orderStatus}
+            </if>
+            <if test="orderCondition.handInTime != null ">
+                and date(hand_in_time) = date(orderCondition.handInTIme)
+            </if>
+            and ro.recreation_id = re.recreation_id
+            and ro.customer_card_number = c.customer_card_number
+        </where>
+    </select>
+
     <update id="updateRecreateOrder" parameterType="com.alone.hotel.entity.RecreateOrder">
         update tb_recreate_order
         set order_status = #{orderStatus}

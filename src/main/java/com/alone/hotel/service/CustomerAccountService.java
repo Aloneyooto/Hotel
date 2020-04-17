@@ -5,6 +5,8 @@ import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.CustomerAccount;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.service
@@ -33,6 +35,12 @@ public interface CustomerAccountService {
      * @return
      */
     CustomerAccount queryCustomerAccountByName(String accountName);
+
+    /**
+     * 查询账号列表
+     * @return
+     */
+    List<CustomerAccount> queryCustomerAccountList();
 
     /**
      * 更新账号信息

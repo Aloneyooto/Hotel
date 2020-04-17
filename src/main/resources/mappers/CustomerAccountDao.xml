@@ -19,6 +19,11 @@
         where account_name = #{accountName}
     </select>
 
+    <select id="queryCustomerAccountList" resultType="com.alone.hotel.entity.CustomerAccount">
+        select account_name, account_password, flag, deposit, customer_card_number, head_img
+        from tb_customer_account
+    </select>
+
     <update id="updateCustomerAccount" parameterType="com.alone.hotel.entity.CustomerAccount" >
         update tb_customer_account
         <set>

@@ -23,10 +23,10 @@ public interface RoomOrderService {
 
     /**
      * 根据账号查询订单
-     * @param accountName
+     * @param orderCondition
      * @return
      */
-    List<RoomOrder> queryRoomOrderByAccountName(String accountName);
+    List<RoomOrder> queryRoomOrderByCondition(RoomOrder orderCondition);
 
     /**
      * 查询已生成的订单数

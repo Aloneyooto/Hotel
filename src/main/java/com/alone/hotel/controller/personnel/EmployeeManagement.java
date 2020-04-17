@@ -11,14 +11,19 @@ import com.alone.hotel.enums.EmployeeStateEnum;
 import com.alone.hotel.service.CleanerService;
 import com.alone.hotel.service.EmployeeAccountService;
 import com.alone.hotel.service.EmployeeService;
+import com.alone.hotel.utils.FaceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.pattern.PathPattern;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @BelongsProject: hotel
@@ -38,17 +43,18 @@ public class EmployeeManagement {
     @Autowired
     private EmployeeAccountService employeeAccountService;
 
+    /**
+     * 添加员工
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping("/addemployee")
-    private EmployeeExecution addEmployee(@RequestParam("employeeStr")String employeeStr,
-                                          @RequestParam("cardImg")MultipartFile cardImg,
-                                          @RequestParam("faceImg")MultipartFile faceImg){
-        Employee employee = null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            employee = mapper.readValue(employeeStr, Employee.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    private EmployeeExecution addEmployee(HttpServletRequest request, @RequestBody Employee employee){
+        //@RequestParam("employeeStr")String employeeStr,@RequestParam("cardImg")MultipartFile cardImg,@RequestParam("faceImg")MultipartFile faceImg
+        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+        MultipartFile cardImg = params.getFile("cardImg");
+        MultipartFile faceImg = params.getFile("faceImg");
         //空值判断
         if(employee != null && cardImg != null && faceImg != null){
             try{
@@ -80,6 +86,11 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * 根据员工ID查询员工信息
+     * @param employeeId
+     * @return
+     */
     @GetMapping("/getemployeebyid")
     private EmployeeExecution getEmployeeById(@RequestParam String employeeId){
         EmployeeExecution employeeExecution = null;
@@ -92,6 +103,14 @@ public class EmployeeManagement {
         return employeeExecution;
     }
 
+    /**
+     * 根据检索条件查询员工列表
+     * 姓名,性别,职位
+     * @param employeeCondition
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/getemployeelist")
     private EmployeeExecution getEmployeeList(@RequestParam Employee employeeCondition, @RequestParam int pageIndex, @RequestParam int pageSize){
         //保证页码合法
@@ -103,15 +122,20 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * 修改员工信息
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping("/updateemployee")
-    private EmployeeExecution updateEmployee(@RequestParam("employeeStr")String employeeStr, @RequestParam("cardImg")MultipartFile cardImg, @RequestParam("faceImg")MultipartFile faceImg){
-        Employee employee = null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            employee = mapper.readValue(employeeStr, Employee.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    private EmployeeExecution updateEmployee(HttpServletRequest request, @RequestBody Employee employee){
+//        @RequestParam("employeeStr")String employeeStr,
+//        @RequestParam("cardImg")MultipartFile cardImg,
+//        @RequestParam("faceImg")MultipartFile faceImg
+        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+        MultipartFile cardImg = params.getFile("cardImg");
+        MultipartFile faceImg = params.getFile("faceImg");
         //空值判断
         if(employee != null){
             try{
@@ -129,6 +153,11 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * 删除员工信息
+     * @param employeeId
+     * @return
+     */
     @PostMapping("/deleteEmployee")
     private EmployeeExecution deleteEmployee(@RequestBody String employeeId){
         EmployeeExecution employeeExecution = null;
@@ -153,5 +182,28 @@ public class EmployeeManagement {
             employeeExecution = new EmployeeExecution(EmployeeStateEnum.EMPLOYEE_ID_ERROR);
         }
         return employeeExecution;
+    }
+
+    /**
+     * 人脸识别
+     * @param faceFile
+     * @return
+     */
+    @GetMapping("/compareFaces")
+    private EmployeeExecution compareFaces(@RequestParam MultipartFile faceFile){
+        //初始化引擎
+        FaceUtil.initEngine();
+        //查询数据库内已有的人脸
+        List<Employee> employeeList = employeeService.queryEmployeeFaceImg();
+        //生成人脸特征信息
+        FaceUtil.getEmployeeFeature(employeeList);
+        try {
+            File newFile = FaceUtil.multipartFileToFile(faceFile);
+            String employeeId = FaceUtil.compareFaces(newFile);
+            Employee employee = employeeService.queryEmployeeById(employeeId);
+            return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
+        } catch (IOException e) {
+            return new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
+        }
     }
 }

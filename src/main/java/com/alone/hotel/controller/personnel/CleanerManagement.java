@@ -67,8 +67,8 @@ public class CleanerManagement {
         }
     }
 
-    @PostMapping("/modifycleaner")
-    private CleanerExecution modifyCleaner(@RequestBody Cleaner cleaner){
+    @PostMapping("/updatecleaner")
+    private CleanerExecution updateCleaner(@RequestBody Cleaner cleaner){
         if(cleaner != null && cleaner.getEmployee().getEmployeeId() != null){
             try{
                 CleanerExecution cleanerExecution = cleanerService.updateCleaner(cleaner);

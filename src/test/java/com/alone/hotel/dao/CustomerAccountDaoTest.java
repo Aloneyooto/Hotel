@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -40,6 +42,12 @@ public class CustomerAccountDaoTest {
     public void testQueryCustomerAccountByName(){
         CustomerAccount customerAccount = customerAccountDao.queryCustomerAccountByName("12");
         assertEquals("123456", customerAccount.getAccountPassword());
+    }
+
+    @Test
+    public void testQueryCustomerAccountList(){
+        List<CustomerAccount> customerAccountList = customerAccountDao.queryCustomerAccountList();
+        assertEquals(8, customerAccountList.size());
     }
 
     @Test

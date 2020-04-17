@@ -109,6 +109,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public List<Employee> queryEmployeeFaceImg() {
+        return employeeDao.queryEmployeeFaceImg();
+    }
+
+
+    @Override
     @Transactional
     public EmployeeExecution updateEmployee(Employee employee, MultipartFile cardImg, MultipartFile faceImg) throws IOException {
         //空值判断

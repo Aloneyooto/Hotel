@@ -45,6 +45,12 @@ public interface EmployeeDao {
     int queryEmployeeCount(@Param("employeeCondition")Employee employeeCondition);
 
     /**
+     * 查询所有员工的脸部图片
+     * @return
+     */
+    List<Employee> queryEmployeeFaceImg();
+
+    /**
      * 修改员工信息
      * @param employee
      * @return

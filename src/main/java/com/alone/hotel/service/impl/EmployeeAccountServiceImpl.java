@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.service.impl
@@ -44,6 +46,12 @@ public class EmployeeAccountServiceImpl implements EmployeeAccountService {
     public EmployeeAccount queryEmployeeAccountByName(String employeeAccountName, String employeeAccountPassword) {
         return employeeAccountDao.queryEmployeeAccountByName(employeeAccountName, employeeAccountPassword);
     }
+
+    @Override
+    public List<EmployeeAccount> queryEmployeeAccountList() {
+        return employeeAccountDao.queryEmployeeAccountList();
+    }
+
 
     @Override
     @Transactional

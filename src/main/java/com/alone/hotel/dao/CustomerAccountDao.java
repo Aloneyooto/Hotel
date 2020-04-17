@@ -2,6 +2,8 @@ package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.CustomerAccount;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.dao
@@ -30,6 +32,12 @@ public interface CustomerAccountDao {
      * @return
      */
     CustomerAccount queryCustomerAccountByName(String accountName);
+
+    /**
+     * 查找全部账号
+     * @return
+     */
+    List<CustomerAccount> queryCustomerAccountList();
 
     /**
      * 修改账户信息

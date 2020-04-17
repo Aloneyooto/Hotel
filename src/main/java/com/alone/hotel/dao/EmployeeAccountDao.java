@@ -1,6 +1,9 @@
 package com.alone.hotel.dao;
 
+import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.EmployeeAccount;
+
+import java.util.List;
 
 /**
  * @BelongsProject: hotel
@@ -23,6 +26,12 @@ public interface EmployeeAccountDao {
      * @return
      */
     EmployeeAccount queryEmployeeAccountByName(String accountName, String accountPassword);
+
+    /**
+     * 根据检索条件查询员工账号
+     * @return
+     */
+    List<EmployeeAccount> queryEmployeeAccountList();
 
     /**
      * 修改账户信息

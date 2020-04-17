@@ -3,6 +3,7 @@ package com.alone.hotel.service;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.RecreateOrder;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 
 import java.util.List;
 
@@ -22,11 +23,20 @@ public interface RecreateOrderService {
     OrderExecution addRecreateOrder(RecreateOrder recreateOrder);
 
     /**
-     * 根据检索条件检索订单
+     * 根据顾客检索订单
      * @param recreateOrder
      * @return
      */
     Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
+
+    /**
+     * 根据检索条件检索订单
+     * @param orderCondition
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    OrderExecution queryRecreateOrderList(RecreateOrder orderCondition, int pageIndex, int pageSize);
 
     /**
      * 更新其他消费记录

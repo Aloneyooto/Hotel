@@ -1,5 +1,6 @@
 package com.alone.hotel.controller.customer;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.dto.RoomExecution;
@@ -8,8 +9,10 @@ import com.alone.hotel.enums.OrderStateEnum;
 import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,15 +44,24 @@ public class CustomerOrderManagement {
     private RoomOrderRelationService roomOrderRelationService;
     @Autowired
     private CheckInService checkInService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 增加房间订单
+     * @param request
      * @param roomOrder
      * @return
      */
     @UserLoginToken
     @PostMapping("/addroomorder")
-    private OrderExecution addRoomOrder(@RequestBody RoomOrder roomOrder){
+    private OrderExecution addRoomOrder(HttpServletRequest request, @RequestBody RoomOrder roomOrder){
+        //获取token
+        String token = request.getHeader("token");
+        //获取customerAccount对象
+        String jsonStr = (String)redisTemplate.opsForValue().get(token);
+        CustomerAccount customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+        roomOrder.setAccount(customerAccount);
         //空值判断
         if(roomOrder != null && roomOrder.getAccount() != null && roomOrder.getRoomType() != null){
             //查询房间数量是否满足订单需求
@@ -113,25 +125,30 @@ public class CustomerOrderManagement {
         }
     }
 
-    /**
-     * 获取账户所定的房间订单
-     * @param customerAccount
-     * @return
-     */
-    @UserLoginToken
-    @GetMapping("/queryroomorderbyaccountname")
-    private OrderExecution queryRoomOrderByAccountName(CustomerAccount customerAccount){
-        if(customerAccount != null){
-            try {
-                List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(customerAccount.getAccountName());
-                return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
-            } catch (Exception e){
-                return new OrderExecution(OrderStateEnum.INNER_ERROR);
-            }
-        } else {
-            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
-        }
-    }
+//    /**
+//     * 获取账户所定的房间订单
+//     * @param request
+//     * @return
+//     */
+//    @UserLoginToken
+//    @GetMapping("/queryroomorderbyaccountname")
+//    private OrderExecution queryRoomOrderByAccountName(HttpServletRequest request){
+//        //获取token
+//        String token = request.getHeader("token");
+//        //获取customerAccount对象
+//        String jsonStr = (String)redisTemplate.opsForValue().get(token);
+//        CustomerAccount customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+//        if(customerAccount != null){
+//            try {
+//                List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(customerAccount.getAccountName());
+//                return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
+//            } catch (Exception e){
+//                return new OrderExecution(OrderStateEnum.INNER_ERROR);
+//            }
+//        } else {
+//            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
+//        }
+//    }
 
     /**
      * 更新房间订单

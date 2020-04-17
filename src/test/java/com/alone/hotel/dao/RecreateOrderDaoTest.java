@@ -63,6 +63,18 @@ public class RecreateOrderDaoTest {
     }
 
     @Test
+    public void testQueryRecreateOrderList(){
+        RecreateOrder recreateOrder = new RecreateOrder();
+        Recreation recreation = new Recreation();
+        recreation.setRecreationId(1);
+        recreateOrder.setRecreation(recreation);
+        List<RecreateOrder> recreateOrderList = recreateOrderDao.queryRecreateOrderList(recreateOrder);
+        assertEquals(1, recreateOrderList.size());
+        int count = recreateOrderDao.queryRecreateOrderCount(recreateOrder);
+        assertEquals(1, count);
+    }
+
+    @Test
     public void testUpdateRecreateOrder(){
         RecreateOrder recreateOrder = new RecreateOrder();
         recreateOrder.setOrderId("1");

@@ -64,8 +64,12 @@ public class RoomOrderDaoTest {
 
     @Test
     public void testQueryRoomOrderByAccountName(){
-        List<RoomOrder> roomOrderList = roomOrderDao.queryRoomOrderByAccountName("alone");
-        assertEquals(2, roomOrderList.size());
+        RoomOrder orderCondition = new RoomOrder();
+        RoomType roomType = new RoomType();
+        roomType.setTypeId(1);
+        orderCondition.setRoomType(roomType);
+        List<RoomOrder> roomOrderList = roomOrderDao.queryRoomOrderByCondition(orderCondition);
+        assertEquals(1, roomOrderList.size());
     }
 
     @Test

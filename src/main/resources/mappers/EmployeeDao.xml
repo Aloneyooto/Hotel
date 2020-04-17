@@ -72,6 +72,11 @@
         </where>
     </select>
 
+    <select id="queryEmployeeFaceImg" resultType="com.alone.hotel.entity.Employee">
+        select employee_id, employee_name, face_img
+        from tb_employee
+    </select>
+
     <update id="updateEmployee" parameterType="com.alone.hotel.entity.Employee" >
         update tb_employee
         <set>

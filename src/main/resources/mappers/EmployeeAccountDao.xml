@@ -13,6 +13,11 @@
         where account_name = #{accountName} and account_password = #{accountPassword};
     </select>
 
+    <select id="queryEmployeeAccountList" resultType="com.alone.hotel.entity.EmployeeAccount">
+        select account_name, account_password, account_power
+        from tb_employee_account
+    </select>
+
     <update id="updateEmployeeAccount" parameterType="com.alone.hotel.entity.EmployeeAccount" >
         update tb_employee_account
         <set>

@@ -27,6 +27,7 @@ public enum OrderStateEnum {
     CHECK_IN_INSERT_ERROR(-216, "房间关联信息插入失败"),
     INNER_ERROR(-217, "内部错误"),
     ACCOUNT_EMPTY(-218, "账号信息为空"),
+    PAGE_ERROR(-219,"页码错误"),
     ;
 
     private int state;

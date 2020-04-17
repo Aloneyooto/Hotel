@@ -19,10 +19,10 @@ public class EmployeeAccountExecution {
     private int state;
     //状态标识
     private String stateInfo;
-    //商品数量
-    private int count;
-    //操作的清洁员
+    //操作的账号
     private EmployeeAccount employeeAccount;
+    //操作的账号列表
+    private List<EmployeeAccount> employeeAccountList;
 
     public EmployeeAccountExecution() {
     }
@@ -36,5 +36,11 @@ public class EmployeeAccountExecution {
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.employeeAccount = employeeAccount;
+    }
+
+    public EmployeeAccountExecution(EmployeeAccountStateEnum stateEnum, List<EmployeeAccount> employeeAccountList){
+        this.state = stateEnum.getState();
+        this.stateInfo = stateEnum.getStateInfo();
+        this.employeeAccountList = employeeAccountList;
     }
 }

@@ -64,9 +64,10 @@ public class RoomOrderServiceImpl implements RoomOrderService {
     }
 
     @Override
-    public List<RoomOrder> queryRoomOrderByAccountName(String accountName) {
-        return roomOrderDao.queryRoomOrderByAccountName(accountName);
+    public List<RoomOrder> queryRoomOrderByCondition(RoomOrder orderCondition) {
+        return roomOrderDao.queryRoomOrderByCondition(orderCondition);
     }
+
 
     @Override
     public int queryOrderCount(Date handInTime) {

@@ -21,6 +21,8 @@ public class OrderExecution {
     private int state;
     //状态标识
     private String stateInfo;
+    //获取到的娱乐订单总数
+    private int recreateOrderCount;
     //操作的房间订单
     private RoomOrder roomOrder;
     //操作的房间订单列表

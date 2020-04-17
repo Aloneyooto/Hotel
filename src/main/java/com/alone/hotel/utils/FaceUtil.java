@@ -1,6 +1,7 @@
 package com.alone.hotel.utils;
 
 import com.alone.hotel.entity.Customer;
+import com.alone.hotel.entity.Employee;
 import com.arcsoft.face.*;
 import com.arcsoft.face.enums.DetectMode;
 import com.arcsoft.face.enums.DetectOrient;
@@ -24,7 +25,7 @@ import static com.arcsoft.face.toolkit.ImageFactory.getRGBData;
  * @Description:
  */
 public class FaceUtil {
-    // TODO 提交到github上的时候记得换掉数据库账号和密码
+    // 提交到github上的时候记得换掉数据库账号和密码
 
     private static final String appId = "C7gdeP7N47L9f7njWAYsi3JjPG1eGr43aDqRkY8qe1bc";
 
@@ -112,19 +113,35 @@ public class FaceUtil {
         errorCode = faceEngine.unInit();
     }
 
-    public static void getDataSoureFeature(List<Customer> customerList){
+    public static void getCustomerFeature(List<Customer> customerList){
         faceStoreMap = new HashMap<String, FaceFeature>();
         //图片根路径
         String imgBasePath = PathUtil.getImgBasePath();
         //获取库内所有图片的特征
         for (Customer customer : customerList) {
-            if(customer != null && customer.getCustomerFaceImg() != null){
+            if(customer != null && customer.getCustomerFaceImg() != null && customer.getCustomerCardNumber() != null){
                 String imgUrl = imgBasePath + customer.getCustomerFaceImg();
                 FaceFeature faceFeature = getFaceFeature(imgUrl);
                 faceStoreMap.put(customer.getCustomerCardNumber(), faceFeature);
             }
         }
         System.out.println("人脸信息数量:" + faceStoreMap.keySet().size());
+    }
+
+    /**
+     * 录入员工面部图片
+     * @param employeeList
+     */
+    public static void getEmployeeFeature(List<Employee> employeeList){
+        faceStoreMap = new HashMap<String, FaceFeature>();
+        String imgBasePath = PathUtil.getImgBasePath();
+        for (Employee employee : employeeList) {
+            if(employee != null && employee.getEmployeeFaceImg() != null && employee.getEmployeeId() != null){
+                String imgUrl = imgBasePath + employee.getEmployeeFaceImg();
+                FaceFeature faceFeature = getFaceFeature(imgUrl);
+                faceStoreMap.put(employee.getEmployeeId(), faceFeature);
+            }
+        }
     }
 
     public static FaceFeature getFaceFeature(String imgUrl){

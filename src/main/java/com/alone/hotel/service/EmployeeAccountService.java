@@ -3,6 +3,8 @@ package com.alone.hotel.service;
 import com.alone.hotel.dto.EmployeeAccountExecution;
 import com.alone.hotel.entity.EmployeeAccount;
 
+import java.util.List;
+
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.service
@@ -22,6 +24,12 @@ public interface EmployeeAccountService {
      * @return
      */
     EmployeeAccount queryEmployeeAccountByName(String employeeAccountName, String employeeAccountPassword);
+
+    /**
+     * 查找员工账号列表
+     * @return
+     */
+    List<EmployeeAccount> queryEmployeeAccountList();
 
     /**
      * 修改员工账号

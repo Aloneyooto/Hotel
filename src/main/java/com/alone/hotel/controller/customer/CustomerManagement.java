@@ -284,7 +284,7 @@ public class CustomerManagement {
         //查询数据库内已有的人脸
         List<Customer> customerList = customerService.queryCustomerFaceImages();
         //生成人脸特征信息
-        FaceUtil.getDataSoureFeature(customerList);
+        FaceUtil.getCustomerFeature(customerList);
         try {
             File newFile = FaceUtil.multipartFileToFile(faceFile);
             String customerCardNumber = FaceUtil.compareFaces(newFile);

@@ -2,6 +2,7 @@ package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.RecreateOrder;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +35,22 @@ public interface RecreateOrderDao {
      * @return
      */
     int queryOrderCount(Date handInTime);
+
+    /**
+     * 根据检索条件检索订单
+     * @param orderCondition
+     * @return
+     */
+    List<RecreateOrder> queryRecreateOrderList(@Param("orderCondition")RecreateOrder orderCondition,
+                                               @Param("rowIndex")int rowIndex,
+                                               @Param("pageSize")int pageSize);
+
+    /**
+     * 根据检索条件检索出的订单记录数
+     * @param orderCondition
+     * @return
+     */
+    int queryRecreateOrderCount(@Param("orderCondition")RecreateOrder orderCondition);
 
     /**
      * 更新其他消费记录

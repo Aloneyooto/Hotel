@@ -1,6 +1,7 @@
 package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.RoomOrder;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -20,12 +21,19 @@ public interface RoomOrderDao {
      */
     int addRoomOrder(RoomOrder roomOrder);
 
+
     /**
-     * 根据账号查询订单
-     * @param accountName
+     * 根据筛选条件查询订单
      * @return
      */
-    List<RoomOrder> queryRoomOrderByAccountName(String accountName);
+    //TODO
+    List<RoomOrder> queryRoomOrderByCondition(@Param("orderCondition") RoomOrder orderCondition);
+
+    /**
+     * 根据筛选条件选出的总记录数
+     * @return
+     */
+    int queryRoomOrderCount(@Param("orderCondition") RoomOrder orderCondition);
 
     /**
      * 根据日期查询当天已生成了多少订单

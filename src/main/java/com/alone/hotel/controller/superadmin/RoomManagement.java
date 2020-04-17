@@ -138,6 +138,7 @@ public class RoomManagement {
         if(room != null){
             try{
                 RoomExecution roomExecution = roomService.updateRoom(room, fileList);
+                //TODO 添加清扫订单
                 if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
                     return new RoomExecution(RoomStateEnum.SUCCESS);
                 } else {
