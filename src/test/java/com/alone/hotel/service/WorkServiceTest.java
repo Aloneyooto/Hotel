@@ -3,7 +3,7 @@ package com.alone.hotel.service;
 import com.alone.hotel.dto.WorkExecution;
 import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.Work;
-import com.alone.hotel.enums.WorkStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,6 +46,6 @@ public class WorkServiceTest {
         work.setEndTime(endTime);
         //work.setStatus(0);
         WorkExecution effectedMessage = workService.addWorkMessage(work);
-        assertEquals(WorkStateEnum.SUCCESS.getState(), effectedMessage.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), effectedMessage.getState());
     }
 }

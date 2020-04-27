@@ -3,7 +3,7 @@ package com.alone.hotel.dto;
 import com.alone.hotel.entity.RecreateOrder;
 import com.alone.hotel.entity.Room;
 import com.alone.hotel.entity.RoomOrder;
-import com.alone.hotel.enums.OrderStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -37,51 +37,51 @@ public class OrderExecution {
     public OrderExecution() {
     }
 
-    public OrderExecution(OrderStateEnum stateEnum){
+    public OrderExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, RoomOrder roomOrder){
+    public OrderExecution(ResultEnum stateEnum, RoomOrder roomOrder){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomOrder = roomOrder;
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, RoomOrder roomOrder, List<Room> roomList){
+    public OrderExecution(ResultEnum stateEnum, RoomOrder roomOrder, List<Room> roomList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomOrder = roomOrder;
         this.roomList = roomList;
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, List<RoomOrder> roomOrderList){
+    public OrderExecution(ResultEnum stateEnum, List<RoomOrder> roomOrderList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomOrderList = roomOrderList;
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, RecreateOrder recreateOrder){
+    public OrderExecution(ResultEnum stateEnum, RecreateOrder recreateOrder){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.recreateOrder = recreateOrder;
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, RoomOrder roomOrder, RecreateOrder recreateOrder){
+    public OrderExecution(ResultEnum stateEnum, RoomOrder roomOrder, RecreateOrder recreateOrder){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomOrder = roomOrder;
         this.recreateOrder = recreateOrder;
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, List<RoomOrder> roomOrderList, List<RecreateOrder> recreateOrderList){
+    public OrderExecution(ResultEnum stateEnum, List<RoomOrder> roomOrderList, List<RecreateOrder> recreateOrderList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomOrderList = roomOrderList;
         this.recreateOrderList = recreateOrderList;
     }
 
-    public OrderExecution(OrderStateEnum stateEnum, List<RoomOrder> roomOrderList, List<RecreateOrder> recreateOrderList, List<Room> roomList){
+    public OrderExecution(ResultEnum stateEnum, List<RoomOrder> roomOrderList, List<RecreateOrder> recreateOrderList, List<Room> roomList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomOrderList = roomOrderList;

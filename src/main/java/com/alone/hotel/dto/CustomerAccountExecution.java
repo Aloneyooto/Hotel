@@ -1,9 +1,8 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.CustomerAccount;
-import com.alone.hotel.enums.CustomerAccountStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -30,24 +29,24 @@ public class CustomerAccountExecution {
     public CustomerAccountExecution() {
     }
 
-    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum){
+    public CustomerAccountExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum, String token){
+    public CustomerAccountExecution(ResultEnum stateEnum, String token){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.token = token;
     }
 
-    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum, CustomerAccount customerAccount){
+    public CustomerAccountExecution(ResultEnum stateEnum, CustomerAccount customerAccount){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customerAccount = customerAccount;
     }
 
-    public CustomerAccountExecution(CustomerAccountStateEnum stateEnum, List<CustomerAccount> customerAccountList){
+    public CustomerAccountExecution(ResultEnum stateEnum, List<CustomerAccount> customerAccountList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customerAccountList = customerAccountList;

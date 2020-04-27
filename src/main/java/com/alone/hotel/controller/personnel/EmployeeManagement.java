@@ -5,20 +5,15 @@ import com.alone.hotel.dto.EmployeeAccountExecution;
 import com.alone.hotel.dto.EmployeeExecution;
 import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.EmployeeAccount;
-import com.alone.hotel.enums.CleanerStateEnum;
-import com.alone.hotel.enums.EmployeeAccountStateEnum;
-import com.alone.hotel.enums.EmployeeStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.CleanerService;
 import com.alone.hotel.service.EmployeeAccountService;
 import com.alone.hotel.service.EmployeeService;
 import com.alone.hotel.utils.FaceUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.util.pattern.PathPattern;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -32,7 +27,7 @@ import java.util.List;
  * @CreateTime: 2020-03-16 10:07
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/personnel")
 public class EmployeeManagement {
@@ -59,7 +54,7 @@ public class EmployeeManagement {
         if(employee != null && cardImg != null && faceImg != null){
             try{
                 EmployeeExecution employeeExecution = employeeService.addEmployee(employee, cardImg, faceImg);
-                if(employeeExecution.getState() == EmployeeStateEnum.SUCCESS.getState()){
+                if(employeeExecution.getState() == ResultEnum.SUCCESS.getState()){
                     try{
                         //自动生成账号
                         EmployeeAccount employeeAccount = new EmployeeAccount();
@@ -68,21 +63,21 @@ public class EmployeeManagement {
                         //初始密码为123456
                         employeeAccount.setAccountPassword("123456");
                         EmployeeAccountExecution employeeAccountExecution = employeeAccountService.addEmployeeAccount(employeeAccount);
-                        if(employeeAccountExecution.getState() != EmployeeAccountStateEnum.SUCCESS.getState()){
-                            return new EmployeeExecution(EmployeeStateEnum.CREATE_ACCOUNT_ERROR);
+                        if(employeeAccountExecution.getState() != ResultEnum.SUCCESS.getState()){
+                            return new EmployeeExecution(ResultEnum.CREATE_ACCOUNT_ERROR);
                         }
                     } catch (Exception e){
-                        return new EmployeeExecution(EmployeeStateEnum.CREATE_ACCOUNT_ERROR);
+                        return new EmployeeExecution(ResultEnum.CREATE_ACCOUNT_ERROR);
                     }
-                    return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
+                    return new EmployeeExecution(ResultEnum.SUCCESS, employee);
                 } else {
-                    return new EmployeeExecution(EmployeeStateEnum.INSERT_ERROR);
+                    return new EmployeeExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (IOException e) {
-                return new EmployeeExecution(EmployeeStateEnum.INSERT_ERROR);
+                return new EmployeeExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new EmployeeExecution(EmployeeStateEnum.EMPTY);
+            return new EmployeeExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -96,9 +91,9 @@ public class EmployeeManagement {
         EmployeeExecution employeeExecution = null;
         if(employeeId != null){
             Employee employee = employeeService.queryEmployeeById(employeeId);
-            employeeExecution = new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
+            employeeExecution = new EmployeeExecution(ResultEnum.SUCCESS, employee);
         } else {
-            employeeExecution = new EmployeeExecution(EmployeeStateEnum.EMPTY);
+            employeeExecution = new EmployeeExecution(ResultEnum.EMPTY);
         }
         return employeeExecution;
     }
@@ -118,7 +113,7 @@ public class EmployeeManagement {
             EmployeeExecution employeeExecution = employeeService.queryEmployeeList(employeeCondition, pageIndex, pageSize);
             return employeeExecution;
         } else {
-            return new EmployeeExecution(EmployeeStateEnum.PAGE_ERROR);
+            return new EmployeeExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -140,16 +135,16 @@ public class EmployeeManagement {
         if(employee != null){
             try{
                 EmployeeExecution employeeExecution = employeeService.updateEmployee(employee, cardImg, faceImg);
-                if(employeeExecution.getState() == EmployeeStateEnum.SUCCESS.getState()){
-                    return new EmployeeExecution(EmployeeStateEnum.SUCCESS);
+                if(employeeExecution.getState() == ResultEnum.SUCCESS.getState()){
+                    return new EmployeeExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new EmployeeExecution(EmployeeStateEnum.UPDATE_ERROR);
+                    return new EmployeeExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (IOException e) {
-                return new EmployeeExecution(EmployeeStateEnum.UPDATE_ERROR);
+                return new EmployeeExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new EmployeeExecution(EmployeeStateEnum.EMPTY);
+            return new EmployeeExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -167,19 +162,19 @@ public class EmployeeManagement {
                 if(employee.getPosition().getPositionId() == 3){
                     try {
                         CleanerExecution cleanerExecution = cleanerService.deleteCleaner(employeeId);
-                        if(cleanerExecution.getState() != CleanerStateEnum.SUCCESS.getState()){
-                            return new EmployeeExecution(EmployeeStateEnum.CLEANER_DELETE_ERROR);
+                        if(cleanerExecution.getState() != ResultEnum.SUCCESS.getState()){
+                            return new EmployeeExecution(ResultEnum.CLEANER_DELETE_ERROR);
                         }
                         employeeExecution = employeeService.deleteEmployee(employeeId);
                     } catch (Exception e){
-                        employeeExecution = new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
+                        employeeExecution = new EmployeeExecution(ResultEnum.INNER_ERROR);
                     }
                 }
             } catch (Exception e){
-                employeeExecution = new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
+                employeeExecution = new EmployeeExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            employeeExecution = new EmployeeExecution(EmployeeStateEnum.EMPLOYEE_ID_ERROR);
+            employeeExecution = new EmployeeExecution(ResultEnum.EMPTY);
         }
         return employeeExecution;
     }
@@ -201,9 +196,9 @@ public class EmployeeManagement {
             File newFile = FaceUtil.multipartFileToFile(faceFile);
             String employeeId = FaceUtil.compareFaces(newFile);
             Employee employee = employeeService.queryEmployeeById(employeeId);
-            return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
+            return new EmployeeExecution(ResultEnum.SUCCESS, employee);
         } catch (IOException e) {
-            return new EmployeeExecution(EmployeeStateEnum.INNER_ERROR);
+            return new EmployeeExecution(ResultEnum.INNER_ERROR);
         }
     }
 }

@@ -2,7 +2,7 @@ package com.alone.hotel.controller.superadmin;
 
 import com.alone.hotel.dto.PositionExecution;
 import com.alone.hotel.entity.Position;
-import com.alone.hotel.enums.PositionStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @CreateTime: 2020-03-13 15:10
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/superadmin")
 public class PositionManagement {
@@ -26,16 +26,16 @@ public class PositionManagement {
         if(position != null && position.getPositionId() != null){
             try{
                 PositionExecution pe = positionService.insertPosition(position);
-                if(pe.getState() == PositionStateEnum.SUCCESS.getState()){
-                    return new PositionExecution(PositionStateEnum.SUCCESS);
+                if(pe.getState() == ResultEnum.SUCCESS.getState()){
+                    return new PositionExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new PositionExecution(PositionStateEnum.POSITION_INSERT_ERROR);
+                    return new PositionExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new PositionExecution(PositionStateEnum.POSITION_INSERT_ERROR);
+                return new PositionExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_EMPTY);
+            return new PositionExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -45,7 +45,7 @@ public class PositionManagement {
         if(positionId > 0){
             positionExecution = positionService.queryPositionById(positionId);
         } else {
-            positionExecution = new PositionExecution(PositionStateEnum.POSITION_ID_ERROR);
+            positionExecution = new PositionExecution(ResultEnum.ID_ERROR);
         }
         return positionExecution;
     }
@@ -61,10 +61,10 @@ public class PositionManagement {
                 PositionExecution pe = positionService.queryPositionList(positionCondition, pageIndex, pageSize);
                 return pe;
             } catch (Exception e){
-                return new PositionExecution(PositionStateEnum.POSITION_INNER_ERROR);
+                return new PositionExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_PAGE_ERROR);
+            return new PositionExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -75,10 +75,10 @@ public class PositionManagement {
                 PositionExecution positionExecution = positionService.modifyPosition(position);
                 return positionExecution;
             } catch (Exception e){
-                return new PositionExecution(PositionStateEnum.POSITION_INNER_ERROR);
+                return new PositionExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_EMPTY);
+            return new PositionExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -89,10 +89,10 @@ public class PositionManagement {
                 PositionExecution positionExecution = positionService.deletePosition(positionId);
                 return positionExecution;
             } catch (Exception e){
-                return new PositionExecution(PositionStateEnum.POSITION_INNER_ERROR);
+                return new PositionExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_ID_ERROR);
+            return new PositionExecution(ResultEnum.ID_ERROR);
         }
     }
 }

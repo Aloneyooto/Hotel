@@ -54,6 +54,7 @@ public class WorkDaoTest {
         for (Work work : workTimeList) {
             System.out.println(work.getWorkTime());
             System.out.println(work.getStartTime());
+            System.out.println(work.getEndTime());
         }
         assertEquals(2, workTimeList.size());
     }

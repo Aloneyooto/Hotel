@@ -3,7 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.RoomTypeDao;
 import com.alone.hotel.dto.RoomTypeExecution;
 import com.alone.hotel.entity.RoomType;
-import com.alone.hotel.enums.RoomTypeStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.RoomException;
 import com.alone.hotel.exceptions.RoomTypeException;
 import com.alone.hotel.service.RoomTypeService;
@@ -32,14 +32,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             try{
                 int effectedNum = roomTypeDao.addRoomType(roomType);
                 if(effectedNum <= 0){
-                    throw new RoomTypeException(RoomTypeStateEnum.INNER_ERROR.getStateInfo());
+                    throw new RoomTypeException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new RoomTypeExecution(RoomTypeStateEnum.SUCCESS);
+                return new RoomTypeExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new RoomTypeException(RoomTypeStateEnum.INNER_ERROR.getStateInfo());
+                throw new RoomTypeException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new RoomTypeExecution(RoomTypeStateEnum.EMPTY);
+            return new RoomTypeExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -60,14 +60,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             try{
                 int effectedNum = roomTypeDao.updateRoomType(roomType);
                 if(effectedNum <= 0){
-                    throw new RoomTypeException(RoomTypeStateEnum.INNER_ERROR.getStateInfo());
+                    throw new RoomTypeException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new RoomTypeExecution(RoomTypeStateEnum.SUCCESS, roomType);
+                return new RoomTypeExecution(ResultEnum.SUCCESS, roomType);
             } catch (Exception e){
-                throw new RoomTypeException(RoomTypeStateEnum.INNER_ERROR.getStateInfo());
+                throw new RoomTypeException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new RoomTypeExecution(RoomTypeStateEnum.EMPTY);
+            return new RoomTypeExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -78,14 +78,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             try{
                 int effectedNum = roomTypeDao.deleteRoomType(roomTypeId);
                 if(effectedNum <= 0){
-                    throw new RoomTypeException(RoomTypeStateEnum.INNER_ERROR.getStateInfo());
+                    throw new RoomTypeException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new RoomTypeExecution(RoomTypeStateEnum.SUCCESS);
+                return new RoomTypeExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new RoomTypeException(RoomTypeStateEnum.INNER_ERROR.getStateInfo());
+                throw new RoomTypeException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new RoomTypeExecution(RoomTypeStateEnum.EMPTY);
+            return new RoomTypeExecution(ResultEnum.EMPTY);
         }
     }
 }

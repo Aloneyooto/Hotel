@@ -1,7 +1,7 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.Customer;
-import com.alone.hotel.enums.CustomerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -21,26 +21,26 @@ public class CustomerExecution {
     private String stateInfo;
     //商品数量
     private int count;
-    //操作的房间
+    //操作的顾客
     private Customer customer;
-    //操作的房间列表
+    //操作的顾客列表
     private List<Customer> customerList;
 
     public CustomerExecution() {
     }
 
-    public CustomerExecution(CustomerStateEnum stateEnum){
+    public CustomerExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public CustomerExecution(CustomerStateEnum stateEnum, Customer customer){
+    public CustomerExecution(ResultEnum stateEnum, Customer customer){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customer = customer;
     }
 
-    public CustomerExecution(CustomerStateEnum stateEnum, List<Customer> customerList){
+    public CustomerExecution(ResultEnum stateEnum, List<Customer> customerList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customerList = customerList;

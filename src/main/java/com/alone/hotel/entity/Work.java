@@ -1,5 +1,6 @@
 package com.alone.hotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,9 +16,11 @@ import java.util.Date;
 @Data
 public class Work {
     private Employee employee;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date workTime;
+    @JsonFormat(pattern = "HH:mm:ss", timezone="GMT+8")
     private Date startTime;
+    @JsonFormat(pattern = "HH:mm:ss", timezone="GMT+8")
     private Date endTime;
     private Integer status;
 }

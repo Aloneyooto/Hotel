@@ -3,7 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.RoomOrderRelationDao;
 import com.alone.hotel.entity.RoomOrder;
 import com.alone.hotel.entity.RoomOrderRelation;
-import com.alone.hotel.enums.OrderStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RoomOrderRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class RoomOrderRelationServiceImpl implements RoomOrderRelationService {
                 }
                 return true;
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.RELATION_INSERT_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.RELATION_INSERT_ERROR.getStateInfo());
             }
         } else {
             return false;
@@ -53,7 +53,7 @@ public class RoomOrderRelationServiceImpl implements RoomOrderRelationService {
                 }
                 return true;
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.RELATION_INSERT_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.RELATION_INSERT_ERROR.getStateInfo());
             }
         } else {
             return false;
@@ -77,7 +77,7 @@ public class RoomOrderRelationServiceImpl implements RoomOrderRelationService {
                 }
                 return true;
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.RELATION_DELETE_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.RELATION_DELETE_ERROR.getStateInfo());
             }
         } else {
             return false;

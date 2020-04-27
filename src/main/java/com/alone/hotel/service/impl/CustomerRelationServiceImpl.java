@@ -5,7 +5,7 @@ import com.alone.hotel.dto.CustomerRelationExecution;
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.entity.CustomerRelation;
-import com.alone.hotel.enums.CustomerRelationStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.CustomerRelationException;
 import com.alone.hotel.service.CustomerRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,14 @@ public class CustomerRelationServiceImpl implements CustomerRelationService {
             try{
                 int effectedNum = customerRelationDao.addCustomerRelation(customerRelation);
                 if(effectedNum <= 0){
-                    throw new CustomerRelationException(CustomerRelationStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerRelationException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerRelationExecution(CustomerRelationStateEnum.SUCCESS);
+                return new CustomerRelationExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new CustomerRelationException(CustomerRelationStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerRelationException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerRelationExecution(CustomerRelationStateEnum.EMPTY);
+            return new CustomerRelationExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -59,14 +59,14 @@ public class CustomerRelationServiceImpl implements CustomerRelationService {
             try {
                 int effectedNum = customerRelationDao.deleteCustomerRelation(customerRelation);
                 if(effectedNum <= 0){
-                    throw new CustomerRelationException(CustomerRelationStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerRelationException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerRelationExecution(CustomerRelationStateEnum.SUCCESS);
+                return new CustomerRelationExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new CustomerRelationException(CustomerRelationStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerRelationException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerRelationExecution(CustomerRelationStateEnum.EMPTY);
+            return new CustomerRelationExecution(ResultEnum.EMPTY);
         }
     }
 }

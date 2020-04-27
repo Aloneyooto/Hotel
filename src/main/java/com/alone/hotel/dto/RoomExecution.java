@@ -1,7 +1,8 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.Room;
-import com.alone.hotel.enums.RoomStateEnum;
+import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -29,18 +30,18 @@ public class RoomExecution {
     public RoomExecution() {
     }
 
-    public RoomExecution(RoomStateEnum stateEnum){
+    public RoomExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public RoomExecution(RoomStateEnum stateEnum, Room room){
+    public RoomExecution(ResultEnum stateEnum, Room room){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.room = room;
     }
 
-    public RoomExecution(RoomStateEnum stateEnum, List<Room> roomList){
+    public RoomExecution(ResultEnum stateEnum, List<Room> roomList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.roomList = roomList;

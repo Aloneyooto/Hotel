@@ -2,7 +2,7 @@ package com.alone.hotel.service;
 
 import com.alone.hotel.dto.CustomerExecution;
 import com.alone.hotel.entity.Customer;
-import com.alone.hotel.enums.CustomerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +39,7 @@ public class CustomerServiceTest {
         InputStream inputStream1 = new FileInputStream(faceImgFile);
         MultipartFile faceFile = new MockMultipartFile(faceImgFile.getName(), inputStream1);
         CustomerExecution customerExecution = customerService.addCustomer(customer, cardFile, faceFile);
-        assertEquals(CustomerStateEnum.SUCCESS.getState(), customerExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), customerExecution.getState());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class CustomerServiceTest {
         customer.setCustomerAge(45);
         customer.setCustomerGender(0);
         CustomerExecution customerExecution = customerService.addCustomer(customer, null, null);
-        assertEquals(CustomerStateEnum.SUCCESS.getState(), customerExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), customerExecution.getState());
     }
 
     @Test
@@ -77,12 +77,12 @@ public class CustomerServiceTest {
         MultipartFile faceFile = new MockMultipartFile(faceImgFile.getName(), inputStream);
         MultipartFile cardFile = null;
         CustomerExecution customerExecution = customerService.updateCustomer(customer, cardFile, faceFile);
-        assertEquals(CustomerStateEnum.SUCCESS.getState(), customerExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), customerExecution.getState());
     }
 
     @Test
     public void testDeleteCustomer(){
         CustomerExecution customerExecution = customerService.deleteCustomer("234586948501234567");
-        assertEquals(CustomerStateEnum.SUCCESS.getState(), customerExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), customerExecution.getState());
     }
 }

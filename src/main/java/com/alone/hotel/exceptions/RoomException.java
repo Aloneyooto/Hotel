@@ -13,8 +13,8 @@ public class RoomException extends RuntimeException{
     private Integer code;
 
     public RoomException(ResultEnum resultEnum){
-        super(resultEnum.getMessage());
-        this.code = resultEnum.getCode();
+        super(resultEnum.getStateInfo());
+        this.code = resultEnum.getState();
     }
 
     public RoomException(Integer code, String message){

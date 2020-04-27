@@ -3,7 +3,7 @@ package com.alone.hotel.service;
 import com.alone.hotel.dto.CleanerExecution;
 import com.alone.hotel.entity.Cleaner;
 import com.alone.hotel.entity.Employee;
-import com.alone.hotel.enums.CleanerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +30,6 @@ public class CleanerServiceTest {
         cleaner.setEmployee(employee);
         cleaner.setRoomFloor("1层");
         CleanerExecution cleanerExecution = cleanerService.addCleaner(cleaner);
-        assertEquals(CleanerStateEnum.POSITION_TYPE_ERROR.getState(), cleanerExecution.getState());
+        assertEquals(ResultEnum.POSITION_TYPE_ERROR.getState(), cleanerExecution.getState());
     }
 }

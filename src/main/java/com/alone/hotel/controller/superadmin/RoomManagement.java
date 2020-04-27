@@ -5,7 +5,7 @@ import com.alone.hotel.dto.ImageExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.Room;
 import com.alone.hotel.entity.RoomType;
-import com.alone.hotel.enums.RoomStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @CreateTime: 2020-03-09 21:22
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/superadmin")
 public class RoomManagement {
@@ -55,16 +55,16 @@ public class RoomManagement {
         if(room != null && fileList != null && fileList.length > 0){
             try{
                 RoomExecution roomExecution = roomService.addRoom(room, fileList);
-                if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
-                    return new RoomExecution(RoomStateEnum.SUCCESS);
+                if(roomExecution.getState() == ResultEnum.SUCCESS.getState()){
+                    return new RoomExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new RoomExecution(RoomStateEnum.INNER_ERROR);
+                    return new RoomExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new RoomExecution(RoomStateEnum.INNER_ERROR);
+                return new RoomExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new RoomExecution(RoomStateEnum.EMPTY);
+            return new RoomExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -79,30 +79,32 @@ public class RoomManagement {
         if(roomId < -1){
             try{
                 Room room = roomService.getRoomById(roomId);
-                roomExecution = new RoomExecution(RoomStateEnum.SUCCESS, room);
+                roomExecution = new RoomExecution(ResultEnum.SUCCESS, room);
             } catch (Exception e){
-                roomExecution = new RoomExecution(RoomStateEnum.INNER_ERROR);
+                roomExecution = new RoomExecution(ResultEnum.INNER_ERROR);
             }
         } else {
             //房间号错误
-            roomExecution = new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+            roomExecution = new RoomExecution(ResultEnum.ROOM_ID_ERROR);
         }
         return roomExecution;
     }
 
     /**
      * 获取房间列表(json传参)
-     * 这个方法可能会出问题
-     * @param jsonParam
+     * @param pageIndex
+     * @param pageSize
+     * @param roomTypeId
+     * @param roomState
      * @return
      */
-    @CrossOrigin
     @GetMapping("/getroomlist")
-    private RoomExecution getRoomList(@RequestBody JSONObject jsonParam){
-        int pageIndex = jsonParam.getInteger("pageIndex");
-        int pageSize = jsonParam.getInteger("pageSize");
-        int roomTypeId = jsonParam.getInteger("roomType");
-        int roomState = jsonParam.getInteger("roomState");
+    private RoomExecution getRoomList(int pageIndex, int pageSize, int roomTypeId, int roomState){
+        //TODO 修改接收参数
+//        int pageIndex = jsonParam.getInteger("pageIndex");
+//        int pageSize = jsonParam.getInteger("pageSize");
+//        int roomTypeId = jsonParam.getInteger("roomType");
+//        int roomState = jsonParam.getInteger("roomState");
         if(pageIndex > -1 && pageSize > 0){
             Room roomCondition = new Room();
             if(roomTypeId > -1){
@@ -116,7 +118,7 @@ public class RoomManagement {
             RoomExecution re = roomService.getRoomList(roomCondition, pageIndex, pageSize);
             return re;
         } else {
-            return new RoomExecution(RoomStateEnum.PAGE_ERROR);
+            return new RoomExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -138,17 +140,16 @@ public class RoomManagement {
         if(room != null){
             try{
                 RoomExecution roomExecution = roomService.updateRoom(room, fileList);
-                //TODO 添加清扫订单
-                if(roomExecution.getState() == RoomStateEnum.SUCCESS.getState()){
-                    return new RoomExecution(RoomStateEnum.SUCCESS);
+                if(roomExecution.getState() == ResultEnum.SUCCESS.getState()){
+                    return new RoomExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new RoomExecution(RoomStateEnum.INNER_ERROR);
+                    return new RoomExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new RoomExecution(RoomStateEnum.INNER_ERROR);
+                return new RoomExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new RoomExecution(RoomStateEnum.EMPTY);
+            return new RoomExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -158,7 +159,7 @@ public class RoomManagement {
             RoomExecution roomExecution = roomService.deleteRoom(roomId);
             return roomExecution;
         } else {
-            return new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+            return new RoomExecution(ResultEnum.ROOM_ID_ERROR);
         }
     }
 }

@@ -1,52 +1,25 @@
 package com.alone.hotel.enums;
 
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * @BelongsProject: hotel
  * @BelongsPackage: com.alone.hotel.enums
  * @Author: Alone
- * @CreateTime: 2020-03-09 16:44
- * @Description:
+ * @CreateTime: 2020-04-25 10:25
+ * @Description: 房间状态
  */
+@Getter
 public enum RoomStateEnum {
-    SUCCESS(1, "操作成功"),
-    INNER_ERROR(-1, "内部错误"),
-    EMPTY(-1001, "房间属性为空"),
-    ROOM_ID_ERROR(-1002, "房间号错误"),
-    PAGE_ERROR(-1003, "页码错误"),
+    EMPTY(0, "空房间"),
+    BOOKING(1, "已预订"),
+    CHECK_OUT(2, "已退房"),
     ;
-
-    private int state;
+    private Integer state;
     private String stateInfo;
 
-    private RoomStateEnum(int state, String stateInfo){
+    private RoomStateEnum(Integer state, String stateInfo){
         this.state = state;
-        this.stateInfo = stateInfo;
-    }
-
-    public static RoomStateEnum stateOf(int state){
-        for (RoomStateEnum stateEnum : values()){
-            if(stateEnum.getState() == state){
-                return stateEnum;
-            }
-        }
-        return null;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public String getStateInfo() {
-        return stateInfo;
-    }
-
-    public void setStateInfo(String stateInfo) {
         this.stateInfo = stateInfo;
     }
 }

@@ -2,7 +2,7 @@ package com.alone.hotel.service;
 
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.entity.CustomerAccount;
-import com.alone.hotel.enums.CustomerAccountStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +39,7 @@ public class CustomerAccountServiceTest {
         InputStream inputStream = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
         CustomerAccountExecution customerAccountExecution = customerAccountService.addCustomerAccount(customerAccount);
-        assertEquals(customerAccountExecution.getState(), CustomerAccountStateEnum.SUCCESS.getState());
+        assertEquals(customerAccountExecution.getState(), ResultEnum.SUCCESS.getState());
     }
 
     @Test
@@ -51,6 +51,6 @@ public class CustomerAccountServiceTest {
         InputStream inputStream = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
         CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, multipartFile);
-        assertEquals(customerAccountExecution.getState(), CustomerAccountStateEnum.SUCCESS.getState());
+        assertEquals(customerAccountExecution.getState(), ResultEnum.SUCCESS.getState());
     }
 }

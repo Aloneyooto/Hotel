@@ -1,7 +1,7 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.CustomerRelation;
-import com.alone.hotel.enums.CustomerRelationStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -29,18 +29,18 @@ public class CustomerRelationExecution {
     public CustomerRelationExecution() {
     }
 
-    public CustomerRelationExecution(CustomerRelationStateEnum stateEnum){
+    public CustomerRelationExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public CustomerRelationExecution(CustomerRelationStateEnum stateEnum, CustomerRelation customerRelation){
+    public CustomerRelationExecution(ResultEnum stateEnum, CustomerRelation customerRelation){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customerRelation = customerRelation;
     }
 
-    public CustomerRelationExecution(CustomerRelationStateEnum stateEnum, List<CustomerRelation> customerRelationList){
+    public CustomerRelationExecution(ResultEnum stateEnum, List<CustomerRelation> customerRelationList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.customerRelationList = customerRelationList;

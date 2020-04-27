@@ -77,7 +77,7 @@ public class CustomerDaoTest {
     public void testCompareFace() throws Exception {
         List<Customer> customerList = customerDao.queryCustomerFaceImages();
         FaceUtil.initEngine();
-        FaceUtil.getDataSoureFeature(customerList);
+        FaceUtil.getCustomerFeature(customerList);
         File file = new File("E:\\she said\\life\\yjs3.jpg");
         String customerCardNumber = FaceUtil.compareFaces(file);
         FaceUtil.destoryEngine();

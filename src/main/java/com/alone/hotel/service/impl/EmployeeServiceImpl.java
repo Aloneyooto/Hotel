@@ -4,7 +4,7 @@ import com.alone.hotel.dao.EmployeeDao;
 import com.alone.hotel.dto.EmployeeExecution;
 import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.Position;
-import com.alone.hotel.enums.EmployeeStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.EmployeeException;
 import com.alone.hotel.service.EmployeeService;
 import com.alone.hotel.utils.ImageUtil;
@@ -52,27 +52,27 @@ public class EmployeeServiceImpl implements EmployeeService {
                 String cardUrl = addImages(employee, 1, cardImg);
                 employee.setEmployeeCardImg(cardUrl);
             } else {
-                throw new EmployeeException(EmployeeStateEnum.CARD_IMAGE_EMPTY.getStateInfo());
+                throw new EmployeeException(ResultEnum.CARD_IMAGE_EMPTY.getStateInfo());
             }
             if(faceImg != null){
                 String faceUrl = addImages(employee, 0, faceImg);
                 employee.setEmployeeFaceImg(faceUrl);
             } else {
-                throw new EmployeeException(EmployeeStateEnum.FACE_IMAGE_EMPTY.getStateInfo());
+                throw new EmployeeException(ResultEnum.FACE_IMAGE_EMPTY.getStateInfo());
             }
             //插入信息
             try {
                 int effectNum = employeeDao.addEmployee(employee);
                 if(effectNum <= 0){
-                    throw new EmployeeException(EmployeeStateEnum.INSERT_ERROR.getStateInfo());
+                    throw new EmployeeException(ResultEnum.INNER_ERROR.getStateInfo());
                 } else {
-                    return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
+                    return new EmployeeExecution(ResultEnum.SUCCESS, employee);
                 }
             } catch (Exception e){
-                return new EmployeeExecution(EmployeeStateEnum.INSERT_ERROR);
+                return new EmployeeExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new EmployeeExecution(EmployeeStateEnum.EMPTY);
+            return new EmployeeExecution(ResultEnum.EMPTY);
         }
 
     }
@@ -131,14 +131,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             try{
                 int effectedNum = employeeDao.updateEmployee(employee);
                 if(effectedNum <= 0){
-                    throw new EmployeeException(EmployeeStateEnum.UPDATE_ERROR.getStateInfo());
+                    throw new EmployeeException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new EmployeeExecution(EmployeeStateEnum.SUCCESS, employee);
+                return new EmployeeExecution(ResultEnum.SUCCESS, employee);
             } catch (Exception e){
-                throw new EmployeeException(EmployeeStateEnum.UPDATE_ERROR.getStateInfo());
+                throw new EmployeeException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new EmployeeExecution(EmployeeStateEnum.PAGE_ERROR);
+            return new EmployeeExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -148,11 +148,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(employeeId != null){
             int effectNum = employeeDao.deleteEmployee(employeeId);
             if(effectNum <= 0){
-                throw new EmployeeException(EmployeeStateEnum.INNER_ERROR.getStateInfo());
+                throw new EmployeeException(ResultEnum.INNER_ERROR.getStateInfo());
             }
-            return new EmployeeExecution(EmployeeStateEnum.SUCCESS);
+            return new EmployeeExecution(ResultEnum.SUCCESS);
         } else {
-            return new EmployeeExecution(EmployeeStateEnum.EMPTY);
+            return new EmployeeExecution(ResultEnum.EMPTY);
         }
     }
 

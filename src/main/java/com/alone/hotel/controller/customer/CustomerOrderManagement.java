@@ -5,7 +5,9 @@ import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.*;
-import com.alone.hotel.enums.OrderStateEnum;
+import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,11 +70,11 @@ public class CustomerOrderManagement {
             Room roomCondition = new Room();
             roomCondition.setRoomType(roomOrder.getRoomType());
             //0代表空房间
-            roomCondition.setRoomState(0);
+            roomCondition.setRoomState(RoomStateEnum.EMPTY.getState());
             RoomExecution roomExecution = roomService.getRoomList(roomCondition, 1, roomOrder.getRoomAmount());
             if(roomExecution.getCount() < roomOrder.getRoomAmount()){
                 //剩余的房间数少于需要的房间数
-                return new OrderExecution(OrderStateEnum.ROOM_LACKING);
+                return new OrderExecution(ResultEnum.ROOM_LACKING);
             }
             //选出房间号
             List<Room> roomList = roomExecution.getRoomList();
@@ -91,7 +93,7 @@ public class CustomerOrderManagement {
             }
             Boolean result = roomOrderRelationService.batchAddRoomOrderRelation(roomOrderRelationList);
             if(result == false){
-                return new OrderExecution(OrderStateEnum.RELATION_INSERT_ERROR);
+                return new OrderExecution(ResultEnum.RELATION_INSERT_ERROR);
             }
             //向房间-入住人表写入信息
             int i = 0, j = 0;
@@ -102,26 +104,26 @@ public class CustomerOrderManagement {
                     checkIn.setCustomer(customerList.get(j));
                     boolean effected = checkInService.addCheckInMessage(checkIn);
                     if(effected == false){
-                        return new OrderExecution(OrderStateEnum.CHECK_IN_INSERT_ERROR);
+                        return new OrderExecution(ResultEnum.CHECK_IN_INSERT_ERROR);
                     }
                 }
             }
             //改变房间状态
             for (Room room : roomList) {
                 RoomExecution changeResult = roomService.updateRoom(room, null);
-                if(changeResult.getState() != RoomStateEnum.SUCCESS.getState()){
-                    return new OrderExecution(OrderStateEnum.ROOM_UPDATE_ERROR);
+                if(changeResult.getState() != ResultEnum.SUCCESS.getState()){
+                    return new OrderExecution(ResultEnum.ROOM_UPDATE_ERROR);
                 }
             }
             //插入房间订单
             OrderExecution orderExecution = roomOrderService.addRoomOrder(roomOrder);
-            if(orderExecution.getState() == OrderStateEnum.SUCCESS.getState()){
-                return new OrderExecution(OrderStateEnum.SUCCESS, roomOrder, roomList);
+            if(orderExecution.getState() == ResultEnum.SUCCESS.getState()){
+                return new OrderExecution(ResultEnum.SUCCESS, roomOrder, roomList);
             } else {
-                return new OrderExecution(OrderStateEnum.ROOM_ORDER_INSERT_ERROR);
+                return new OrderExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new OrderExecution(OrderStateEnum.ROOM_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -141,12 +143,12 @@ public class CustomerOrderManagement {
 //        if(customerAccount != null){
 //            try {
 //                List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(customerAccount.getAccountName());
-//                return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
+//                return new OrderExecution(ResultEnum.SUCCESS, roomOrderList);
 //            } catch (Exception e){
-//                return new OrderExecution(OrderStateEnum.INNER_ERROR);
+//                return new OrderExecution(ResultEnum.INNER_ERROR);
 //            }
 //        } else {
-//            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
+//            return new OrderExecution(ResultEnum.ACCOUNT_EMPTY);
 //        }
 //    }
 
@@ -163,10 +165,10 @@ public class CustomerOrderManagement {
                 OrderExecution orderExecution = roomOrderService.updateRoomOrder(roomOrder);
                 return orderExecution;
             } catch (Exception e){
-                return new OrderExecution(OrderStateEnum.INNER_ERROR);
+                return new OrderExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new OrderExecution(OrderStateEnum.ROOM_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -184,36 +186,36 @@ public class CustomerOrderManagement {
                 //改变房间状态
                 for (Customer customer : customerList) {
                     CheckIn checkIn = checkInService.queryCheckInByCustomer(customer.getCustomerCardNumber());
-                    if(checkIn.getRoom().getRoomState() != 2){
+                    if(checkIn.getRoom().getRoomState() != RoomStateEnum.CHECK_OUT.getState()){
                         //不是已退房状态就改变房间状态
                         RoomExecution roomExecution = roomService.updateRoom(checkIn.getRoom(), null);
-                        if(roomExecution.getState() != RoomStateEnum.SUCCESS.getState()){
-                            return new OrderExecution(OrderStateEnum.ROOM_UPDATE_ERROR);
+                        if(roomExecution.getState() != ResultEnum.SUCCESS.getState()){
+                            return new OrderExecution(ResultEnum.ROOM_UPDATE_ERROR);
                         }
                     }
                     //删除入住关联表记录
                     boolean result = checkInService.deleteCheckInMessage(checkIn);
                     if(result != true){
-                        return new OrderExecution(OrderStateEnum.RELATION_DELETE_ERROR);
+                        return new OrderExecution(ResultEnum.RELATION_DELETE_ERROR);
                     }
                 }
                 //删除订单关联表记录
                 boolean result = roomOrderRelationService.deleteRoomOrderRelation(roomOrder.getOrderId());
                 if(result == false){
-                    return new OrderExecution(OrderStateEnum.RELATION_DELETE_ERROR);
+                    return new OrderExecution(ResultEnum.RELATION_DELETE_ERROR);
                 }
                 //删除订单记录
                 OrderExecution orderExecution = roomOrderService.deleteRoomOrder(roomOrder.getOrderId());
-                if(orderExecution.getState() == OrderStateEnum.SUCCESS.getState()){
+                if(orderExecution.getState() == ResultEnum.SUCCESS.getState()){
                     return orderExecution;
                 } else {
-                    return new OrderExecution(OrderStateEnum.ROOM_ORDER_DELETE_ERROR);
+                    return new OrderExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new OrderExecution(OrderStateEnum.ROOM_ORDER_DELETE_ERROR);
+                return new OrderExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new OrderExecution(OrderStateEnum.ROOM_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -223,7 +225,7 @@ public class CustomerOrderManagement {
         if(recreateOrder != null){
             return recreateOrderService.addRecreateOrder(recreateOrder);
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -232,9 +234,9 @@ public class CustomerOrderManagement {
     private OrderExecution queryRecreateOrderByCustomer(@RequestParam RecreateOrder recreateOrder){
         if(recreateOrder != null){
             Customer customer = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
-            return new OrderExecution(OrderStateEnum.SUCCESS, null, customer.getRecreateOrderList());
+            return new OrderExecution(ResultEnum.SUCCESS, null, customer.getRecreateOrderList());
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -244,7 +246,7 @@ public class CustomerOrderManagement {
         if(recreateOrder != null && recreateOrder.getOrderStatus() != 1){
             return recreateOrderService.updateRecreateOrder(recreateOrder);
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -254,50 +256,10 @@ public class CustomerOrderManagement {
         if(recreateOrderId != null){
             return recreateOrderService.deleteRecreateOrder(recreateOrderId);
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_ID_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
-    /**
-     * 获取账号所有订单
-     * 不能用
-     * @param accountName
-     * @return
-     */
-//    @UserLoginToken
-//    @GetMapping("/queryallordersbyaccount")
-//    private OrderExecution queryAllOrdersByAccount(@RequestParam String accountName){
-//        //空值判断
-//        if(accountName != null){
-//            //查询房间订单
-//            List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByAccountName(accountName);
-//            //去room_order_relation里查询房间列表
-//            for (RoomOrder roomOrder : roomOrderList) {
-//                //查询到的房间列表
-//                RoomOrder orderResult = roomOrderRelationService.queryRoomByOrderId(roomOrder.getOrderId());
-//                List<Room> roomList = orderResult.getRoomList();
-//                for (Room room : roomList) {
-//                    room = checkInService.queryCheckInByRoom(room.getRoomId());
-//                    //根据顾客ID查询recreate_order
-//                    List<Customer> customerList = room.getCustomerList();
-//                    for (Customer customer : customerList) {
-//                        RecreateOrder recreateOrder = new RecreateOrder();
-//                        recreateOrder.setCustomer(customer);
-//                        Customer customerResult = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
-//                        customer.setRecreateOrderList(customerResult.getRecreateOrderList());
-//                    }
-//                    for (int i = 0; i < customerList.size(); i++){
-//
-//                    }
-//                    room.setCustomerList(customerList);
-//                }
-//                roomOrder.setRoomList(roomList);
-//            }
-//            return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
-//        } else {
-//            return new OrderExecution(OrderStateEnum.ACCOUNT_EMPTY);
-//        }
-//    }
 
     /**
      * 生成房间订单ID

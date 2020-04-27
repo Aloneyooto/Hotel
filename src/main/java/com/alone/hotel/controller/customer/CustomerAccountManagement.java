@@ -7,9 +7,8 @@ import com.alone.hotel.annotation.PassToken;
 import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.entity.CustomerAccount;
-import com.alone.hotel.enums.CustomerAccountStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.CustomerAccountService;
-import com.alone.hotel.service.impl.RedisService;
 import com.alone.hotel.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,12 +56,11 @@ public class CustomerAccountManagement {
                 //保存token-customerAccount
                 redisTemplate.opsForValue().set(token, JSON.toJSONString(customerAccount));
             } catch (Exception e){
-                //TODO
-                return new CustomerAccountExecution(CustomerAccountStateEnum.INNER_ERROR);
+                return new CustomerAccountExecution(ResultEnum.CACHE_WRITE_ERROR);
             }
-            return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS, token);
+            return new CustomerAccountExecution(ResultEnum.SUCCESS, token);
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+            return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
         }
     }
 
@@ -79,7 +76,7 @@ public class CustomerAccountManagement {
             CustomerAccountExecution customerAccountExecution = customerAccountService.addCustomerAccount(customerAccount);
             return customerAccountExecution;
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+            return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
         }
     }
 
@@ -105,21 +102,26 @@ public class CustomerAccountManagement {
                 //获取customerAccount对象
                 String jsonStr = (String)redisTemplate.opsForValue().get(token);
                 CustomerAccount customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
-                if(customerAccount != null){
-                    //将密码更换成新的
-                    customerAccount.setAccountPassword(newPsw);
-                    CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
-                    return customerAccountExecution;
+                if(customerAccount != null && customerAccount.getAccountName() != null){
+                    //判断旧密码是否正确
+                    if(oldPsw.equals(customerAccount.getAccountPassword())){
+                        //将密码更换成新的
+                        customerAccount.setAccountPassword(newPsw);
+                        CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
+                        return customerAccountExecution;
+                    } else {
+                        return new CustomerAccountExecution(ResultEnum.OLD_PASSWORD_ERROR);
+                    }
                 } else {
-                    //旧密码错误
-                    return new CustomerAccountExecution(CustomerAccountStateEnum.NAME_OR_PASSWORD_ERROR);
+                    //账户信息为空
+                    return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
                 }
             } else {
                 //两次输入的密码不一致
-                return new CustomerAccountExecution(CustomerAccountStateEnum.NEW_PASSWORD_ERROR);
+                return new CustomerAccountExecution(ResultEnum.NEW_PASSWORD_ERROR);
             }
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+            return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
         }
     }
 
@@ -138,12 +140,12 @@ public class CustomerAccountManagement {
                 //获取customerAccount对象
                 String jsonStr = (String)redisTemplate.opsForValue().get(token);
                 CustomerAccount customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
-                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS, customerAccount);
+                return new CustomerAccountExecution(ResultEnum.SUCCESS, customerAccount);
             } else {
-                return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+                return new CustomerAccountExecution(ResultEnum.TOKEN_EMPTY);
             }
         } catch (Exception e){
-            return new CustomerAccountExecution(CustomerAccountStateEnum.INNER_ERROR);
+            return new CustomerAccountExecution(ResultEnum.INNER_ERROR);
         }
     }
 
@@ -169,10 +171,10 @@ public class CustomerAccountManagement {
                 redisTemplate.opsForValue().set(token, JSON.toJSONString(customerAccount));
                 return customerAccountExecution;
             } else {
-                return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+                return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
             }
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.INNER_ERROR);
+            return new CustomerAccountExecution(ResultEnum.TOKEN_EMPTY);
         }
     }
 
@@ -196,10 +198,10 @@ public class CustomerAccountManagement {
                 redisTemplate.opsForValue().set(token, JSON.toJSONString(customerAccount));
                 return customerAccountExecution;
             } else {
-                return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+                return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
             }
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.INNER_ERROR);
+            return new CustomerAccountExecution(ResultEnum.TOKEN_EMPTY);
         }
     }
 }

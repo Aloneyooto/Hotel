@@ -5,7 +5,7 @@ import com.alone.hotel.dao.RoomTypeDao;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.RoomOrder;
 import com.alone.hotel.entity.RoomType;
-import com.alone.hotel.enums.OrderStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RoomOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +52,14 @@ public class RoomOrderServiceImpl implements RoomOrderService {
                 //添加订单
                 int effectNum = roomOrderDao.addRoomOrder(roomOrder);
                 if(effectNum <= 0){
-                    throw new OrderException(OrderStateEnum.ROOM_ORDER_INSERT_ERROR.getStateInfo());
+                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(OrderStateEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.ROOM_ORDER_INSERT_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new OrderExecution(OrderStateEnum.ROOM_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -82,14 +82,14 @@ public class RoomOrderServiceImpl implements RoomOrderService {
             try{
                 int effectNum = roomOrderDao.updateRoomOrder(roomOrder);
                 if(effectNum <= 0){
-                    throw new OrderException(OrderStateEnum.ROOM_ORDER_UPDATE_ERROR.getStateInfo());
+                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(OrderStateEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.ROOM_ORDER_UPDATE_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new OrderExecution(OrderStateEnum.ROOM_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -100,14 +100,14 @@ public class RoomOrderServiceImpl implements RoomOrderService {
             try {
                 int effectNum = roomOrderDao.deleteRoomOrder(orderId);
                 if(effectNum <= 0){
-                    throw new OrderException(OrderStateEnum.ROOM_ORDER_DELETE_ERROR.getStateInfo());
+                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(OrderStateEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.ROOM_ORDER_DELETE_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new OrderExecution(OrderStateEnum.ROOM_ORDER_ID_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 

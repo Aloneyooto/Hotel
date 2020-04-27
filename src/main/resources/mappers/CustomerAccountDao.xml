@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.alone.hotel.dao.CustomerAccountDao">
+    <resultMap id="accountMap" type="com.alone.hotel.entity.CustomerAccount">
+        <id column="account_name" property="accountName" />
+        <result column="account_password" property="accountPassword" />
+        <result column="flag" property="flag" />
+        <result column="deposit" property="deposit" />
+        <result column="customer_card_number" property="customer.customerCardNumber" />
+        <result column="head_img" property="headImg" />
+    </resultMap>
+    
 
     <insert id="addCustomerAccount" parameterType="com.alone.hotel.entity.CustomerAccount" keyProperty="accountName" keyColumn="account_name">
         insert into tb_customer_account(account_name, account_password, flag, deposit, head_img)
@@ -19,7 +28,7 @@
         where account_name = #{accountName}
     </select>
 
-    <select id="queryCustomerAccountList" resultType="com.alone.hotel.entity.CustomerAccount">
+    <select id="queryCustomerAccountList" resultMap="accountMap">
         select account_name, account_password, flag, deposit, customer_card_number, head_img
         from tb_customer_account
     </select>

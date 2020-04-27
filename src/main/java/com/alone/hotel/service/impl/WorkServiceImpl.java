@@ -3,7 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.WorkDao;
 import com.alone.hotel.dto.WorkExecution;
 import com.alone.hotel.entity.Work;
-import com.alone.hotel.enums.WorkStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.WorkException;
 import com.alone.hotel.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,14 @@ public class WorkServiceImpl implements WorkService {
             try {
                 int effectedNum = workDao.addWorkMessage(work);
                 if(effectedNum <= 0){
-                    throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                    throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new WorkExecution(WorkStateEnum.SUCCESS);
+                return new WorkExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -50,12 +50,12 @@ public class WorkServiceImpl implements WorkService {
         if(employeeId != null){
             try {
                 List<Work> workList = workDao.queryWorkTimeById(employeeId);
-                return new WorkExecution(WorkStateEnum.SUCCESS, workList);
+                return new WorkExecution(ResultEnum.SUCCESS, workList);
             } catch (Exception e){
-                throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -66,14 +66,14 @@ public class WorkServiceImpl implements WorkService {
             try {
                 int effectedNum = workDao.updateWorkTime(work);
                 if(effectedNum <= 0){
-                    throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                    throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new WorkExecution(WorkStateEnum.SUCCESS, work);
+                return new WorkExecution(ResultEnum.SUCCESS, work);
             } catch (Exception e){
-                throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -84,14 +84,14 @@ public class WorkServiceImpl implements WorkService {
             try {
                 int effectedNum = workDao.deleteWorkTime(employeeId, workTime);
                 if(effectedNum <= 0){
-                    throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                    throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new WorkExecution(WorkStateEnum.SUCCESS);
+                return new WorkExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new WorkException(WorkStateEnum.INNER_ERROR.getStateInfo());
+                throw new WorkException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 }

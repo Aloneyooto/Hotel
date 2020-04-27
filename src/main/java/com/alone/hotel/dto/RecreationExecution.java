@@ -1,7 +1,8 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.Recreation;
-import com.alone.hotel.enums.RecreationStateEnum;
+import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -29,20 +30,20 @@ public class RecreationExecution {
     public RecreationExecution() {
     }
 
-    public RecreationExecution(RecreationStateEnum RecreationStateEnum){
-        this.state = RecreationStateEnum.getState();
-        this.stateInfo = RecreationStateEnum.getStateInfo();
+    public RecreationExecution(ResultEnum ResultEnum){
+        this.state = ResultEnum.getState();
+        this.stateInfo = ResultEnum.getStateInfo();
     }
 
-    public RecreationExecution(RecreationStateEnum RecreationStateEnum, Recreation recreation){
-        this.state = RecreationStateEnum.getState();
-        this.stateInfo = RecreationStateEnum.getStateInfo();
+    public RecreationExecution(ResultEnum ResultEnum, Recreation recreation){
+        this.state = ResultEnum.getState();
+        this.stateInfo = ResultEnum.getStateInfo();
         this.recreation = recreation;
     }
 
-    public RecreationExecution(RecreationStateEnum RecreationStateEnum, List<Recreation> recreationList){
-        this.state = RecreationStateEnum.getState();
-        this.stateInfo = RecreationStateEnum.getStateInfo();
+    public RecreationExecution(ResultEnum ResultEnum, List<Recreation> recreationList){
+        this.state = ResultEnum.getState();
+        this.stateInfo = ResultEnum.getStateInfo();
         this.recreationList = recreationList;
     }
 }

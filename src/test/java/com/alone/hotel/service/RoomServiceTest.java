@@ -4,7 +4,7 @@ import com.alone.hotel.dto.ImageExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.Room;
 import com.alone.hotel.entity.RoomType;
-import com.alone.hotel.enums.RoomStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.utils.ImageUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ class RoomServiceTest {
         List<ImageExecution> list = new ArrayList<ImageExecution>();
         list.add(image);
 //        RoomExecution roomExecution = roomService.addRoom(room, list);
-//        assertEquals(RoomStateEnum.SUCCESS.getState(), roomExecution.getState());
+//        assertEquals(ResultEnum.SUCCESS.getState(), roomExecution.getState());
     }
 
     @Test
@@ -62,6 +62,6 @@ class RoomServiceTest {
         multipartFiles[0] = new MockMultipartFile(file.getName(), inputStream);
         multipartFiles[1] = new MockMultipartFile(file1.getName(), inputStream1);
         RoomExecution roomExecution = roomService.updateRoom(room, multipartFiles);
-        assertEquals(RoomStateEnum.SUCCESS.getState(), roomExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), roomExecution.getState());
     }
 }

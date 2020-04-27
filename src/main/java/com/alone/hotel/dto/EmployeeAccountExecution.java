@@ -1,7 +1,7 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.EmployeeAccount;
-import com.alone.hotel.enums.EmployeeAccountStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -27,18 +27,18 @@ public class EmployeeAccountExecution {
     public EmployeeAccountExecution() {
     }
 
-    public EmployeeAccountExecution(EmployeeAccountStateEnum stateEnum){
+    public EmployeeAccountExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public EmployeeAccountExecution(EmployeeAccountStateEnum stateEnum, EmployeeAccount employeeAccount){
+    public EmployeeAccountExecution(ResultEnum stateEnum, EmployeeAccount employeeAccount){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.employeeAccount = employeeAccount;
     }
 
-    public EmployeeAccountExecution(EmployeeAccountStateEnum stateEnum, List<EmployeeAccount> employeeAccountList){
+    public EmployeeAccountExecution(ResultEnum stateEnum, List<EmployeeAccount> employeeAccountList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.employeeAccountList = employeeAccountList;

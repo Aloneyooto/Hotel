@@ -1,7 +1,7 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.Cleaner;
-import com.alone.hotel.enums.CleanerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -29,18 +29,18 @@ public class CleanerExecution {
     public CleanerExecution() {
     }
 
-    public CleanerExecution(CleanerStateEnum stateEnum){
+    public CleanerExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public CleanerExecution(CleanerStateEnum stateEnum, Cleaner cleaner){
+    public CleanerExecution(ResultEnum stateEnum, Cleaner cleaner){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.cleaner = cleaner;
     }
 
-    public CleanerExecution(CleanerStateEnum stateEnum, List<Cleaner> cleanerList){
+    public CleanerExecution(ResultEnum stateEnum, List<Cleaner> cleanerList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.cleanerList = cleanerList;

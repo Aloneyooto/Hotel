@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.InventoryDao">
+    <insert id="addInventory" parameterType="com.alone.hotel.entity.Inventory">
+        insert into tb_inventory(goods_id, goods_name, goods_amount, goods_price)
+        values (#{goodsId}, #{goodsName}, #{goodsAmount}, #{goodsPrice})
+    </insert>
+
+    <select id="queryInventoryByGoodsId" resultType="com.alone.hotel.entity.Inventory" parameterType="Integer">
+        select goods_id, goods_name, goods_amount, goods_price
+        from tb_inventory
+        where goods_id = #{goodsId}
+    </select>
+
+    <select id="queryInventoryList" resultType="com.alone.hotel.entity.Inventory">
+        select goods_id, goods_name, goods_amount, goods_price
+        from tb_inventory
+        <where>
+            <if test="goodsName != null ">goods_name like '%' #{goodsName} '%'</if>
+        </where>
+    </select>
+
+    <update id="updateInventory" parameterType="com.alone.hotel.entity.Inventory">
+        update tb_inventory
+        <set>
+            <if test="goodsName != null ">goods_name = #{goodsName},</if>
+            <if test="goodsAmount != null ">goods_amount = #{goodsAmount},</if>
+            <if test="goodsPrice != null ">goods_price = #{goodsPrice},</if>
+        </set>
+        where goods_id = #{goodsId}
+    </update>
+
+    <delete id="deleteInventory">
+        delete from tb_inventory
+        where goods_id = #{goodsId}
+    </delete>
+</mapper>

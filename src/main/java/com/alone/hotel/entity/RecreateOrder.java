@@ -1,5 +1,6 @@
 package com.alone.hotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -20,5 +21,6 @@ public class RecreateOrder {
     private Date startTime;
     private Date endTime;
     private Integer orderStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date handInTime;
 }

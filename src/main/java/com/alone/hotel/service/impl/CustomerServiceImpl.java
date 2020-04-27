@@ -3,7 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.CustomerDao;
 import com.alone.hotel.dto.CustomerExecution;
 import com.alone.hotel.entity.Customer;
-import com.alone.hotel.enums.CustomerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.CustomerException;
 import com.alone.hotel.service.CustomerService;
 import com.alone.hotel.utils.ImageUtil;
@@ -44,21 +44,21 @@ public class CustomerServiceImpl implements CustomerService {
                     customer.setCustomerFaceImg(faceUrl);
                 }
             } catch (Exception e){
-                throw new CustomerException(CustomerStateEnum.FILE_INSERT_ERROR.getStateInfo());
+                throw new CustomerException(ResultEnum.FILE_INSERT_ERROR.getStateInfo());
             }
             //插入信息
             try {
                 int effectNum = customerDao.addCustomer(customer);
                 if(effectNum <= 0){
-                    throw new CustomerException(CustomerStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerException(ResultEnum.INNER_ERROR.getStateInfo());
                 } else {
-                    return new CustomerExecution(CustomerStateEnum.SUCCESS, customer);
+                    return new CustomerExecution(ResultEnum.SUCCESS, customer);
                 }
             } catch (Exception e){
-                return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+                return new CustomerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+            return new CustomerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -89,19 +89,19 @@ public class CustomerServiceImpl implements CustomerService {
                     customer.setCustomerFaceImg(faceUrl);
                 }
             } catch (Exception e){
-                throw new CustomerException(CustomerStateEnum.FILE_INSERT_ERROR.getStateInfo());
+                throw new CustomerException(ResultEnum.FILE_INSERT_ERROR.getStateInfo());
             }
             try{
                 int effectedNum = customerDao.updateCustomer(customer);
                 if(effectedNum <= 0){
-                    throw new CustomerException(CustomerStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerExecution(CustomerStateEnum.SUCCESS, customer);
+                return new CustomerExecution(ResultEnum.SUCCESS, customer);
             } catch (Exception e){
-                throw new CustomerException(CustomerStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+            return new CustomerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -111,11 +111,11 @@ public class CustomerServiceImpl implements CustomerService {
         if(customerCardNumber != null){
             int effectNum = customerDao.deleteCustomer(customerCardNumber);
             if(effectNum <= 0){
-                throw new CustomerException(CustomerStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerException(ResultEnum.INNER_ERROR.getStateInfo());
             }
-            return new CustomerExecution(CustomerStateEnum.SUCCESS);
+            return new CustomerExecution(ResultEnum.SUCCESS);
         } else {
-            return new CustomerExecution(CustomerStateEnum.ID_CARD_EMPTY);
+            return new CustomerExecution(ResultEnum.EMPTY);
         }
     }
 

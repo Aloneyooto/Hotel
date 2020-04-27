@@ -3,7 +3,7 @@ package com.alone.hotel.controller.personnel;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.RecreateOrder;
 import com.alone.hotel.entity.RoomOrder;
-import com.alone.hotel.enums.OrderStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.RecreateOrderService;
 import com.alone.hotel.service.RoomOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.List;
  * @CreateTime: 2020-04-15 19:57
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/personnel")
 public class OrderManagement {
@@ -38,9 +38,9 @@ public class OrderManagement {
     private OrderExecution queryRoomOrderList(@RequestBody RoomOrder orderCondition){
         try {
             List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByCondition(orderCondition);
-            return new OrderExecution(OrderStateEnum.SUCCESS, roomOrderList);
+            return new OrderExecution(ResultEnum.SUCCESS, roomOrderList);
         } catch (Exception e){
-            return new OrderExecution(OrderStateEnum.INNER_ERROR);
+            return new OrderExecution(ResultEnum.INNER_ERROR);
         }
     }
 
@@ -58,14 +58,14 @@ public class OrderManagement {
         if(pageIndex > 0 && pageSize > 0){
             try{
                 OrderExecution orderExecution = recreateOrderService.queryRecreateOrderList(recreateOrder, pageIndex, pageSize);
-                orderExecution.setState(OrderStateEnum.SUCCESS.getState());
-                orderExecution.setStateInfo(OrderStateEnum.SUCCESS.getStateInfo());
+                orderExecution.setState(ResultEnum.SUCCESS.getState());
+                orderExecution.setStateInfo(ResultEnum.SUCCESS.getStateInfo());
                 return orderExecution;
             } catch (Exception e){
-                return new OrderExecution(OrderStateEnum.INNER_ERROR);
+                return new OrderExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new OrderExecution(OrderStateEnum.PAGE_ERROR);
+            return new OrderExecution(ResultEnum.PAGE_ERROR);
         }
     }
 

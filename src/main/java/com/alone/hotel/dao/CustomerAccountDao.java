@@ -24,7 +24,7 @@ public interface CustomerAccountDao {
      * @param accountName
      * @return
      */
-    CustomerAccount queryCustomerAccountByNameAndPsw(String accountName, String accountPassword);
+    CustomerAccount queryCustomerAccountByNameAndPwd(String accountName, String accountPassword);
 
     /**
      * 通过用户名查找账号

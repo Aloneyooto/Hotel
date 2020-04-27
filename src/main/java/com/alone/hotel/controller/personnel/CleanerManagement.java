@@ -2,7 +2,7 @@ package com.alone.hotel.controller.personnel;
 
 import com.alone.hotel.dto.CleanerExecution;
 import com.alone.hotel.entity.Cleaner;
-import com.alone.hotel.enums.CleanerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.CleanerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @CreateTime: 2020-03-16 22:52
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/personnel")
 public class CleanerManagement {
@@ -26,16 +26,16 @@ public class CleanerManagement {
         if(cleaner != null && cleaner.getEmployee().getEmployeeId() != null){
             try{
                 CleanerExecution pe = cleanerService.addCleaner(cleaner);
-                if(pe.getState() == CleanerStateEnum.SUCCESS.getState()){
-                    return new CleanerExecution(CleanerStateEnum.SUCCESS);
+                if(pe.getState() == ResultEnum.SUCCESS.getState()){
+                    return new CleanerExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new CleanerExecution(CleanerStateEnum.INSERT_INNER_ERROR);
+                    return new CleanerExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new CleanerExecution(CleanerStateEnum.INSERT_INNER_ERROR);
+                return new CleanerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CleanerExecution(CleanerStateEnum.EMPTY);
+            return new CleanerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -44,9 +44,9 @@ public class CleanerManagement {
         CleanerExecution cleanerExecution = null;
         if(cleanerId != null){
             Cleaner cleaner = cleanerService.queryCleanerById(cleanerId);
-            cleanerExecution = new CleanerExecution(CleanerStateEnum.SUCCESS, cleaner);
+            cleanerExecution = new CleanerExecution(ResultEnum.SUCCESS, cleaner);
         } else {
-            cleanerExecution = new CleanerExecution(CleanerStateEnum.EMPTY);
+            cleanerExecution = new CleanerExecution(ResultEnum.EMPTY);
         }
         return cleanerExecution;
     }
@@ -60,10 +60,10 @@ public class CleanerManagement {
                 CleanerExecution pe = cleanerService.queryCleanerList(roomFloor, pageIndex, pageSize);
                 return pe;
             } catch (Exception e){
-                return new CleanerExecution(CleanerStateEnum.INNER_ERROR);
+                return new CleanerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CleanerExecution(CleanerStateEnum.PAGE_ERROR);
+            return new CleanerExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -74,10 +74,10 @@ public class CleanerManagement {
                 CleanerExecution cleanerExecution = cleanerService.updateCleaner(cleaner);
                 return cleanerExecution;
             } catch (Exception e){
-                return new CleanerExecution(CleanerStateEnum.INNER_ERROR);
+                return new CleanerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CleanerExecution(CleanerStateEnum.INNER_ERROR);
+            return new CleanerExecution(ResultEnum.INNER_ERROR);
         }
     }
 
@@ -88,10 +88,10 @@ public class CleanerManagement {
                 CleanerExecution cleanerExecution = cleanerService.deleteCleaner(cleanerId);
                 return cleanerExecution;
             } catch (Exception e){
-                return new CleanerExecution(CleanerStateEnum.INNER_ERROR);
+                return new CleanerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CleanerExecution(CleanerStateEnum.EMPTY);
+            return new CleanerExecution(ResultEnum.EMPTY);
         }
     }
 }

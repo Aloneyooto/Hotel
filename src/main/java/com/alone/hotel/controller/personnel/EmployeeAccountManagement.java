@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.EmployeeAccountExecution;
 import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.EmployeeAccount;
-import com.alone.hotel.enums.EmployeeAccountStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.EmployeeAccountService;
 import com.alone.hotel.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.List;
  * @CreateTime: 2020-03-31 10:36
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/personnel")
 public class EmployeeAccountManagement {
@@ -46,12 +46,12 @@ public class EmployeeAccountManagement {
                 if(!employee.getPosition().getPositionId().equals(employeeAccount.getAccountPower())){
                     employeeAccount.setAccountPower(employee.getPosition().getPositionId());
                 }
-                return new EmployeeAccountExecution(EmployeeAccountStateEnum.SUCCESS, employeeAccount);
+                return new EmployeeAccountExecution(ResultEnum.SUCCESS, employeeAccount);
             } else {
-                return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_ERROR);
+                return new EmployeeAccountExecution(ResultEnum.ACCOUNT_EMPTY);
             }
         } else {
-            return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
+            return new EmployeeAccountExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -77,14 +77,14 @@ public class EmployeeAccountManagement {
                     return employeeAccountExecution;
                 } else {
                     //旧密码错误
-                    return new EmployeeAccountExecution(EmployeeAccountStateEnum.OLD_PASSWORD_ERROR);
+                    return new EmployeeAccountExecution(ResultEnum.OLD_PASSWORD_ERROR);
                 }
             } else {
                 //两次输入的密码不一致
-                return new EmployeeAccountExecution(EmployeeAccountStateEnum.NEW_PASSWORD_ERROR);
+                return new EmployeeAccountExecution(ResultEnum.NEW_PASSWORD_ERROR);
             }
         } else {
-            return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
+            return new EmployeeAccountExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -96,9 +96,9 @@ public class EmployeeAccountManagement {
     private EmployeeAccountExecution queryEmployeeAccountList(){
         try {
             List<EmployeeAccount> employeeAccountList = employeeAccountService.queryEmployeeAccountList();
-            return new EmployeeAccountExecution(EmployeeAccountStateEnum.SUCCESS, employeeAccountList);
+            return new EmployeeAccountExecution(ResultEnum.SUCCESS, employeeAccountList);
         } catch (Exception e){
-            return new EmployeeAccountExecution(EmployeeAccountStateEnum.INNER_ERROR);
+            return new EmployeeAccountExecution(ResultEnum.INNER_ERROR);
         }
     }
 
@@ -113,7 +113,7 @@ public class EmployeeAccountManagement {
             EmployeeAccountExecution result = employeeAccountService.updateEmployeeAccount(employeeAccount);
             return result;
         } else {
-            return new EmployeeAccountExecution(EmployeeAccountStateEnum.EMPLOYEE_ACCOUNT_EMPTY);
+            return new EmployeeAccountExecution(ResultEnum.ACCOUNT_EMPTY);
         }
     }
 }

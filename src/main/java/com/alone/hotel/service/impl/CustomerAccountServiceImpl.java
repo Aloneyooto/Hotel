@@ -3,8 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.CustomerAccountDao;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.entity.CustomerAccount;
-import com.alone.hotel.enums.CustomerAccountStateEnum;
-import com.alone.hotel.enums.CustomerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.CustomerAccountException;
 import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.utils.ImageUtil;
@@ -38,20 +37,20 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
                 customerAccount.setFlag(0);
                 int effectedNum = customerAccountDao.addCustomerAccount(customerAccount);
                 if(effectedNum <= 0){
-                    throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerAccountException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS);
+                return new CustomerAccountExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerAccountException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+            return new CustomerAccountExecution(ResultEnum.EMPTY);
         }
     }
 
     @Override
     public CustomerAccount queryCustomerAccountByNameAndPsw(String accountName, String password) {
-        return customerAccountDao.queryCustomerAccountByNameAndPsw(accountName, password);
+        return customerAccountDao.queryCustomerAccountByNameAndPwd(accountName, password);
     }
 
     @Override
@@ -75,19 +74,19 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
                         String imgPath = addImage(customerAccount, headImg);
                         customerAccount.setHeadImg(imgPath);
                     } catch (Exception e){
-                        throw new CustomerAccountException(CustomerAccountStateEnum.HEAD_IMAGE_ERROR.getStateInfo());
+                        throw new CustomerAccountException(ResultEnum.ADD_HEADIMG_ERROR.getStateInfo());
                     }
                 }
                 int effectNum = customerAccountDao.updateCustomerAccount(customerAccount);
                 if(effectNum <= 0){
-                    throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerAccountException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS);
+                return new CustomerAccountExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerAccountException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.EMPTY);
+            return new CustomerAccountExecution(ResultEnum.ACCOUNT_EMPTY);
         }
     }
 
@@ -98,14 +97,14 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
             try {
                 int effectNum = customerAccountDao.deleteCustomerAccount(accountName);
                 if(effectNum <= 0){
-                    throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
+                    throw new CustomerAccountException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS);
+                return new CustomerAccountExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new CustomerAccountException(CustomerAccountStateEnum.INNER_ERROR.getStateInfo());
+                throw new CustomerAccountException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CustomerAccountExecution(CustomerAccountStateEnum.ACCOUNT_NAME_EMPTY);
+            return new CustomerAccountExecution(ResultEnum.EMPTY);
         }
     }
 

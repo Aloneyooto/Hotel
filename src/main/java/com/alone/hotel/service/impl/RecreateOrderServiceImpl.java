@@ -6,7 +6,7 @@ import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.RecreateOrder;
 import com.alone.hotel.entity.Recreation;
-import com.alone.hotel.enums.OrderStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RecreateOrderService;
 import com.alone.hotel.service.RecreationService;
@@ -57,14 +57,14 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
                 //添加订单
                 int effectNum = recreateOrderDao.addRecreateOrder(recreateOrder);
                 if(effectNum <= 0){
-                    throw new OrderException(OrderStateEnum.RECREATE_ORDER_INSERT_ERROR.getStateInfo());
+                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(OrderStateEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.RECREATE_ORDER_INSERT_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -95,14 +95,14 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
             try{
                 int effectNum = recreateOrderDao.updateRecreateOrder(recreateOrder);
                 if(effectNum <= 0){
-                    throw new OrderException(OrderStateEnum.RECREATE_ORDER_UPDATE_ERROR.getStateInfo());
+                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(OrderStateEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.RECREATE_ORDER_UPDATE_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -113,14 +113,14 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
             try {
                 int effectNum = recreateOrderDao.deleteRecreateOrder(recreateOrderId);
                 if(effectNum <= 0){
-                    throw new OrderException(OrderStateEnum.RECREATE_ORDER_DELETE_ERROR.getStateInfo());
+                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(OrderStateEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new OrderException(OrderStateEnum.RECREATE_ORDER_DELETE_ERROR.getStateInfo());
+                throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new OrderExecution(OrderStateEnum.RECREATE_ORDER_ID_EMPTY);
+            return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 

@@ -2,7 +2,7 @@ package com.alone.hotel.controller.superadmin;
 
 import com.alone.hotel.dto.RecreationExecution;
 import com.alone.hotel.entity.Recreation;
-import com.alone.hotel.enums.RecreationStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.RecreationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @CreateTime: 2020-03-17 21:05
  * @Description:
  */
-@CrossOrigin
+
 @RestController
 @RequestMapping("/superadmin")
 public class RecreationManagement {
@@ -26,16 +26,16 @@ public class RecreationManagement {
         if(recreation != null && recreation.getRecreationId() != null){
             try{
                 RecreationExecution pe = recreationService.insertRecreation(recreation);
-                if(pe.getState() == RecreationStateEnum.SUCCESS.getState()){
-                    return new RecreationExecution(RecreationStateEnum.SUCCESS);
+                if(pe.getState() == ResultEnum.SUCCESS.getState()){
+                    return new RecreationExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new RecreationExecution(RecreationStateEnum.INNER_ERROR);
+                    return new RecreationExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new RecreationExecution(RecreationStateEnum.INNER_ERROR);
+                return new RecreationExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.RECREATION_EMPTY);
+            return new RecreationExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -45,12 +45,12 @@ public class RecreationManagement {
         if(recreationId > 0){
             try {
                 Recreation recreation = recreationService.queryRecreationById(recreationId);
-                recreationExecution = new RecreationExecution(RecreationStateEnum.SUCCESS, recreation);
+                recreationExecution = new RecreationExecution(ResultEnum.SUCCESS, recreation);
             } catch (Exception e){
-                recreationExecution = new RecreationExecution(RecreationStateEnum.INNER_ERROR);
+                recreationExecution = new RecreationExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            recreationExecution = new RecreationExecution(RecreationStateEnum.RECREATION_ID_ERROR);
+            recreationExecution = new RecreationExecution(ResultEnum.ID_ERROR);
         }
         return recreationExecution;
     }
@@ -66,10 +66,10 @@ public class RecreationManagement {
                 RecreationExecution pe = recreationService.queryRecreationList(recreationCondition, pageIndex, pageSize);
                 return pe;
             } catch (Exception e){
-                return new RecreationExecution(RecreationStateEnum.INNER_ERROR);
+                return new RecreationExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.PAGE_ERROR);
+            return new RecreationExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -80,10 +80,10 @@ public class RecreationManagement {
                 RecreationExecution recreationExecution = recreationService.modifyRecreation(recreation);
                 return recreationExecution;
             } catch (Exception e){
-                return new RecreationExecution(RecreationStateEnum.INNER_ERROR);
+                return new RecreationExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.RECREATION_EMPTY);
+            return new RecreationExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -94,10 +94,10 @@ public class RecreationManagement {
                 RecreationExecution recreationExecution = recreationService.deleteRecreation(recreationId);
                 return recreationExecution;
             } catch (Exception e){
-                return new RecreationExecution(RecreationStateEnum.INNER_ERROR);
+                return new RecreationExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.RECREATION_ID_ERROR);
+            return new RecreationExecution(ResultEnum.ID_ERROR);
         }
     }
 }

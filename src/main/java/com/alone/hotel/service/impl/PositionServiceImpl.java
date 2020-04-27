@@ -3,7 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.PositionDao;
 import com.alone.hotel.dto.PositionExecution;
 import com.alone.hotel.entity.Position;
-import com.alone.hotel.enums.PositionStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.PositionException;
 import com.alone.hotel.service.PositionService;
 import com.alone.hotel.utils.PageUtil;
@@ -33,21 +33,21 @@ public class PositionServiceImpl implements PositionService {
             if(effectNum <= 0){
                 throw new PositionException("插入失败");
             } else {
-                return new PositionExecution(PositionStateEnum.SUCCESS);
+                return new PositionExecution(ResultEnum.SUCCESS);
             }
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_EMPTY);
+            return new PositionExecution(ResultEnum.EMPTY);
         }
     }
 
     @Override
     public PositionExecution queryPositionById(int positionId) {
         if(positionId < 0){
-            return new PositionExecution(PositionStateEnum.POSITION_ID_ERROR);
+            return new PositionExecution(ResultEnum.ID_ERROR);
         } else {
             try{
                 Position position = positionDao.queryPositionById(positionId);
-                return new PositionExecution(PositionStateEnum.SUCCESS, position);
+                return new PositionExecution(ResultEnum.SUCCESS, position);
             } catch (Exception e){
                 throw new PositionException("查询职位信息出错");
             }
@@ -66,7 +66,7 @@ public class PositionServiceImpl implements PositionService {
             pe.setCount(count);
             return pe;
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_PAGE_ERROR);
+            return new PositionExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -79,12 +79,12 @@ public class PositionServiceImpl implements PositionService {
                 if(effectedNum <= 0){
                     throw new PositionException("修改职位信息失败");
                 }
-                return new PositionExecution(PositionStateEnum.SUCCESS, position);
+                return new PositionExecution(ResultEnum.SUCCESS, position);
             } catch (Exception e){
                 throw new PositionException("修改职位信息失败");
             }
         } else {
-            return new PositionExecution(PositionStateEnum.POSITION_EMPTY);
+            return new PositionExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -97,7 +97,7 @@ public class PositionServiceImpl implements PositionService {
             if(effectedNum <= 0){
                 throw new PositionException("职位信息删除失败");
             }
-            return new PositionExecution(PositionStateEnum.SUCCESS);
+            return new PositionExecution(ResultEnum.SUCCESS);
         } catch (Exception e){
             throw new PositionException("职位信息删除失败" + e.getMessage());
         }

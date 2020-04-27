@@ -1,7 +1,8 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.Work;
-import com.alone.hotel.enums.WorkStateEnum;
+import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -29,18 +30,18 @@ public class WorkExecution {
     public WorkExecution() {
     }
 
-    public WorkExecution(WorkStateEnum stateEnum){
+    public WorkExecution(ResultEnum stateEnum){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
     }
 
-    public WorkExecution(WorkStateEnum stateEnum, Work work){
+    public WorkExecution(ResultEnum stateEnum, Work work){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.work = work;
     }
 
-    public WorkExecution(WorkStateEnum stateEnum, List<Work> workList){
+    public WorkExecution(ResultEnum stateEnum, List<Work> workList){
         this.state = stateEnum.getState();
         this.stateInfo = stateEnum.getStateInfo();
         this.workList = workList;

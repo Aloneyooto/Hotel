@@ -3,7 +3,7 @@ package com.alone.hotel.controller.personnel;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.CustomerAccount;
-import com.alone.hotel.enums.CustomerAccountStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +38,21 @@ public class ClientManagement {
             List<CustomerAccount> customerAccountList = customerAccountService.queryCustomerAccountList();
             if(customerAccountList != null){
                 for (int i = 0; i < customerAccountList.size(); i++) {
-                    String customerCardNumber = customerAccountList.get(i).getCustomer().getCustomerCardNumber();
-                    if(customerCardNumber != null){
+                    CustomerAccount account = customerAccountList.get(i);
+                    if(account.getCustomer() != null && account.getCustomer().getCustomerCardNumber() != null){
                         try {
+                            String customerCardNumber = account.getCustomer().getCustomerCardNumber();
                             Customer customer = customerService.queryCustomerById(customerCardNumber);
                             customerAccountList.get(i).setCustomer(customer);
                         } catch (Exception e){
-                            return new CustomerAccountExecution(CustomerAccountStateEnum.INNER_ERROR);
+                            return new CustomerAccountExecution(ResultEnum.INNER_ERROR);
                         }
                     }
                 }
             }
-            return new CustomerAccountExecution(CustomerAccountStateEnum.SUCCESS, customerAccountList);
+            return new CustomerAccountExecution(ResultEnum.SUCCESS, customerAccountList);
         } catch (Exception e){
-            return new CustomerAccountExecution(CustomerAccountStateEnum.INNER_ERROR);
+            return new CustomerAccountExecution(ResultEnum.INNER_ERROR);
         }
     }
 }

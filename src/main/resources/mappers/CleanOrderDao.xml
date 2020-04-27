@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alone.hotel.dao.CleanOrderDao">
+    <resultMap id="cleanOrderMap" type="com.alone.hotel.entity.CleanOrder">
+        <id column="order_id" property="orderId" />
+        <result column="room_id" property="room.roomId" />
+        <result column="status" property="status" />
+        <result column="hand_in_time" property="handInTime" />
+        <association property="employee" javaType="com.alone.hotel.entity.Employee">
+            <id column="employee_id" property="employeeId" />
+            <result column="employee_name" property="employeeName" />
+        </association>
+    </resultMap>
+
+    <insert id="addCleanOrder" parameterType="com.alone.hotel.entity.CleanOrder" keyProperty="orderId" keyColumn="order_id">
+        insert into tb_clean_order(order_id, room_id, employee_id, status, hand_in_time)
+        values (#{orderId}, #{room.roomId}, #{employee.employeeId}, #{status}, #{handInTime})
+    </insert>
+
+    <select id="queryCleanOrder" resultMap="cleanOrderMap" parameterType="String">
+        select c.order_id, c.room_id, e.employee_id, e.employee_name, c.status, c.hand_in_time
+        from tb_clean_order c, tb_employee e
+        <where>
+            <if test="employeeId != null ">and e.employee_id = #{employeeId}</if>
+            and c.employee_id = e.employee_id
+        </where>
+    </select>
+
+    <select id="queryOrderCount" resultType="int" parameterType="String">
+        select count(1)
+        from tb_clean_order
+        where order_id like #{orderId}'%'
+    </select>
+
+    <update id="updateCleanOrderStatus" parameterType="com.alone.hotel.entity.CleanOrder">
+        update tb_clean_order
+        set status = #{status}
+        where room_id = #{room.roomId} and employee_id = #{employee.employeeId}
+    </update>
+
+    <delete id="deleteCleanOrder">
+        delete from tb_clean_order
+        where room_id = #{room.roomId} and employee_id = #{employee.employeeId}
+    </delete>
+</mapper>

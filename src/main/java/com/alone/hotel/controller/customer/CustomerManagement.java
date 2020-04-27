@@ -1,7 +1,6 @@
 package com.alone.hotel.controller.customer;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.dto.CustomerExecution;
@@ -11,17 +10,12 @@ import com.alone.hotel.entity.CheckIn;
 import com.alone.hotel.entity.Customer;
 import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.entity.CustomerRelation;
-import com.alone.hotel.enums.CustomerAccountStateEnum;
-import com.alone.hotel.enums.CustomerRelationStateEnum;
-import com.alone.hotel.enums.CustomerStateEnum;
-import com.alone.hotel.enums.RoomStateEnum;
+import com.alone.hotel.enums.*;
 import com.alone.hotel.service.CheckInService;
 import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.service.CustomerRelationService;
 import com.alone.hotel.service.CustomerService;
 import com.alone.hotel.utils.FaceUtil;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +61,7 @@ public class CustomerManagement {
     @PostMapping("/addcustomermessage")
     private CustomerExecution addCustomerMessage(HttpServletRequest request){
         //Customer customer, MultipartFile cardImg, MultipartFile faceImg, CustomerAccount customerAccount, int flag
+        //TODO 不能全取出来
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         String customerCardNumber = params.getParameter("customerCardNumber");
         //保证身份证号不为空
@@ -108,11 +103,11 @@ public class CustomerManagement {
                 customer.setCustomerPhone(customerPhone);
 
                 CustomerExecution customerExecution = customerService.addCustomer(customer, cardImg, faceImg);
-                if(customerExecution.getState() != CustomerStateEnum.SUCCESS.getState()){
+                if(customerExecution.getState() != ResultEnum.SUCCESS.getState()){
                     return customerExecution;
                 }
             } catch (Exception e){
-                return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+                return new CustomerExecution(ResultEnum.INNER_ERROR);
             }
             //是否实名认证，是的话向customer_account表写入数据
             if(flag == 1){
@@ -120,11 +115,10 @@ public class CustomerManagement {
                 customerAccount.setFlag(1);
                 customerAccount.setCustomer(customer);
 
-
                 //To check
                 CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
-                if(customerAccountExecution.getState() != CustomerAccountStateEnum.SUCCESS.getState()){
-                    return new CustomerExecution(CustomerStateEnum.CERTIFICATION_ERROR);
+                if(customerAccountExecution.getState() != ResultEnum.SUCCESS.getState()){
+                    return new CustomerExecution(ResultEnum.CERTIFICATION_ERROR);
                 }
             }
             //向customer_relation表添加关系
@@ -132,13 +126,13 @@ public class CustomerManagement {
             customerRelation.setAccount(customerAccount);
             customerRelation.setCustomer(customer);
             CustomerRelationExecution customerRelationExecution = customerRelationService.addCustomerRelation(customerRelation);
-            if(customerRelationExecution.getState() == CustomerRelationStateEnum.SUCCESS.getState()){
-                return new CustomerExecution(CustomerStateEnum.SUCCESS, customer);
+            if(customerRelationExecution.getState() == ResultEnum.SUCCESS.getState()){
+                return new CustomerExecution(ResultEnum.SUCCESS, customer);
             } else {
-                return new CustomerExecution(CustomerStateEnum.RELATION_INSERT_ERROR);
+                return new CustomerExecution(ResultEnum.RELATION_INSERT_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+            return new CustomerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -160,12 +154,12 @@ public class CustomerManagement {
                 CustomerRelation customerRelation = new CustomerRelation();
                 customerRelation.setAccount(customerAccount);
                 CustomerAccount account = customerRelationService.queryCustomerByAccount(customerRelation);
-                return new CustomerExecution(CustomerStateEnum.SUCCESS, account.getCustomerList());
+                return new CustomerExecution(ResultEnum.SUCCESS, account.getCustomerList());
             } else {
-                return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+                return new CustomerExecution(ResultEnum.ACCOUNT_EMPTY);
             }
         } catch (Exception e){
-            return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+            return new CustomerExecution(ResultEnum.INNER_ERROR);
         }
     }
 
@@ -210,16 +204,16 @@ public class CustomerManagement {
         if(customer != null){
             try{
                 CustomerExecution customerExecution = customerService.updateCustomer(customer, cardImg, faceImg);
-                if(customerExecution.getState() == CustomerStateEnum.SUCCESS.getState()){
+                if(customerExecution.getState() == ResultEnum.SUCCESS.getState()){
                     return customerExecution;
                 } else {
-                    return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+                    return new CustomerExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                  return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+                  return new CustomerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+            return new CustomerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -253,21 +247,21 @@ public class CustomerManagement {
             customerRelation.setCustomer(customer);
             try {
                 CustomerRelationExecution customerRelationExecution = customerRelationService.deleteCustomerRelation(customerRelation);
-                if(customerRelationExecution.getState() != CustomerRelationStateEnum.SUCCESS.getState()){
-                    return new CustomerExecution(CustomerStateEnum.RELATION_DELETE_ERROR);
+                if(customerRelationExecution.getState() != ResultEnum.SUCCESS.getState()){
+                    return new CustomerExecution(ResultEnum.RELATION_DELETE_ERROR);
                 }
             } catch (Exception e){
-                return new CustomerExecution(CustomerStateEnum.RELATION_DELETE_ERROR);
+                return new CustomerExecution(ResultEnum.RELATION_DELETE_ERROR);
             }
             //删除customer的记录
             CustomerExecution customerExecution = customerService.deleteCustomer(customer.getCustomerCardNumber());
-            if(customerExecution.getState() == CustomerStateEnum.SUCCESS.getState()){
+            if(customerExecution.getState() == ResultEnum.SUCCESS.getState()){
                 return customerExecution;
             } else {
-                return new CustomerExecution(CustomerStateEnum.INNER_ERROR);
+                return new CustomerExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new CustomerExecution(CustomerStateEnum.BASIC_MESSAGE_ERROR);
+            return new CustomerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -290,12 +284,12 @@ public class CustomerManagement {
             String customerCardNumber = FaceUtil.compareFaces(newFile);
             CheckIn checkIn = checkInService.queryCheckInByCustomer(customerCardNumber);
             if(roomId == checkIn.getRoom().getRoomId()){
-                return new RoomExecution(RoomStateEnum.SUCCESS, checkIn.getRoom());
+                return new RoomExecution(ResultEnum.SUCCESS, checkIn.getRoom());
             } else {
-                return new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+                return new RoomExecution(ResultEnum.ROOM_ID_ERROR);
             }
         } catch (IOException e) {
-            return new RoomExecution(RoomStateEnum.INNER_ERROR);
+            return new RoomExecution(ResultEnum.INNER_ERROR);
         }
     }
 }

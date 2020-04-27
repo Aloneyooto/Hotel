@@ -3,7 +3,7 @@ package com.alone.hotel.service;
 import com.alone.hotel.dto.EmployeeExecution;
 import com.alone.hotel.entity.Employee;
 import com.alone.hotel.entity.Position;
-import com.alone.hotel.enums.EmployeeStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +44,7 @@ public class EmployeeServiceTest {
         position.setPositionId(2);
         employee.setPosition(position);
         EmployeeExecution employeeExecution = employeeService.addEmployee(employee, cardFile, faceFile);
-        assertEquals(EmployeeStateEnum.SUCCESS.getState(), employeeExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), employeeExecution.getState());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class EmployeeServiceTest {
         InputStream inputStream1 = new FileInputStream(faceImgFile);
         MultipartFile faceFile = new MockMultipartFile(faceImgFile.getName(), inputStream1);
         EmployeeExecution  employeeExecution = employeeService.updateEmployee(employee, cardFile, faceFile);
-        assertEquals(EmployeeStateEnum.SUCCESS.getState(), employeeExecution.getState());
+        assertEquals(ResultEnum.SUCCESS.getState(), employeeExecution.getState());
     }
 
 

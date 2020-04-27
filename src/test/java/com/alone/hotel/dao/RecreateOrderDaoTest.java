@@ -68,7 +68,7 @@ public class RecreateOrderDaoTest {
         Recreation recreation = new Recreation();
         recreation.setRecreationId(1);
         recreateOrder.setRecreation(recreation);
-        List<RecreateOrder> recreateOrderList = recreateOrderDao.queryRecreateOrderList(recreateOrder);
+        List<RecreateOrder> recreateOrderList = recreateOrderDao.queryRecreateOrderList(recreateOrder, 1, 1);
         assertEquals(1, recreateOrderList.size());
         int count = recreateOrderDao.queryRecreateOrderCount(recreateOrder);
         assertEquals(1, count);

@@ -3,7 +3,7 @@ package com.alone.hotel.service.impl;
 import com.alone.hotel.dao.RecreationDao;
 import com.alone.hotel.dto.RecreationExecution;
 import com.alone.hotel.entity.Recreation;
-import com.alone.hotel.enums.RecreationStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.RecreationException;
 import com.alone.hotel.service.RecreationService;
 import com.alone.hotel.utils.PageUtil;
@@ -33,10 +33,10 @@ public class RecreationServiceImpl implements RecreationService {
             if(effectNum <= 0){
                 throw new RecreationException("插入失败");
             } else {
-                return new RecreationExecution(RecreationStateEnum.SUCCESS);
+                return new RecreationExecution(ResultEnum.SUCCESS);
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.RECREATION_EMPTY);
+            return new RecreationExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -57,7 +57,7 @@ public class RecreationServiceImpl implements RecreationService {
             pe.setCount(count);
             return pe;
         } else {
-            return new RecreationExecution(RecreationStateEnum.PAGE_ERROR);
+            return new RecreationExecution(ResultEnum.PAGE_ERROR);
         }
     }
 
@@ -68,14 +68,14 @@ public class RecreationServiceImpl implements RecreationService {
             try {
                 int effectedNum = recreationDao.updateRecreation(recreation);
                 if(effectedNum <= 0){
-                    throw new RecreationException(RecreationStateEnum.INNER_ERROR.getStateInfo());
+                    throw new RecreationException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new RecreationExecution(RecreationStateEnum.SUCCESS, recreation);
+                return new RecreationExecution(ResultEnum.SUCCESS, recreation);
             } catch (Exception e){
-                throw new RecreationException(RecreationStateEnum.INNER_ERROR.getStateInfo());
+                throw new RecreationException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.RECREATION_EMPTY);
+            return new RecreationExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -86,14 +86,14 @@ public class RecreationServiceImpl implements RecreationService {
             try{
                 int effectedNum = recreationDao.deleteRecreation(recreationId);
                 if(effectedNum <= 0){
-                    throw new RecreationException(RecreationStateEnum.INNER_ERROR.getStateInfo());
+                    throw new RecreationException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new RecreationExecution(RecreationStateEnum.SUCCESS);
+                return new RecreationExecution(ResultEnum.SUCCESS);
             } catch (Exception e){
-                throw new RecreationException(RecreationStateEnum.INNER_ERROR.getStateInfo());
+                throw new RecreationException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new RecreationExecution(RecreationStateEnum.RECREATION_ID_ERROR);
+            return new RecreationExecution(ResultEnum.ID_ERROR);
         }
     }
 }

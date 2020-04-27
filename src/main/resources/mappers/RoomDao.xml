@@ -38,10 +38,10 @@
         select room_id, room_floor, room_desc, room_state, room_type
         from tb_room
         <where>
-            <if test="roomCondition.roomType != null ">
+            <if test="roomCondition.roomType != null and roomCondition.roomType > -1">
                 and room_type = #{roomCondition.roomType.typeId}
             </if>
-            <if test="roomCondition.roomState != null ">
+            <if test="roomCondition.roomState != null and roomCondition.roomState > -1">
                 and room_state = #{roomCondition.roomState}
             </if>
         </where>

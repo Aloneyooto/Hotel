@@ -5,7 +5,7 @@ import com.alone.hotel.dao.EmployeeDao;
 import com.alone.hotel.dto.CleanerExecution;
 import com.alone.hotel.entity.Cleaner;
 import com.alone.hotel.entity.Employee;
-import com.alone.hotel.enums.CleanerStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.CleanerException;
 import com.alone.hotel.service.CleanerService;
 import com.alone.hotel.utils.PageUtil;
@@ -42,17 +42,17 @@ public class CleanerServiceImpl implements CleanerService {
                 try{
                     int effectedNum = cleanerDao.insertCleaner(cleaner);
                     if(effectedNum <= 0){
-                        throw new CleanerException(CleanerStateEnum.INSERT_INNER_ERROR.getStateInfo());
+                        throw new CleanerException(ResultEnum.INNER_ERROR.getStateInfo());
                     }
-                    return new CleanerExecution(CleanerStateEnum.SUCCESS, cleaner);
+                    return new CleanerExecution(ResultEnum.SUCCESS, cleaner);
                 } catch (Exception e){
-                    throw new CleanerException(CleanerStateEnum.INSERT_INNER_ERROR.getStateInfo());
+                    throw new CleanerException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
             } else {
-                return new CleanerExecution(CleanerStateEnum.POSITION_TYPE_ERROR);
+                return new CleanerExecution(ResultEnum.POSITION_TYPE_ERROR);
             }
         } else {
-            return new CleanerExecution(CleanerStateEnum.EMPTY);
+            return new CleanerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -83,14 +83,14 @@ public class CleanerServiceImpl implements CleanerService {
             try{
                 int effectedNum = cleanerDao.updateCleaner(cleaner);
                 if(effectedNum <= 0){
-                    throw new CleanerException(CleanerStateEnum.UPDATE_INNER_ERROR.getStateInfo());
+                    throw new CleanerException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CleanerExecution(CleanerStateEnum.SUCCESS, cleaner);
+                return new CleanerExecution(ResultEnum.SUCCESS, cleaner);
             } catch (Exception e){
-                throw new CleanerException(CleanerStateEnum.UPDATE_INNER_ERROR.getStateInfo());
+                throw new CleanerException(ResultEnum.INNER_ERROR.getStateInfo());
             }
         } else {
-            return new CleanerExecution(CleanerStateEnum.EMPTY);
+            return new CleanerExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -101,15 +101,15 @@ public class CleanerServiceImpl implements CleanerService {
             if(employeeId != null){
                 int effectedNum = cleanerDao.deleteCleaner(employeeId);
                 if(effectedNum <= 0){
-                    throw new CleanerException(CleanerStateEnum.DELETE_INNER_ERROR.getStateInfo());
+                    throw new CleanerException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new CleanerExecution(CleanerStateEnum.SUCCESS);
+                return new CleanerExecution(ResultEnum.SUCCESS);
             }
             else {
-                return new CleanerExecution(CleanerStateEnum.EMPTY);
+                return new CleanerExecution(ResultEnum.EMPTY);
             }
         } catch (Exception e){
-            return new CleanerExecution(CleanerStateEnum.DELETE_INNER_ERROR);
+            return new CleanerExecution(ResultEnum.INNER_ERROR);
         }
     }
 

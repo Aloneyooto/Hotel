@@ -3,7 +3,7 @@ package com.alone.hotel.controller.personnel;
 import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.dto.WorkExecution;
 import com.alone.hotel.entity.Work;
-import com.alone.hotel.enums.WorkStateEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,34 +31,34 @@ public class WorkMessageManagement {
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try{
                 WorkExecution workExecution = workService.addWorkMessage(work);
-                if(workExecution.getState() == WorkStateEnum.SUCCESS.getState()){
-                    return new WorkExecution(WorkStateEnum.SUCCESS);
+                if(workExecution.getState() == ResultEnum.SUCCESS.getState()){
+                    return new WorkExecution(ResultEnum.SUCCESS);
                 } else {
-                    return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                    return new WorkExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                return new WorkExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 
     @GetMapping("/queryworktimebyid")
-    private WorkExecution queryWorkTimeById(@RequestParam("employeeId") String employeeId){
+    private WorkExecution queryWorkTimeById(@RequestParam(value = "employeeId") String employeeId){
         if(employeeId != null){
             try {
                 WorkExecution workExecution = workService.queryWorkTimeById(employeeId);
-                if(workExecution.getState() == WorkStateEnum.SUCCESS.getState()){
+                if(workExecution.getState() == ResultEnum.SUCCESS.getState()){
                     return workExecution;
                 } else {
-                    return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                    return new WorkExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                return new WorkExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -67,16 +67,16 @@ public class WorkMessageManagement {
         if(work != null && work.getEmployee().getEmployeeId() != null){
             try {
                 WorkExecution workExecution = workService.updateWorkTime(work);
-                if(workExecution.getState() == WorkStateEnum.SUCCESS.getState()){
+                if(workExecution.getState() == ResultEnum.SUCCESS.getState()){
                     return workExecution;
                 } else {
-                    return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                    return new WorkExecution(ResultEnum.INNER_ERROR);
                 }
             } catch (Exception e){
-                return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                return new WorkExecution(ResultEnum.INNER_ERROR);
             }
         } else {
-            return new WorkExecution(WorkStateEnum.EMPTY);
+            return new WorkExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -92,13 +92,13 @@ public class WorkMessageManagement {
                     WorkExecution  workExecution = workService.deleteWorkTime(employeeId, workTime);
                     return workExecution;
                 } catch (Exception e){
-                    return new WorkExecution(WorkStateEnum.INNER_ERROR);
+                    return new WorkExecution(ResultEnum.INNER_ERROR);
                 }
             } else {
-                return new WorkExecution(WorkStateEnum.EMPTY);
+                return new WorkExecution(ResultEnum.EMPTY);
             }
         } catch (Exception e) {
-            return new WorkExecution(WorkStateEnum.INNER_ERROR);
+            return new WorkExecution(ResultEnum.INNER_ERROR);
         }
 
     }

@@ -1,7 +1,8 @@
 package com.alone.hotel.dto;
 
 import com.alone.hotel.entity.Position;
-import com.alone.hotel.enums.PositionStateEnum;
+import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -29,20 +30,20 @@ public class PositionExecution {
     public PositionExecution() {
     }
 
-    public PositionExecution(PositionStateEnum positionStateEnum){
-        this.state = positionStateEnum.getState();
-        this.stateInfo = positionStateEnum.getStateInfo();
+    public PositionExecution(ResultEnum ResultEnum){
+        this.state = ResultEnum.getState();
+        this.stateInfo = ResultEnum.getStateInfo();
     }
 
-    public PositionExecution(PositionStateEnum positionStateEnum, Position position){
-        this.state = positionStateEnum.getState();
-        this.stateInfo = positionStateEnum.getStateInfo();
+    public PositionExecution(ResultEnum ResultEnum, Position position){
+        this.state = ResultEnum.getState();
+        this.stateInfo = ResultEnum.getStateInfo();
         this.position = position;
     }
 
-    public PositionExecution(PositionStateEnum positionStateEnum, List<Position> positionList){
-        this.state = positionStateEnum.getState();
-        this.stateInfo = positionStateEnum.getStateInfo();
+    public PositionExecution(ResultEnum ResultEnum, List<Position> positionList){
+        this.state = ResultEnum.getState();
+        this.stateInfo = ResultEnum.getStateInfo();
         this.positionList = positionList;
     }
 }

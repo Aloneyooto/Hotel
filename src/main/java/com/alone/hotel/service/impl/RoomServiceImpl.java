@@ -7,6 +7,7 @@ import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.Room;
 import com.alone.hotel.entity.RoomImg;
 import com.alone.hotel.enums.ResultEnum;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.enums.RoomStateEnum;
 import com.alone.hotel.exceptions.RoomException;
 import com.alone.hotel.service.RoomService;
@@ -52,7 +53,7 @@ public class RoomServiceImpl implements RoomService {
         //空值判断
         if(room != null){
             //设置房间默认状态为空房间
-            room.setRoomState(0);
+            room.setRoomState(RoomStateEnum.EMPTY.getState());
             try{
                 //插入房间信息
                 int effectNum = roomDao.insertRoom(room);
@@ -65,12 +66,12 @@ public class RoomServiceImpl implements RoomService {
             //若房间详情图不为空则添加
             if(files != null && files.length > 0){
                 addRoomImgList(room, files);
-                return new RoomExecution(RoomStateEnum.SUCCESS, room);
+                return new RoomExecution(ResultEnum.SUCCESS, room);
             } else {
-                return new RoomExecution(RoomStateEnum.EMPTY);
+                return new RoomExecution(ResultEnum.EMPTY);
             }
         } else {
-            return new RoomExecution(RoomStateEnum.EMPTY);
+            return new RoomExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -120,12 +121,12 @@ public class RoomServiceImpl implements RoomService {
                 if(effectedNum <= 0){
                     throw new RoomException(ResultEnum.ROOM_UPDATE_ERROR);
                 }
-                return new RoomExecution(RoomStateEnum.SUCCESS, room);
+                return new RoomExecution(ResultEnum.SUCCESS, room);
             } catch (Exception e){
                 throw new RoomException(ResultEnum.ROOM_UPDATE_ERROR);
             }
         } else {
-            return new RoomExecution(RoomStateEnum.EMPTY);
+            return new RoomExecution(ResultEnum.EMPTY);
         }
     }
 
@@ -142,13 +143,13 @@ public class RoomServiceImpl implements RoomService {
                 if(result <= 0){
                     throw new RoomException(ResultEnum.ROOM_DELETE_ERROR);
                 } else {
-                    return new RoomExecution(RoomStateEnum.SUCCESS);
+                    return new RoomExecution(ResultEnum.SUCCESS);
                 }
             }
         } catch (Exception e){
             throw new RoomException(ResultEnum.ROOM_DELETE_ERROR);
         }
-        return new RoomExecution(RoomStateEnum.ROOM_ID_ERROR);
+        return new RoomExecution(ResultEnum.INNER_ERROR);
     }
 
     private void addRoomImgList(Room room, MultipartFile[] files){
