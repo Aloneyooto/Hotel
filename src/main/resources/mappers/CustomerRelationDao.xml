@@ -23,6 +23,8 @@
         </collection>
     </resultMap>
 
+
+
     <insert id="addCustomerRelation" parameterType="com.alone.hotel.entity.CustomerRelation" keyProperty="customerCardNumber" keyColumn="customer_card_number">
         insert into tb_customer_relation(customer_card_number, account_name)
         values (#{customer.customerCardNumber}, #{account.accountName})
@@ -42,6 +44,7 @@
         where r.account_name = c.account_name
         and r.customer_card_number = #{customerCardNumber}
     </select>
+
 
     <delete id="deleteCustomerRelation">
         delete from tb_customer_relation

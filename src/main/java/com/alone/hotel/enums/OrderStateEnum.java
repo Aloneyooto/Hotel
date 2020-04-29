@@ -11,10 +11,10 @@ import lombok.Getter;
  */
 @Getter
 public enum OrderStateEnum {
-    UNFINISHED(-1, "未完成"),
-    UNPAID(0, "未支付"),
-    PAID(1, "已支付"),
-    FINISHED(2, "已完成"),
+    UNFINISHED(0, "未完成"),
+    UNPAID(1, "未支付"),
+    PAID(2, "已支付"),
+    FINISHED(3, "已完成"),
     ;
     private Integer state;
     private String stateInfo;

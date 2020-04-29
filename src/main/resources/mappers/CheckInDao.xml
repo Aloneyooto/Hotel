@@ -49,4 +49,9 @@
         delete from tb_check_in
         where room_id = #{room.roomId} and customer_card_number = #{customer.customerCardNumber}
     </delete>
+
+    <delete id="deleteCheckInMessageByRoom">
+        delete from tb_check_in
+        where room_id = #{room.roomId}
+    </delete>
 </mapper>

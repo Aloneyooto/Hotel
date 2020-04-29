@@ -64,4 +64,23 @@ public class CheckInServiceImpl implements CheckInService {
         }
         return false;
     }
+
+    @Override
+    @Transactional
+    public boolean deleteCheckInMessageByRoom(Integer roomId) {
+        if(roomId > 0){
+            try {
+                int effectedNum = checkInDao.deleteCheckInMessageByRoom(roomId);
+                if(effectedNum <= 0){
+                    return false;
+                }
+                return true;
+            } catch (Exception e){
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }

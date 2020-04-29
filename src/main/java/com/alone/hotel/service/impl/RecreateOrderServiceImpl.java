@@ -4,19 +4,23 @@ import com.alone.hotel.dao.RecreateOrderDao;
 import com.alone.hotel.dao.RecreationDao;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.Customer;
+import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.entity.RecreateOrder;
 import com.alone.hotel.entity.Recreation;
+import com.alone.hotel.enums.OrderStateEnum;
 import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.exceptions.OrderException;
 import com.alone.hotel.service.RecreateOrderService;
 import com.alone.hotel.service.RecreationService;
 import com.alone.hotel.utils.PageUtil;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -45,21 +49,20 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
             try{
                 //设置初始值
                 recreateOrder.setHandInTime(new Date());
-                recreateOrder.setOrderStatus(0);
+                recreateOrder.setOrderStatus(OrderStateEnum.UNFINISHED.getState());
+                recreateOrder.setStartTime(new Date());
                 //生成订单ID
                 String orderId = generateRoomOrderId(recreateOrder.getHandInTime());
                 recreateOrder.setOrderId(orderId);
-                //计算订单价格
+                //设置订单类别
                 Recreation recreation = recreationDao.queryRecreationById(recreateOrder.getRecreation().getRecreationId());
-                double price = recreation.getRecreationPrice() * getDatePoor(recreateOrder.getStartTime(), recreateOrder.getEndTime());
-                recreateOrder.setOrderPrice(price);
                 recreateOrder.setRecreation(recreation);
                 //添加订单
                 int effectNum = recreateOrderDao.addRecreateOrder(recreateOrder);
                 if(effectNum <= 0){
                     throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
                 }
-                return new OrderExecution(ResultEnum.SUCCESS);
+                return new OrderExecution(ResultEnum.SUCCESS, recreateOrder);
             } catch (Exception e){
                 throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
@@ -69,9 +72,15 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
     }
 
     @Override
-    public Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder) {
-        return recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder);
+    public Customer queryRecreateOrderByCustomer(Integer recreationId, Integer orderStatus, String customerCardNumber) {
+        return recreateOrderDao.queryRecreateOrderByCustomer(recreationId, orderStatus, customerCardNumber);
     }
+
+    @Override
+    public CustomerAccount queryRecreationListByAccount(String accountName) {
+        return recreateOrderDao.queryRecreationListByAccount(accountName);
+    }
+
 
     @Override
     public OrderExecution queryRecreateOrderList(RecreateOrder orderCondition, int pageIndex, int pageSize) {
@@ -93,11 +102,29 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
     public OrderExecution updateRecreateOrder(RecreateOrder recreateOrder) {
         if(recreateOrder != null && recreateOrder.getCustomer() != null && recreateOrder.getCustomer().getCustomerCardNumber() != null){
             try{
-                int effectNum = recreateOrderDao.updateRecreateOrder(recreateOrder);
-                if(effectNum <= 0){
-                    throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
+                Customer result = recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder.getRecreation().getRecreationId(),
+                        recreateOrder.getOrderStatus(), recreateOrder.getCustomer().getCustomerCardNumber());
+                if(recreateOrder.getOrderStatus() == OrderStateEnum.UNFINISHED.getState()){
+                    //对于某一消费类型没有支付的应当只有1个
+                    RecreateOrder oldOrder = result.getRecreateOrderList().get(0);
+                    //计算订单价格
+                    oldOrder.setEndTime(new Date());
+                    int hours = getDatePoor(oldOrder.getStartTime(), oldOrder.getEndTime());
+                    double price = oldOrder.getRecreation().getRecreationPrice() * hours;
+                    oldOrder.setOrderPrice(price);
+                    oldOrder.setOrderStatus(OrderStateEnum.UNPAID.getState());
+                    int effectNum = recreateOrderDao.updateRecreateOrder(oldOrder);
+                    if(effectNum <= 0){
+                        throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
+                    }
+                } else {
+                    int effectNum = recreateOrderDao.updateRecreateOrder(recreateOrder);
+                    if(effectNum <= 0){
+                        throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
+                    }
                 }
-                return new OrderExecution(ResultEnum.SUCCESS);
+                Customer updateResult = recreateOrderDao.queryRecreateOrderByCustomer(-1, -1, recreateOrder.getCustomer().getCustomerCardNumber());
+                return new OrderExecution(ResultEnum.SUCCESS, null, updateResult.getRecreateOrderList());
             } catch (Exception e){
                 throw new OrderException(ResultEnum.INNER_ERROR.getStateInfo());
             }
@@ -161,6 +188,14 @@ public class RecreateOrderServiceImpl implements RecreateOrderService {
         long min = diff % nd % nh / nm;
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
-        return (int)hour;
+        return (int)(min % 60 == 0 ? hour : hour + 1);
     }
+
+//    public static void main(String[] args) {
+//        Calendar startTime = Calendar.getInstance();
+//        startTime.set(2020, 4, 29, 0, 0, 0);
+//        Calendar endTime = Calendar.getInstance();
+//        endTime.set(2020, 4, 29, 1, 0, 0);
+//        System.out.println(getDatePoor(startTime.getTime(), endTime.getTime()));
+//    }
 }

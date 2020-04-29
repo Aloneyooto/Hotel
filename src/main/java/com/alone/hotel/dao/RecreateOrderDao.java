@@ -1,6 +1,7 @@
 package com.alone.hotel.dao;
 
 import com.alone.hotel.entity.Customer;
+import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.entity.RecreateOrder;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,10 +25,14 @@ public interface RecreateOrderDao {
 
     /**
      * 根据检索条件检索订单
-     * @param recreateOrder
+     * @param recreationId
+     * @param orderStatus
+     * @param customerCardNumber
      * @return
      */
-    Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
+    Customer queryRecreateOrderByCustomer(@Param("recreationId")Integer recreationId,
+                                          @Param("orderStatus")Integer orderStatus,
+                                          @Param("customerCardNumber")String customerCardNumber);
 
     /**
      * 查询某天已生成的订单数
@@ -51,6 +56,13 @@ public interface RecreateOrderDao {
      * @return
      */
     int queryRecreateOrderCount(@Param("orderCondition")RecreateOrder orderCondition);
+
+    /**
+     * 查询该账号所添加人员的全部娱乐订单
+     * @param accountName
+     * @return
+     */
+    CustomerAccount queryRecreationListByAccount(@Param("accountName")String accountName);
 
     /**
      * 更新其他消费记录

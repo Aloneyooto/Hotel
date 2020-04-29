@@ -34,6 +34,8 @@ public interface CustomerRelationDao {
      */
     Customer queryAccountByCustomer(@Param("customerCardNumber") String customerCardNumber);
 
+
+
     /**
      * 删除关联信息
      * @param customerRelation

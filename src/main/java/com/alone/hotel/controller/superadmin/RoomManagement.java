@@ -43,7 +43,6 @@ public class RoomManagement {
     @PostMapping("/addroom")
     private RoomExecution addRoom(@RequestParam("roomStr")String roomStr,
                                   @RequestParam("fileList")MultipartFile[] fileList){
-        //TODO 验证码
         //List<ImageExecution> imageList = new ArrayList<ImageExecution>();
         Room room = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -100,11 +99,6 @@ public class RoomManagement {
      */
     @GetMapping("/getroomlist")
     private RoomExecution getRoomList(int pageIndex, int pageSize, int roomTypeId, int roomState){
-        //TODO 修改接收参数
-//        int pageIndex = jsonParam.getInteger("pageIndex");
-//        int pageSize = jsonParam.getInteger("pageSize");
-//        int roomTypeId = jsonParam.getInteger("roomType");
-//        int roomState = jsonParam.getInteger("roomState");
         if(pageIndex > -1 && pageSize > 0){
             Room roomCondition = new Room();
             if(roomTypeId > -1){

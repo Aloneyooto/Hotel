@@ -39,4 +39,11 @@ public interface CheckInService {
      * @return
      */
     boolean deleteCheckInMessage(CheckIn checkIn);
+
+    /**
+     * 删除某房间的入住关联信息
+     * @param roomId
+     * @return
+     */
+    boolean deleteCheckInMessageByRoom(Integer roomId);
 }

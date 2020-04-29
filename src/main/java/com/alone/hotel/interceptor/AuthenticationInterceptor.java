@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alone.hotel.annotation.PassToken;
 import com.alone.hotel.annotation.UserLoginToken;
 import com.alone.hotel.entity.CustomerAccount;
+import com.alone.hotel.enums.ResultEnum;
 import com.alone.hotel.service.CustomerAccountService;
 import com.alone.hotel.service.impl.RedisService;
 import com.alone.hotel.utils.TokenUtil;
@@ -40,7 +41,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //TODO
+
         //获取token
         String token = request.getHeader("token");
         //如果不是映射到方法直接通过
@@ -59,7 +60,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             if(userLoginToken.required()){
                 //执行认证
                 if(token == null){
-                    throw new RuntimeException("无token,请重新登录");
+                    throw new RuntimeException(ResultEnum.TOKEN_EMPTY.getStateInfo());
                 }
                 //获取token中的用户名
                 String accountName;

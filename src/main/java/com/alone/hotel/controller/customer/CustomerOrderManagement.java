@@ -1,7 +1,9 @@
 package com.alone.hotel.controller.customer;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alone.hotel.annotation.UserLoginToken;
+import com.alone.hotel.dto.CustomerAccountExecution;
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.dto.RoomExecution;
 import com.alone.hotel.entity.*;
@@ -222,7 +224,7 @@ public class CustomerOrderManagement {
     @UserLoginToken
     @PostMapping("/addrecreateorder")
     private OrderExecution addRecreateOrder(@RequestBody RecreateOrder recreateOrder){
-        if(recreateOrder != null){
+        if(recreateOrder != null && recreateOrder.getCustomer() != null && recreateOrder.getCustomer().getCustomerCardNumber() != null){
             return recreateOrderService.addRecreateOrder(recreateOrder);
         } else {
             return new OrderExecution(ResultEnum.EMPTY);
@@ -231,19 +233,44 @@ public class CustomerOrderManagement {
 
     @UserLoginToken
     @GetMapping("/queryrecreateorderbycustomer")
-    private OrderExecution queryRecreateOrderByCustomer(@RequestParam RecreateOrder recreateOrder){
-        if(recreateOrder != null){
-            Customer customer = recreateOrderService.queryRecreateOrderByCustomer(recreateOrder);
+    private OrderExecution queryRecreateOrderByCustomer(int recreationId, int orderStatus, String customerCardNumber){
+        if(customerCardNumber != null){
+            Customer customer = recreateOrderService.queryRecreateOrderByCustomer(recreationId, orderStatus, customerCardNumber);
             return new OrderExecution(ResultEnum.SUCCESS, null, customer.getRecreateOrderList());
         } else {
             return new OrderExecution(ResultEnum.EMPTY);
         }
     }
 
+    /**
+     * 查询账户内所有人的娱乐订单
+     * @return
+     */
+    @UserLoginToken
+    @GetMapping("/queryrecreationlistbyaccount")
+    private CustomerAccountExecution queryRecreationListByAccount(HttpServletRequest request){
+        try{
+            //获取token
+            String token = request.getHeader("token");
+            CustomerAccount customerAccount = null;
+            if(token != null){
+                //获取customerAccount对象
+                String jsonStr = (String)redisTemplate.opsForValue().get(token);
+                customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+            } else {
+                return new CustomerAccountExecution(ResultEnum.TOKEN_EMPTY);
+            }
+            CustomerAccount result = recreateOrderService.queryRecreationListByAccount(customerAccount.getAccountName());
+            return new CustomerAccountExecution(ResultEnum.SUCCESS, result);
+        } catch (Exception e){
+            return new CustomerAccountExecution(ResultEnum.INNER_ERROR);
+        }
+    }
+
     @UserLoginToken
     @PostMapping("/updaterecreateorder")
     private OrderExecution updateRecreateOrder(@RequestBody RecreateOrder recreateOrder){
-        if(recreateOrder != null && recreateOrder.getOrderStatus() != 1){
+        if(recreateOrder != null && recreateOrder.getOrderStatus() > -1){
             return recreateOrderService.updateRecreateOrder(recreateOrder);
         } else {
             return new OrderExecution(ResultEnum.EMPTY);

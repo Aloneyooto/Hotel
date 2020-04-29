@@ -107,7 +107,7 @@ public class EmployeeManagement {
      * @return
      */
     @GetMapping("/getemployeelist")
-    private EmployeeExecution getEmployeeList(@RequestParam Employee employeeCondition, @RequestParam int pageIndex, @RequestParam int pageSize){
+    private EmployeeExecution getEmployeeList(@RequestParam(value = "employeeCondition") Employee employeeCondition, @RequestParam(value = "pageIndex") int pageIndex, @RequestParam(value = "pageSize") int pageSize){
         //保证页码合法
         if(pageIndex > 0 && pageSize > 0){
             EmployeeExecution employeeExecution = employeeService.queryEmployeeList(employeeCondition, pageIndex, pageSize);

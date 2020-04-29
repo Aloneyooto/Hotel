@@ -34,8 +34,9 @@ public class OrderManagement {
      * @param orderCondition
      * @return
      */
-    @GetMapping("/queryroomorderlist")
+    @PostMapping("/queryroomorderlist")
     private OrderExecution queryRoomOrderList(@RequestBody RoomOrder orderCondition){
+        //accountName typeId handInTime
         try {
             List<RoomOrder> roomOrderList = roomOrderService.queryRoomOrderByCondition(orderCondition);
             return new OrderExecution(ResultEnum.SUCCESS, roomOrderList);
@@ -51,7 +52,7 @@ public class OrderManagement {
      * @param recreateOrder
      * @return
      */
-    @GetMapping("/queryrecreateorderlist")
+    @PostMapping("/queryrecreateorderlist")
     private OrderExecution queryRecreateOrderList(HttpServletRequest request, @RequestBody RecreateOrder recreateOrder){
         int pageIndex = Integer.parseInt(request.getParameter("pageIndex"));
         int pageSize = Integer.parseInt(request.getParameter("pageSize"));

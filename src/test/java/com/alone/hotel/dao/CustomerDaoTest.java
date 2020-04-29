@@ -48,8 +48,10 @@ public class CustomerDaoTest {
 
     @Test
     public void testQueryCustomerById(){
-        Customer customer = customerDao.queryCustomerById("12345789012345678");
-        assertEquals("诸葛多恩", customer.getCustomerName());
+//        Customer customer = customerDao.queryCustomerById("12345789012345678");
+//        assertEquals("诸葛多恩", customer.getCustomerName());
+        Customer customer = customerDao.queryCustomerById("567856785678567890");
+        assertEquals(null, customer);
     }
 
     @Test

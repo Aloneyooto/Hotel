@@ -52,7 +52,7 @@ public class RecreateOrderDaoTest {
         Customer customer = new Customer();
         customer.setCustomerCardNumber("12345789012345678");
         recreateOrder.setCustomer(customer);
-        Customer customerResult = recreateOrderDao.queryRecreateOrderByCustomer(recreateOrder);
+        Customer customerResult = recreateOrderDao.queryRecreateOrderByCustomer(null, null, "12345789012345678");
         assertEquals(1, customerResult.getRecreateOrderList().size());
     }
 

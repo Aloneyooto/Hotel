@@ -2,6 +2,7 @@ package com.alone.hotel.service;
 
 import com.alone.hotel.dto.OrderExecution;
 import com.alone.hotel.entity.Customer;
+import com.alone.hotel.entity.CustomerAccount;
 import com.alone.hotel.entity.RecreateOrder;
 import com.mysql.cj.x.protobuf.MysqlxCrud;
 
@@ -24,10 +25,21 @@ public interface RecreateOrderService {
 
     /**
      * 根据顾客检索订单
-     * @param recreateOrder
+     * @param recreationId
+     * @param orderStatus
+     * @param customerCardNumber
      * @return
      */
-    Customer queryRecreateOrderByCustomer(RecreateOrder recreateOrder);
+    Customer queryRecreateOrderByCustomer(Integer recreationId,
+                                          Integer orderStatus,
+                                          String customerCardNumber);
+
+    /**
+     * 查询账户内所有人的娱乐订单
+     * @param accountName
+     * @return
+     */
+    CustomerAccount queryRecreationListByAccount(String accountName);
 
     /**
      * 根据检索条件检索订单

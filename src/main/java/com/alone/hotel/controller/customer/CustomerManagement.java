@@ -61,7 +61,6 @@ public class CustomerManagement {
     @PostMapping("/addcustomermessage")
     private CustomerExecution addCustomerMessage(HttpServletRequest request){
         //Customer customer, MultipartFile cardImg, MultipartFile faceImg, CustomerAccount customerAccount, int flag
-        //TODO 不能全取出来
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         String customerCardNumber = params.getParameter("customerCardNumber");
         //保证身份证号不为空
@@ -72,7 +71,6 @@ public class CustomerManagement {
             String customerPhone = null;
             MultipartFile cardImg = params.getFile("cardImg");
             MultipartFile faceImg = params.getFile("faceImg");
-            int flag = Integer.parseInt(params.getParameter("flag"));
             String customerName = params.getParameter("customerName");
             if(params.getParameter("customerAge") != null){
                 customerAge = Integer.parseInt(params.getParameter("customerAge"));
@@ -93,7 +91,6 @@ public class CustomerManagement {
                 customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
             }
 
-
             //添加顾客信息
             try{
                 customer.setCustomerCardNumber(customerCardNumber);
@@ -108,18 +105,6 @@ public class CustomerManagement {
                 }
             } catch (Exception e){
                 return new CustomerExecution(ResultEnum.INNER_ERROR);
-            }
-            //是否实名认证，是的话向customer_account表写入数据
-            if(flag == 1){
-                //在进行实名认证
-                customerAccount.setFlag(1);
-                customerAccount.setCustomer(customer);
-
-                //To check
-                CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
-                if(customerAccountExecution.getState() != ResultEnum.SUCCESS.getState()){
-                    return new CustomerExecution(ResultEnum.CERTIFICATION_ERROR);
-                }
             }
             //向customer_relation表添加关系
             CustomerRelation customerRelation = new CustomerRelation();
@@ -290,6 +275,55 @@ public class CustomerManagement {
             }
         } catch (IOException e) {
             return new RoomExecution(ResultEnum.INNER_ERROR);
+        }
+    }
+
+    /**
+     * 实名认证
+     * @param customer
+     */
+    @UserLoginToken
+    @PostMapping("/customerverified")
+    private CustomerAccountExecution customerVerified(HttpServletRequest request, @RequestBody Customer customer){
+        //TODO 更新url
+        //获取token
+        String token = request.getHeader("token");
+        CustomerAccount customerAccount = null;
+        if(token != null){
+            //获取customerAccount对象
+            String jsonStr = (String)redisTemplate.opsForValue().get(token);
+            customerAccount = JSONArray.parseObject(jsonStr, CustomerAccount.class);
+        } else {
+            return new CustomerAccountExecution(ResultEnum.TOKEN_EMPTY);
+        }
+
+        if(customer != null && customer.getCustomerCardNumber() != null){
+            Customer oldCustomer = customerService.queryCustomerById(customer.getCustomerCardNumber());
+            if(oldCustomer == null){
+                CustomerExecution customerExecution = customerService.addCustomer(customer, null, null);
+                //插入成功
+                if(customerExecution.getState() != ResultEnum.SUCCESS.getState()){
+                    return new CustomerAccountExecution(ResultEnum.INNER_ERROR);
+                }
+            }
+            customerAccount.setFlag(1);
+            customerAccount.setCustomer(customer);
+            //向customer_relation表添加关系
+            CustomerRelation customerRelation = new CustomerRelation();
+            customerRelation.setAccount(customerAccount);
+            customerRelation.setCustomer(customer);
+            CustomerRelationExecution customerRelationExecution = customerRelationService.addCustomerRelation(customerRelation);
+            if(customerRelationExecution.getState() != ResultEnum.SUCCESS.getState()){
+                return new CustomerAccountExecution(ResultEnum.RELATION_INSERT_ERROR);
+            }
+            CustomerAccountExecution customerAccountExecution = customerAccountService.updateCustomerAccount(customerAccount, null);
+            if(customerAccountExecution.getState() == ResultEnum.SUCCESS.getState()){
+                return customerAccountExecution;
+            } else {
+                return new CustomerAccountExecution(ResultEnum.CERTIFICATION_ERROR);
+            }
+        } else {
+            return new CustomerAccountExecution(ResultEnum.EMPTY);
         }
     }
 }

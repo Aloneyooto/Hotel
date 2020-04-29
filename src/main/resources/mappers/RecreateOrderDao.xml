@@ -6,12 +6,37 @@
         <result column="customer_name" property="customerName" />
         <collection property="recreateOrderList" ofType="com.alone.hotel.entity.RecreateOrder">
             <id column="order_id" property="orderId" />
-            <result column="recreation_id" property="recreation.recreationId" />
             <result column="order_price" property="orderPrice" />
             <result column="start_time" property="startTime" />
             <result column="end_time" property="endTime" />
             <result column="order_status" property="orderStatus" />
             <result column="hand_in_time" property="handInTime" />
+            <association property="recreation" javaType="com.alone.hotel.entity.Recreation">
+                <id column="recreation_id" property="recreationId" />
+                <result column="recreation_name" property="recreationName" />
+                <result column="recreation_price" property="recreationPrice" />
+            </association>
+        </collection>
+    </resultMap>
+
+    <resultMap id="accountRecreationMap" type="com.alone.hotel.entity.CustomerAccount">
+        <id column="account_name" property="accountName" />
+        <collection property="customerList" column="customer_card_number" ofType="com.alone.hotel.entity.Customer">
+            <id column="customer_card_number" property="customerCardNumber" />
+            <result column="customer_name" property="customerName" />
+            <result column="customer_age" property="customerAge" />
+            <result column="customer_gender" property="customerGender" />
+            <result column="customer_card_img" property="customerCardImg" />
+            <result column="customer_face_img" property="customerFaceImg" />
+            <result column="customer_phone" property="customerPhone" />
+            <collection property="recreateOrderList" ofType="com.alone.hotel.entity.RecreateOrder">
+                <id column="order_id" property="orderId" />
+                <result column="recreation_id" property="recreation.recreationId" />
+                <result column="order_price" property="recreation.recreationPrice" />
+                <result column="start_time" property="startTime" />
+                <result column="end_time" property="endTime" />
+                <result column="order_status" property="orderStatus" />
+            </collection>
         </collection>
     </resultMap>
 
@@ -24,17 +49,19 @@
 
     <select id="queryRecreateOrderByCustomer" resultMap="recreateOrderMap">
         select ro.order_id, c.customer_card_number, c.customer_name,
-        ro.recreation_id, ro.order_price, ro.start_time, ro.end_time, ro.order_status
-        from tb_recreate_order ro, tb_customer c
+        ro.recreation_id, re.recreation_name, re.recreation_price,
+        ro.order_price, ro.start_time, ro.end_time, ro.order_status
+        from tb_recreate_order ro, tb_customer c, tb_recreation re
         <where>
-            <if test="recreation != null and recreation.recreationId != null ">
-                and recreation_id = #{recreation.recreationId}
+            <if test="recreationId > -1 ">
+                and ro.recreation_id = #{recreationId}
             </if>
-            <if test="orderStatus != null">
+            <if test="orderStatus > -1">
                 and order_status = #{orderStatus}
             </if>
-            and c.customer_card_number = #{customer.customerCardNumber}
+            and c.customer_card_number = #{customerCardNumber}
             and ro.customer_card_number = c.customer_card_number
+            and ro.recreation_id = re.recreation_id
         </where>
     </select>
 
@@ -100,9 +127,23 @@
         </where>
     </select>
 
+    <select id="queryRecreationListByAccount" resultMap="accountRecreationMap">
+        select cu.account_name, c.customer_card_number, c.customer_name,
+        ro.order_id, ro.recreation_id, ro.order_price, ro.start_time,
+        ro.end_time, ro.order_status
+        from tb_customer_relation cu, tb_recreate_order ro, tb_customer c
+        where cu.customer_card_number = c.customer_card_number
+        and c.customer_card_number = ro.customer_card_number
+        and cu.account_name = #{accountName}
+    </select>
+
     <update id="updateRecreateOrder" parameterType="com.alone.hotel.entity.RecreateOrder">
         update tb_recreate_order
-        set order_status = #{orderStatus}
+        <set>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="orderPrice != null">order_price = #{orderPrice}</if>
+        </set>
         where order_id = #{orderId}
     </update>
 

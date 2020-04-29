@@ -41,4 +41,11 @@ public interface CheckInDao {
      * @return
      */
     int deleteCheckInMessage(CheckIn checkIn);
+
+    /**
+     * 删除某房间的入住关联信息
+     * @param roomId
+     * @return
+     */
+    int deleteCheckInMessageByRoom(Integer roomId);
 }
